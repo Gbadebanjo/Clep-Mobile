@@ -1,9 +1,8 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
-
+import { Ionicons } from '@expo/vector-icons';
 import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -14,7 +13,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].primary700,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
@@ -30,16 +29,31 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Ionicons size={28} name="home" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="cart"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Cart',
+          tabBarIcon: ({ color }) => <Ionicons size={28} name="cart" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="wishlist"
+        options={{
+          title: 'Wishlist',
+          tabBarIcon: ({ color }) => <Ionicons size={28} name="heart" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="user"
+        options={{
+          title: 'User',
+          tabBarIcon: ({ color }) => <Ionicons size={28} name="person" color={color} />,
         }}
       />
     </Tabs>
+
   );
 }
