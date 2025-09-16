@@ -1,35 +1,51 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  ReactNode,
+} from "react";
 import {
   Dimensions,
   TouchableOpacity,
   View,
   Animated,
   ImageBackground,
+  StyleProp,
+  ViewStyle,
 } from "react-native";
 import { sliderStyles } from "./slider-styles";
 import { Ionicons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
-const Slider = ({ children, autoScrollInterval = 5000 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const translateX = useRef(new Animated.Value(0)).current;
+interface SliderProps {
+  children: ReactNode[];
+  autoScrollInterval?: number;
+}
 
-  const slides = children.filter((item) => item !== null);
+const Slider: React.FC<SliderProps> = ({
+  children,
+  autoScrollInterval = 5000,
+}) => {
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const translateX = useRef<Animated.Value>(new Animated.Value(0)).current;
+
+  const slides = children.filter((item): item is ReactNode => item !== null);
   const length = slides.length;
 
-  const animateToIndex = (index) => {
+  const animateToIndex = useCallback((index: number) => {
     Animated.spring(translateX, {
       toValue: -index * width,
       useNativeDriver: true,
     }).start();
-  };
+  });
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     const newIndex = currentIndex + 1;
     setCurrentIndex(newIndex);
     animateToIndex(newIndex);
-  };
+  }, [animateToIndex, currentIndex]);
 
   const prevSlide = () => {
     const newIndex = currentIndex === 0 ? 0 : currentIndex - 1;
@@ -40,22 +56,21 @@ const Slider = ({ children, autoScrollInterval = 5000 }) => {
   useEffect(() => {
     const interval = setInterval(nextSlide, autoScrollInterval);
     return () => clearInterval(interval);
-  }, [currentIndex]);
+  }, [autoScrollInterval, currentIndex, nextSlide]);
 
-  // When we reach the copy of the first slide, jump back to the real first
   useEffect(() => {
     if (currentIndex === length) {
       setTimeout(() => {
-        translateX.setValue(0); // instantly reset position
+        translateX.setValue(0);
         setCurrentIndex(0);
-      }, 300); // small delay to finish spring animation
+      }, 300);
     }
-  }, [currentIndex]);
+  }, [currentIndex, length, translateX]);
 
   return (
     <ImageBackground
       source={require("@/assets/images/bg.png")}
-      style={sliderStyles.sliderContainer}
+      style={sliderStyles.sliderContainer as StyleProp<ViewStyle>}
       resizeMode="cover"
     >
       <Animated.View
