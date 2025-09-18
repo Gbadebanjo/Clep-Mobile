@@ -6,6 +6,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams, usePathname } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { ThemedText } from '../ThemedText';
+import { ThemedView } from '../ThemedView';
 import Filters from './filter';
 import { Pagination } from './pagination';
 import ProductCard from './product-card';
@@ -132,66 +134,66 @@ export default function AllProducts({ slug }: { slug?: string }) {
     { id: 'price-high-low', name: 'Price: High to Low' },
     { id: 'rating', name: 'Highest Rated' },
   ];
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      setError(false);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        setError(false);
+      const productAPI = new ProductAPI();
 
-        const productAPI = new ProductAPI();
+      let whereClause: Record<string, any> = { ...clause };
 
-        let whereClause: Record<string, any> = { ...clause };
-
-        if (filters.category) {
-          whereClause['categories.category.slug'] = {
-            equals: filters.category,
-          };
-        }
-
-        let sortField = '-createdAt';
-        if (filters.sortBy === 'price-low-high') {
-          sortField = 'base_price';
-        } else if (filters.sortBy === 'price-high-low') {
-          sortField = '-base_price';
-        } else if (filters.sortBy === 'rating') {
-          sortField = '-average_rating';
-        }
-
-        if ((searchQuery as any).trim()) {
-          whereClause.name = {
-            contains: searchQuery,
-          };
-        }
-
-        if (filters.priceRange.min > 0 || filters.priceRange.max > 0) {
-          whereClause.base_sale_price = {};
-          if (filters.priceRange.min > 0) whereClause.base_sale_price.greater_than_equal = filters.priceRange.min;
-          if (filters.priceRange.max > 0) whereClause.base_sale_price.less_than_equal = filters.priceRange.max;
-        }
-
-        const results = await productAPI.getProducts({
-          where: whereClause,
-          sort: sortField,
-          page: currentPage,
-          limit: 12,
-        });
-
-        setProducts(results?.data?.docs || []);
-        setTotalPages(results?.data?.totalPages || 1);
-      } catch (err) {
-        console.error('Error fetching products:', err);
-        setError(true);
-      } finally {
-        setLoading(false);
+      if (filters.category) {
+        whereClause['categories.category.slug'] = {
+          equals: filters.category,
+        };
       }
-    };
 
+      let sortField = '-createdAt';
+      if (filters.sortBy === 'price-low-high') {
+        sortField = 'base_price';
+      } else if (filters.sortBy === 'price-high-low') {
+        sortField = '-base_price';
+      } else if (filters.sortBy === 'rating') {
+        sortField = '-average_rating';
+      }
+
+      if ((searchQuery as any).trim()) {
+        whereClause.name = {
+          contains: searchQuery,
+        };
+      }
+
+      if (filters.priceRange.min > 0 || filters.priceRange.max > 0) {
+        whereClause.base_sale_price = {};
+        if (filters.priceRange.min > 0) whereClause.base_sale_price.greater_than_equal = filters.priceRange.min;
+        if (filters.priceRange.max > 0) whereClause.base_sale_price.less_than_equal = filters.priceRange.max;
+      }
+
+      const results = await productAPI.getProducts({
+        where: whereClause,
+        sort: sortField,
+        page: currentPage,
+        limit: 12,
+      });
+
+      setProducts(results?.data?.docs || []);
+      setTotalPages(results?.data?.totalPages || 1);
+    } catch (err) {
+      console.error('Error fetching products:', err);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchProducts();
-  }, [currentPage, filters, searchQuery, clause]);
+  }, [currentPage, filters, clause]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    fetchProducts();
+
     setCurrentPage(1);
   };
 
@@ -227,23 +229,23 @@ export default function AllProducts({ slug }: { slug?: string }) {
   }
 
   return (
-    <View style={styles.scrollContainer}>
+    <ThemedView style={styles.scrollContainer}>
       {/* Heading */}
-      <MaskedView maskElement={<Text style={styles.title}>{title ?? 'All Products'}</Text>}>
+      <MaskedView maskElement={<ThemedText style={styles.title}>{title ?? 'All Products'}</ThemedText>}>
         <LinearGradient
           colors={['#7f1d1d', '#450a0a']} // wine-700 → wine-900
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
         >
-          <Text style={[styles.title, { opacity: 0 }]}>{title ?? 'All Products'}</Text>
+          <ThemedText style={[styles.title, { opacity: 0 }]}>{title ?? 'All Products'}</ThemedText>
         </LinearGradient>
       </MaskedView>
 
       {/* Subtitle */}
-      <Text style={styles.subtitle}>
+      <ThemedText style={styles.subtitle}>
         Browse our complete collection of fashion items. Use the filters and search to find exactly what you&apos;re
         looking for.
-      </Text>
+      </ThemedText>
       <View style={[styles.container, { flexDirection: isLargeScreen ? 'row' : 'column' }]}>
         <Filters
           showFilters={showFilters}
@@ -276,11 +278,11 @@ export default function AllProducts({ slug }: { slug?: string }) {
 
       {products.length === 0 && (
         <View style={styles.noProductContainer}>
-          <Text>No products available at the moment</Text>
-          <Text>Check back soon for our latest featured items!</Text>
+          <ThemedText>No products available at the moment</ThemedText>
+          <ThemedText>Check back soon for our latest featured items!</ThemedText>
         </View>
       )}
-    </View>
+    </ThemedView>
   );
 }
 
@@ -301,7 +303,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     marginBottom: 20,
-    color: '#111827',
   },
   title: {
     fontWeight: 'bold',
@@ -310,8 +311,8 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: '#6b7280', // gray-500 / tertiary text
     maxWidth: 600,
+    fontWeight: '300',
   },
   errorText: {
     color: 'red',

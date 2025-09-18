@@ -1,8 +1,10 @@
 import { ProductAPI } from '@/apis/product-api';
 import { product } from '@/types/product';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Dimensions, StyleSheet, Text } from 'react-native';
 import LinkButton from '../General/link.button';
+import { ThemedText } from '../ThemedText';
+import { ThemedView } from '../ThemedView';
 import ProductCard from './product-card';
 
 const screenWidth = Dimensions.get('window').width;
@@ -60,29 +62,29 @@ export default function FeaturedProducts() {
   }
 
   return (
-    <View style={styles.scrollContainer}>
+    <ThemedView style={styles.scrollContainer}>
       {/* Heading */}
-      <Text style={styles.heading}>Featured Products</Text>
+      <ThemedText style={styles.heading}>Featured Products</ThemedText>
 
       {/*Product grid */}
       {rows.map((row, rowIndex) => (
-        <View style={styles.row} key={rowIndex}>
+        <ThemedView style={styles.row} key={rowIndex}>
           {row.map((product, colIndex) => (
-            <View key={colIndex} style={[styles.productWrapper, { width: productCardWidth }]}>
+            <ThemedView key={colIndex} style={[styles.productWrapper, { width: productCardWidth }]}>
               <ProductCard product={product} />
-            </View>
+            </ThemedView>
           ))}
-        </View>
+        </ThemedView>
       ))}
 
       {featuredProducts.length === 0 && (
-        <View style={styles.noProductContainer}>
-          <Text>No featured products available at the moment</Text>
-          <Text>Check back soon for our latest featured items!</Text>
-        </View>
+        <ThemedView style={styles.noProductContainer}>
+          <ThemedText>No featured products available at the moment</ThemedText>
+          <ThemedText>Check back soon for our latest featured items!</ThemedText>
+        </ThemedView>
       )}
       <LinkButton text="View All Products" href="/all-products" />
-    </View>
+    </ThemedView>
   );
 }
 
@@ -90,6 +92,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     paddingHorizontal: 12,
     paddingBottom: 24,
+    marginTop: 12,
   },
   banner: {
     width: '100%',
@@ -102,7 +105,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     marginBottom: 20,
-    color: '#111827',
   },
   errorText: {
     color: 'red',

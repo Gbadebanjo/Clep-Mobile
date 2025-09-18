@@ -1,7 +1,9 @@
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { ThemedText } from '../ThemedText';
 
 interface PaginationProps {
   currentPage: number;
@@ -10,6 +12,14 @@ interface PaginationProps {
 }
 
 export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, handlePageChange }) => {
+  const background = useThemeColor(
+    {
+      dark: '#7f1d1d',
+      light: '#7f1d1d',
+    },
+    'background'
+  );
+
   return (
     <Animated.View entering={FadeIn.delay(300)} style={styles.container}>
       {/* Previous button */}
@@ -38,9 +48,15 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
           <TouchableOpacity
             key={pageToShow}
             onPress={() => handlePageChange(pageToShow)}
-            style={[styles.pageButton, currentPage === pageToShow ? styles.activePage : styles.inactivePage]}
+            style={[
+              styles.pageButton,
+              currentPage === pageToShow ? styles.activePage : styles.inactivePage,
+              { backgroundColor: background },
+            ]}
           >
-            <Text style={[styles.pageText, currentPage === pageToShow && styles.activePageText]}>{pageToShow}</Text>
+            <ThemedText style={[styles.pageText, currentPage === pageToShow && styles.activePageText]}>
+              {pageToShow}
+            </ThemedText>
           </TouchableOpacity>
         );
       })}
@@ -90,7 +106,7 @@ const styles = StyleSheet.create({
   },
   pageText: {
     fontSize: 14,
-    color: '#374151', // gray-700
+    color: '#070808ff', // gray-700
   },
   activePageText: {
     color: '#fff',
