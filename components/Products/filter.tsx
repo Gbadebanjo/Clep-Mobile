@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   toggleButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.light.primary800, // primary
+    backgroundColor: Colors.light.primary800,
     paddingVertical: 20,
     paddingHorizontal: 16,
     borderRadius: 50,

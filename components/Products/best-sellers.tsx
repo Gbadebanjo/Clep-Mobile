@@ -3,6 +3,7 @@ import { product } from '@/types/product';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from 'react-native';
 import LinkButton from '../General/link.button';
+import { ThemedText } from '../ThemedText';
 import ProductCard from './product-card';
 
 const screenWidth = Dimensions.get('window').width;
@@ -71,7 +72,7 @@ export default function BestSellers() {
   return (
     <View style={styles.scrollContainer}>
       {/* Heading */}
-      <Text style={styles.heading}>Best Products</Text>
+      <ThemedText style={styles.heading}>Best Products</ThemedText>
 
       <LinkButton
         text="Explore All"
@@ -93,8 +94,8 @@ export default function BestSellers() {
 
       {bestSellers.length === 0 && (
         <View style={styles.noProductContainer}>
-          <Text>No featured products available at the moment</Text>
-          <Text>Check back soon for our latest featured items!</Text>
+          <ThemedText>No featured products available at the moment</ThemedText>
+          <ThemedText>Check back soon for our latest featured items!</ThemedText>
         </View>
       )}
     </View>
@@ -117,7 +118,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     marginBottom: 0,
-    color: '#111827',
   },
   exploreButton: {
     marginBottom: 20,
