@@ -11,8 +11,8 @@ export default function AllProductsPage() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     backgroundColor: '#fff',
+//   },
+// });

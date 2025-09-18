@@ -26,12 +26,12 @@ export default function BestSellers() {
         let results = await productAPI.getFeaturedProducts();
         let products = results?.data?.docs || [];
 
-        // If we have less than 6 featured products, get additional recent products
-        if (products.length < 6) {
+        // If we have less than 18 featured products, get additional recent products
+        if (products.length < 18) {
           const additionalResults = await productAPI.getProducts({
             where: { status: { equals: 'published' } },
             sort: '-createdAt',
-            limit: 6 - products.length + 10, // Get extra to filter out duplicates
+            limit: 18 - products.length + 10, // Get extra to filter out duplicates
           });
 
           const recentProducts = additionalResults?.data?.docs || [];
@@ -40,14 +40,14 @@ export default function BestSellers() {
           const featuredIds = products.map((p) => p.id);
           const additionalProducts = recentProducts
             .filter((p) => !featuredIds.includes(p.id))
-            .slice(6, 12 - products.length);
+            .slice(0, 18 - products.length);
 
           products = [...products, ...additionalProducts];
         }
 
-        // Limit to 6 products total
+        // Limit to 18 products total
         setLoading(false);
-        setBestSellers(products.slice(0, 6));
+        setBestSellers(products.slice(0, 18));
         setLoading(false);
       } catch (err) {
         console.error('Error fetching best sellers:', err);

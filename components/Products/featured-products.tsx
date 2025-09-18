@@ -22,23 +22,23 @@ export default function FeaturedProducts() {
         let results = await productAPI.getFeaturedProducts();
         let products = results?.data?.docs || [];
 
-        if (products.length < 6) {
+        if (products.length < 18) {
           const additionalResults = await productAPI.getProducts({
             where: { status: { equals: 'published' } },
             sort: '-createdAt',
-            limit: 6 - products.length + 10,
+            limit: 18 - products.length + 10,
           });
 
           const recentProducts = additionalResults?.data?.docs || [];
           const featuredIds = products.map((p) => p.id);
           const additionalProducts = recentProducts
             .filter((p) => !featuredIds.includes(p.id))
-            .slice(0, 6 - products.length);
+            .slice(0, 18 - products.length);
 
           products = [...products, ...additionalProducts];
         }
 
-        setFeaturedProducts(products.slice(0, 6));
+        setFeaturedProducts(products.slice(0, 18));
         setLoading(false);
       } catch (err) {
         console.error('Error fetching featured products:', err);
