@@ -1,4 +1,4 @@
-import { signupStyles } from '@/components/Auth/signup-styles';
+import { signupStyles } from '@/components/Auth/styles/signup-styles';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Ionicons } from '@expo/vector-icons';

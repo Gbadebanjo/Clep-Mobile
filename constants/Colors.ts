@@ -15,6 +15,7 @@ export const Colors = {
     primary900: '#6B0C2D',
     primary950: '#3E071A',
     text: '#000000',
+    subTitle: '#747778',
     background: '#fff',
     tint: tintColorLight,
     icon: '#687076',
@@ -39,5 +40,6 @@ export const Colors = {
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
+    subTitle: '#9BA1A6',
   },
 };
