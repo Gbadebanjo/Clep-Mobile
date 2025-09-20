@@ -1,5 +1,5 @@
 // import { loginStyles } from '@/components/Auth/login-styles';
-import { loginStyles } from '@/components/Auth/login-styles';
+import { loginStyles } from '@/components/Auth/styles/login-styles';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { router } from 'expo-router';

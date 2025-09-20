@@ -51,7 +51,7 @@ export const loginStyles = StyleSheet.create({
   },
   forgotText: {
     textAlign: 'right',
-    color: '#666',
+    color: '#747778',
     fontSize: 14,
     marginBottom: 40,
   },

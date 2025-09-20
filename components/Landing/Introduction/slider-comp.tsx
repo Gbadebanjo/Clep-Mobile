@@ -9,7 +9,7 @@ import { sliderStyles } from './slider-styles';
 
 function IntroductionSliderComp() {
   const handleGetStarted = () => {
-    router.push('/signup');
+    router.push('/vendor-login');
   };
 
   return (

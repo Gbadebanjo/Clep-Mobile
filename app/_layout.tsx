@@ -36,6 +36,15 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="signup" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor-login" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor-verification" options={{ headerShown: false }} />
+          <Stack.Screen name="login-success" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor-signup" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor-plan-selection" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor-identity-verification" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor-store-setup" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor-wallet-setup" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor-account-created" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />
