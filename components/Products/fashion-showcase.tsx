@@ -1,4 +1,4 @@
-import { ImageBackground } from 'expo-image';
+import { ImageBackground, Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
@@ -61,10 +61,10 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, index }) => {
   return (
     <TouchableOpacity style={FashionShowStyles.cardWrapper} onPress={() => router.push(category.link as any)}>
       <View style={FashionShowStyles.card}>
-        <ImageBackground source={category.image} style={FashionShowStyles.image}></ImageBackground>
+        <Image source={category.image} style={FashionShowStyles.image}></Image>
 
         {/* Overlay Gradient */}
-        <View style={[FashionShowStyles.overlay, { backgroundColor: 'rgba(0,0,0,0.4)' }]} />
+        <View style={[FashionShowStyles.overlay, { backgroundColor: 'rgba(0,0,0,0.1)' }]} />
 
         {/* Text + Button */}
         <View style={FashionShowStyles.cardContent}>

@@ -1,9 +1,11 @@
 import { Colors } from '@/constants/Colors';
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, useColorScheme } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-export const vendorLoginStyles = StyleSheet.create({
+
+export const vendorLoginStyles = (colorScheme: 'light' | 'dark') =>
+  StyleSheet.create({
   container: {
     flex: 1,
     paddingBottom: 60,
@@ -60,6 +62,7 @@ export const vendorLoginStyles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 40,
     textAlign: 'center',
+    minHeight: 60,
   },
   formContainer: {
     width: '100%',
@@ -111,7 +114,7 @@ export const vendorLoginStyles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 2,
-    borderColor: '#000',
+    borderColor: Colors[colorScheme].text,
     borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
