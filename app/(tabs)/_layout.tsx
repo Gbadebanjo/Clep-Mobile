@@ -3,6 +3,7 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
+import { PencilRuler } from "lucide-react-native"; 
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
@@ -33,6 +34,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Ionicons size={28} name="home" color={color} />,
         }}
       />
+        <Tabs.Screen
+          name="wishlist"
+          options={{
+            title: 'Wishlist',
+            tabBarIcon: ({ color }) => <Ionicons size={28} name="heart" color={color} />,
+          }}
+        />
       <Tabs.Screen
         name="cart"
         options={{
@@ -41,10 +49,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="wishlist"
+        name="measurement"
         options={{
-          title: 'Wishlist',
-          tabBarIcon: ({ color }) => <Ionicons size={28} name="heart" color={color} />,
+          title: 'Measurement',
+          tabBarIcon: ({ color }) => <PencilRuler size={28} color={color} />,
         }}
       />
       <Tabs.Screen
