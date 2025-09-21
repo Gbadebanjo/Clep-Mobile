@@ -1,20 +1,23 @@
-import { vendorLoginStyles } from '@/components/Auth/styles/vendor-login-styles';
+import { vendorLoginStyles } from '@/components/Vendor/Auth/login/style';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
-import { TextInput, TouchableOpacity, View } from 'react-native';
+import { TextInput, TouchableOpacity, useColorScheme, View } from 'react-native';
 
 export default function SearchNavCompo() {
+  const colorScheme = useColorScheme() as 'light' | 'dark';
+  const styles = vendorLoginStyles(colorScheme);
+
   return (
-    <View style={vendorLoginStyles.searchNavContainer}>
-      <View style={vendorLoginStyles.header}>
+    <View style={styles.searchNavContainer}>
+      <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="menu" size={24} color="#000" />
         </TouchableOpacity>
-        <View style={vendorLoginStyles.searchContainer}>
+        <View style={styles.searchContainer}>
           <Ionicons name="search" size={20} color="#999" />
           <TextInput
-            style={vendorLoginStyles.searchInput}
+            style={styles.searchInput}
             placeholder="Search For Products, Brands And More!"
             placeholderTextColor="#999"
           />

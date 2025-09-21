@@ -5,7 +5,8 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams, usePathname } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { ThemedLoader } from '../ThemedLoader';
 import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
 import Filters from './filter';
@@ -219,7 +220,7 @@ export default function AllProducts({ slug }: { slug?: string }) {
     return () => clearTimeout(timer);
   }, [updateURL]);
 
-  if (loading) return <ActivityIndicator size="large" color="#7c2d12" />;
+  if (loading) return <ThemedLoader text="Loading products..." />;
   if (error) return <Text style={styles.errorText}>An error occurred. Please try again.</Text>;
 
   // Group products into rows of 2
@@ -289,7 +290,7 @@ export default function AllProducts({ slug }: { slug?: string }) {
 const styles = StyleSheet.create({
   scrollContainer: {
     paddingHorizontal: 12,
-    paddingBottom: 24,
+    paddingBottom: 70,
     paddingTop: 36,
   },
   banner: {

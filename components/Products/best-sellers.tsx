@@ -1,8 +1,9 @@
 import { ProductAPI } from '@/apis/product-api';
 import { product } from '@/types/product';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import LinkButton from '../General/link.button';
+import { ThemedLoader } from '../ThemedLoader';
 import { ThemedText } from '../ThemedText';
 import ProductCard from './product-card';
 
@@ -60,7 +61,7 @@ export default function BestSellers() {
     fetchBestSellers();
   }, [selectedCategory, selectedPeriod]);
 
-  if (loading) return <ActivityIndicator size="large" color="#7c2d12" />;
+  if (loading) return <ThemedLoader text="Loading best products..." />;
   if (error) return <Text style={styles.errorText}>An error occurred. Please try again.</Text>;
 
   // Group products into rows of 2

@@ -8,13 +8,7 @@ export type ThemedTextProps = TextProps & {
   type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
 };
 
-export function ThemedText({
-  style,
-  lightColor,
-  darkColor,
-  type = 'default',
-  ...rest
-}: ThemedTextProps) {
+export function ThemedText({ style, lightColor, darkColor, type = 'default', ...rest }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
 
   return (
@@ -36,7 +30,7 @@ export function ThemedText({
 const styles = StyleSheet.create({
   default: {
     fontSize: 16,
-    lineHeight: 24,
+    // lineHeight: 24,
   },
   defaultSemiBold: {
     fontSize: 16,
