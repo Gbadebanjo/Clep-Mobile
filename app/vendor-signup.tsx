@@ -1,12 +1,13 @@
 import { vendorSignupStyles } from '@/components/Auth/styles/vendor-signup-styles';
 import SearchNavCompo from '@/components/General/search-nav';
+import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
 import { ThemedView } from '@/components/ThemedView';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { ImageBackground, ScrollView, TextInput, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, ScrollView, TouchableOpacity, View } from 'react-native';
 
 export default function VendorSignupScreen() {
   const [fullName, setFullName] = useState('E.g John Doe');
@@ -58,21 +59,18 @@ export default function VendorSignupScreen() {
               </ThemedText>
 
               <View style={vendorSignupStyles.formContainer}>
-                <ThemedText style={vendorSignupStyles.label}>Full Name</ThemedText>
-                <TextInput style={vendorSignupStyles.input} value={fullName} onChangeText={setFullName} />
+                <ThemedInput label="Full Name" value={fullName} onChangeText={setFullName} />
 
-                <ThemedText style={vendorSignupStyles.label}>Email</ThemedText>
-                <TextInput
-                  style={vendorSignupStyles.input}
+                <ThemedInput
+                  label="Email"
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
                   autoCapitalize="none"
                 />
 
-                <ThemedText style={vendorSignupStyles.label}>Phone Number</ThemedText>
-                <TextInput
-                  style={vendorSignupStyles.input}
+                <ThemedInput
+                  label="Phone Number"
                   value={phoneNumber}
                   onChangeText={setPhoneNumber}
                   keyboardType="phone-pad"
@@ -130,34 +128,14 @@ export default function VendorSignupScreen() {
               </ThemedText>
 
               <View style={vendorSignupStyles.formContainer}>
-                <ThemedText style={vendorSignupStyles.label}>Password</ThemedText>
-                <View style={vendorSignupStyles.passwordContainer}>
-                  <TextInput
-                    style={vendorSignupStyles.passwordInput}
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={!showPassword}
-                  />
-                  <TouchableOpacity style={vendorSignupStyles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
-                    <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={20} color="#999" />
-                  </TouchableOpacity>
-                </View>
+                <ThemedInput label="Password" value={password} onChangeText={setPassword} isPassword={true} />
 
-                <ThemedText style={vendorSignupStyles.label}>Confirm Password</ThemedText>
-                <View style={vendorSignupStyles.passwordContainer}>
-                  <TextInput
-                    style={vendorSignupStyles.passwordInput}
-                    value={confirmPassword}
-                    onChangeText={setConfirmPassword}
-                    secureTextEntry={!showConfirmPassword}
-                  />
-                  <TouchableOpacity
-                    style={vendorSignupStyles.eyeIcon}
-                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    <Ionicons name={showConfirmPassword ? 'eye-off' : 'eye'} size={20} color="#999" />
-                  </TouchableOpacity>
-                </View>
+                <ThemedInput
+                  label="Confirm Password"
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  isPassword={true}
+                />
 
                 <View style={vendorSignupStyles.generalButtonContainer}>
                   <ThemedTouchableOpacity style={{ ...vendorSignupStyles.previousButton }} onPress={handlePrevious}>

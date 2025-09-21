@@ -1,5 +1,6 @@
 import { vendorLoginStyles } from '@/components/Auth/styles/vendor-login-styles';
 import SearchNav from '@/components/General/search-nav';
+import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
 import { ThemedView } from '@/components/ThemedView';
@@ -7,12 +8,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { AppleIcon, LucideGoal } from 'lucide-react-native';
 import React, { useState } from 'react';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 export default function VendorLoginScreen() {
   const [email, setEmail] = useState('john@example.com');
   const [password, setPassword] = useState('**********');
-  const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleLogin = () => {
@@ -48,27 +48,15 @@ export default function VendorLoginScreen() {
           <ThemedText style={vendorLoginStyles.title}>Sign in as a Vendor</ThemedText>
 
           <View style={vendorLoginStyles.formContainer}>
-            <ThemedText style={vendorLoginStyles.label}>Email</ThemedText>
-            <TextInput
-              style={vendorLoginStyles.input}
+            <ThemedInput
+              label="Email"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
             />
 
-            <ThemedText style={vendorLoginStyles.label}>Password</ThemedText>
-            <View style={vendorLoginStyles.passwordContainer}>
-              <TextInput
-                style={vendorLoginStyles.passwordInput}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={!showPassword}
-              />
-              <TouchableOpacity style={vendorLoginStyles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
-                <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={20} color="#999" />
-              </TouchableOpacity>
-            </View>
+            <ThemedInput label="Password" value={password} onChangeText={setPassword} isPassword={true} />
 
             <View style={vendorLoginStyles.optionsRow}>
               <TouchableOpacity style={vendorLoginStyles.rememberContainer} onPress={() => setRememberMe(!rememberMe)}>

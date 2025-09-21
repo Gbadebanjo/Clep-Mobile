@@ -1,4 +1,5 @@
 import { signupStyles } from '@/components/Auth/styles/signup-styles';
+import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,7 +11,6 @@ export default function SignupScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
 
   const handleSignup = () => {
     console.log('Signup:', { email, password, phoneNumber });
@@ -31,29 +31,15 @@ export default function SignupScreen() {
 
       <ThemedView style={signupStyles.contentSection}>
         <View style={signupStyles.formContainer}>
-          <TextInput
-            style={signupStyles.input}
+          <ThemedInput
             placeholder="Email"
-            placeholderTextColor="#999"
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
           />
 
-          <View style={signupStyles.passwordContainer}>
-            <TextInput
-              style={signupStyles.passwordInput}
-              placeholder="Password"
-              placeholderTextColor="#999"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
-            />
-            <TouchableOpacity style={signupStyles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
-              <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={20} color="#999" />
-            </TouchableOpacity>
-          </View>
+          <ThemedInput placeholder="Password" value={password} onChangeText={setPassword} isPassword={true} />
 
           <View style={signupStyles.phoneContainer}>
             <View style={signupStyles.countryCode}>

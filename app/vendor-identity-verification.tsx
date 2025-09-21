@@ -1,13 +1,13 @@
 import SearchNavCompo from '@/components/General/search-nav';
+import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
 import { ThemedView } from '@/components/ThemedView';
 import { identityVerificationStyles } from '@/components/Vendor/identity-verification-styles';
-import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { TextInput, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 
 export default function VendorIdentityVerificationScreen() {
   const [nin, setNin] = useState('**********');
@@ -43,20 +43,14 @@ export default function VendorIdentityVerificationScreen() {
         </ThemedText>
 
         <View style={identityVerificationStyles.formContainer}>
-          <ThemedText style={identityVerificationStyles.label}>Verify your NIN</ThemedText>
-          <View style={identityVerificationStyles.ninContainer}>
-            <TextInput
-              style={identityVerificationStyles.ninInput}
-              value={nin}
-              onChangeText={setNin}
-              secureTextEntry={!showNin}
-              keyboardType="numeric"
-              maxLength={11}
-            />
-            <TouchableOpacity style={identityVerificationStyles.eyeIcon} onPress={() => setShowNin(!showNin)}>
-              <Ionicons name={showNin ? 'eye-off' : 'eye'} size={20} color="#999" />
-            </TouchableOpacity>
-          </View>
+          <ThemedInput
+            label="Verify your NIN"
+            value={nin}
+            onChangeText={setNin}
+            isPassword={true}
+            keyboardType="numeric"
+            maxLength={11}
+          />
 
           <View style={identityVerificationStyles.buttonContainer}>
             <TouchableOpacity style={identityVerificationStyles.previousButton} onPress={handlePrevious}>

@@ -1,10 +1,10 @@
-// import { loginStyles } from '@/components/Auth/login-styles';
 import { loginStyles } from '@/components/Auth/styles/login-styles';
+import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, Text, TouchableOpacity, View } from 'react-native';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -33,24 +33,15 @@ export default function LoginScreen() {
 
       <ThemedView style={loginStyles.contentSection}>
         <View style={loginStyles.formContainer}>
-          <TextInput
-            style={loginStyles.input}
+          <ThemedInput
             placeholder="Email"
-            placeholderTextColor="#999"
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
           />
 
-          <TextInput
-            style={loginStyles.input}
-            placeholder="Password"
-            placeholderTextColor="#999"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
+          <ThemedInput placeholder="Password" value={password} onChangeText={setPassword} isPassword={true} />
 
           <TouchableOpacity onPress={handleForgotPassword}>
             <ThemedText style={loginStyles.forgotText}>Forgot your password?</ThemedText>
