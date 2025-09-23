@@ -8,6 +8,7 @@ export const vendorLoginStyles = (colorScheme: 'light' | 'dark') =>
     container: {
       flex: 1,
       paddingBottom: 60,
+      paddingTop: 50,
     },
     scrollContainer: {
       flexGrow: 1,

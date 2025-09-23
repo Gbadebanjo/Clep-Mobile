@@ -35,7 +35,7 @@ export default function VendorWalletSetupComponent() {
   };
 
   const handleNext = () => {
-    router.push('/vendor-account-created');
+    router.push('/vendor/account-created');
   };
 
   const handlePrevious = () => {

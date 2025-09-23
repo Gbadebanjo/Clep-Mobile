@@ -3,10 +3,13 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
+import Toast from 'react-native-toast-message';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { setAuthToken } from '@/services/api';
+import { useAuthStore } from '@/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -25,6 +28,15 @@ export default function RootLayout() {
       })
   );
 
+  // Initialize auth token on app start
+  const { token } = useAuthStore();
+
+  useEffect(() => {
+    if (token) {
+      setAuthToken(token);
+    }
+  }, [token]);
+
   if (!loaded) {
     return null;
   }
@@ -32,22 +44,27 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <QueryClientProvider client={queryClient}>
-        <Stack>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="signup" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor-login" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor-verification" options={{ headerShown: false }} />
-          <Stack.Screen name="login-success" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor-signup" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor-plan-selection" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor-identity-verification" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor-store-setup" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor-wallet-setup" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor-account-created" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor/login" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor/verification" options={{ headerShown: false }} />
+          {/* <Stack.Screen name="vendor/login-success" options={{ headerShown: false }} /> */}
+          <Stack.Screen name="vendor/signup" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor/plan-selection" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor/identity-verification" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor/store-setup" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor/wallet-setup" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor/account-created" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />
+        <Toast />
       </QueryClientProvider>
     </ThemeProvider>
   );

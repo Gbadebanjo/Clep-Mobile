@@ -1,4 +1,3 @@
-import SearchNavCompo from '@/components/General/search-nav';
 import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
@@ -17,7 +16,7 @@ export default function VendorIdentityVerificationScreen() {
   const styles = identityVerificationStyles(colorScheme);
 
   const handleNext = () => {
-    router.push('/vendor-store-setup');
+    router.push('/vendor/store-setup');
   };
 
   const handlePrevious = () => {
@@ -25,7 +24,7 @@ export default function VendorIdentityVerificationScreen() {
   };
 
   const handleSignIn = () => {
-    router.push('/vendor-login');
+    router.push('/vendor/login');
   };
 
   return (
@@ -36,7 +35,7 @@ export default function VendorIdentityVerificationScreen() {
         style={styles.gradientOverlay}
       />
 
-      <SearchNavCompo />
+      {/* <SearchNavCompo /> */}
 
       <View style={styles.content}>
         <ThemedText style={styles.title}>Verify your Identity</ThemedText>

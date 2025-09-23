@@ -17,7 +17,7 @@ export default function VendorStoreSetupScreen() {
   const colorScheme = useColorScheme() as 'light' | 'dark';
   const styles = storeSetupStyles(colorScheme);
   const handleNext = () => {
-    router.push('/vendor-wallet-setup');
+    router.push('/vendor/wallet-setup');
   };
 
   const handlePrevious = () => {

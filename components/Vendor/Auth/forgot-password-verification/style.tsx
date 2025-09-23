@@ -1,42 +1,28 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Colors } from '@/constants/Colors';
+import { StyleSheet } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
-
-export const verificationStyles = (colorScheme: 'light' | 'dark') =>
+export const forgotPasswordVerificationStyles = (colorScheme: 'light' | 'dark') =>
   StyleSheet.create({
     container: {
       flex: 1,
-      paddingTop: 50,
+      paddingBottom: 80,
     },
     scrollContainer: {
       flexGrow: 1,
     },
-    header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: 20,
-      paddingTop: 50,
-      paddingBottom: 20,
-      gap: 15,
+    imageContainer: {
+      height: 300,
+      marginBottom: 30,
+      position: 'relative',
     },
-    searchContainer: {
+    heroImage: {
       flex: 1,
-      flexDirection: 'row',
+      justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#F5F5F5',
-      borderRadius: 25,
-      paddingHorizontal: 15,
-      paddingVertical: 10,
-      gap: 10,
     },
-    searchInput: {
-      flex: 1,
-      fontSize: 14,
-      color: '#000',
-    },
+
     content: {
       paddingHorizontal: 20,
-      paddingTop: 40,
     },
     title: {
       fontSize: 32,
@@ -53,31 +39,36 @@ export const verificationStyles = (colorScheme: 'light' | 'dark') =>
     codeContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: 30,
-      gap: 12,
+      marginBottom: 20,
+      paddingHorizontal: 20,
     },
     codeInput: {
-      flex: 1,
+      width: 60,
       height: 60,
+      borderRadius: 12,
       borderWidth: 2,
       borderColor: '#E5E5E5',
-      borderRadius: 12,
       fontSize: 24,
       fontWeight: 'bold',
-      color: '#000',
-      maxWidth: 60,
-      textAlign: 'center',
+      backgroundColor: colorScheme === 'dark' ? '#2A2A2A' : '#F5F5F5',
+      color: colorScheme === 'dark' ? '#fff' : '#000',
+    },
+    codeInputFilled: {
+      borderColor: '#007AFF',
+      backgroundColor: colorScheme === 'dark' ? '#1A1A1A' : '#F0F8FF',
     },
     codeInputActive: {
-      borderColor: '#E91E63',
+      borderColor: Colors[colorScheme].primary800 || '#E91E63',
     },
     resendText: {
       fontSize: 14,
       color: '#747778',
-      marginBottom: 40,
+      textAlign: 'center',
+      marginBottom: 30,
     },
     verifyButton: {
-      borderRadius: 25,
+      backgroundColor: Colors[colorScheme].primary800 || '#000',
+      borderRadius: 40,
       paddingVertical: 16,
       alignItems: 'center',
       marginBottom: 20,
@@ -89,6 +80,7 @@ export const verificationStyles = (colorScheme: 'light' | 'dark') =>
     resendContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
+      alignItems: 'center',
     },
     noEmailText: {
       fontSize: 14,
@@ -96,7 +88,7 @@ export const verificationStyles = (colorScheme: 'light' | 'dark') =>
     },
     resendLinkText: {
       fontSize: 14,
+      color: Colors[colorScheme].primary800 || '#E91E63',
       fontWeight: '600',
-      marginTop: -2,
     },
   });

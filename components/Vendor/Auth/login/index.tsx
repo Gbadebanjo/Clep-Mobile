@@ -1,9 +1,11 @@
-import SearchNav from '@/components/General/search-nav';
 import { ThemedInput } from '@/components/ThemedInput';
+import { ThemedLoader } from '@/components/ThemedLoader';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
+import { showError } from '@/services/api';
+import { AuthService } from '@/services/auth.service';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { AppleIcon, LucideGoal } from 'lucide-react-native';
@@ -12,24 +14,40 @@ import { ScrollView, TouchableOpacity, useColorScheme, View } from 'react-native
 import { vendorLoginStyles } from './style';
 
 export default function VendorLoginComponent() {
-  const [email, setEmail] = useState('john@example.com');
-  const [password, setPassword] = useState('**********');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const colorScheme = useColorScheme() as 'light' | 'dark';
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const styles = vendorLoginStyles(colorScheme);
 
-  const handleLogin = () => {
-    router.push('/vendor-verification' as any);
+  const handleLogin = async () => {
+    if (!email || !password) {
+      showError('Please enter your email and password');
+      return;
+    }
+    setIsLoading(true);
+    const response = await AuthService.login({ email, password });
+    setIsLoading(false);
+    console.log('Login response:', response);
+    if (response.success) {
+      if (response.data?.data.user?.emailVerified) {
+        router.push('/user' as any);
+        return;
+      }
+      router.push('/vendor/verification' as any);
+    }
+    // router.push('/vendor/verification' as any);
   };
 
   const handleSignUp = () => {
-    router.push('/vendor-signup' as any);
+    router.push('/vendor/signup' as any);
   };
 
   const handleForgotPassword = () => {
-    console.log('Forgot password');
+    router.push('/vendor/forgot-password' as any);
   };
 
   const handleGoogleSignIn = () => {
@@ -40,10 +58,14 @@ export default function VendorLoginComponent() {
     console.log('Apple sign in');
   };
 
+  if (isLoading) {
+    return <ThemedLoader text="Logging in your account..." />;
+  }
+
   return (
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <SearchNav />
+        {/* <SearchNav /> */}
 
         {/* Content */}
         <View style={styles.content}>

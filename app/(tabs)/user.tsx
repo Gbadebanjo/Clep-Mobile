@@ -9,7 +9,7 @@ export default function user() {
     <SafeAreaView>
       <ThemedTouchableOpacity
         style={{ padding: 10, marginHorizontal: 30, borderRadius: 40 }}
-        onPress={() => router.push('/vendor-login')}
+        onPress={() => router.push('/vendor/login')}
       >
         <ThemedText lightColor=" #fff" darkColor="#000">
           Let&apos;s Start

@@ -54,7 +54,7 @@ export default function VendorPlanSelectionScreen() {
   };
 
   const handleContinue = () => {
-    router.push('/vendor-identity-verification');
+    router.push('/vendor/identity-verification');
   };
 
   return (

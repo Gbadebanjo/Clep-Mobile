@@ -7,6 +7,7 @@ export const identityVerificationStyles = (colorScheme: 'light' | 'dark') =>
   StyleSheet.create({
     container: {
       flex: 1,
+      paddingTop: 50,
     },
     scrollView: {
       flex: 1,
