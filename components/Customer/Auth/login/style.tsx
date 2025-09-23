@@ -132,7 +132,7 @@ export const vendorLoginStyles = (colorScheme: 'light' | 'dark') =>
       borderRadius: 40,
       paddingVertical: 16,
       alignItems: 'center',
-      marginBottom: 15,
+      marginBottom: 20,
     },
     signInButtonText: {
       fontSize: 16,
@@ -141,8 +141,7 @@ export const vendorLoginStyles = (colorScheme: 'light' | 'dark') =>
     signUpContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
-      marginBottom: 20,
-      marginTop: -10,
+      marginBottom: 5,
     },
     noAccountText: {
       fontSize: 14,

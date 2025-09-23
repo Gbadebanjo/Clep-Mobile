@@ -12,7 +12,7 @@ import React, { useState } from 'react';
 import { ScrollView, TouchableOpacity, useColorScheme, View } from 'react-native';
 import { vendorLoginStyles } from './style';
 
-export default function VendorLoginComponent() {
+export default function CustomerLoginComponent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -36,17 +36,17 @@ export default function VendorLoginComponent() {
         router.push('/user' as any);
         return;
       }
-      router.push('/vendor/verification' as any);
+      router.push('/customer/verification' as any);
     }
     // router.push('/vendor/verification' as any);
   };
 
   const handleSignUp = () => {
-    router.push('/vendor/signup' as any);
+    router.push('/customer/signup' as any);
   };
 
   const handleForgotPassword = () => {
-    router.push('/vendor/forgot-password' as any);
+    router.push('/customer/forgot-password' as any);
   };
 
   const handleGoogleSignIn = () => {
@@ -71,7 +71,7 @@ export default function VendorLoginComponent() {
           <ThemedText lightColor="#747778" darkColor="#fff" style={styles.welcomeText}>
             WELCOME BACK
           </ThemedText>
-          <ThemedText style={styles.title}>Sign in as a Vendor</ThemedText>
+          <ThemedText style={styles.title}>Sign in as a Customer</ThemedText>
 
           <View style={styles.formContainer}>
             <ThemedInput
@@ -122,9 +122,9 @@ export default function VendorLoginComponent() {
               <View style={styles.dividerLine} />
               <ThemedText style={styles.dividerText}>Or</ThemedText>
               <View style={styles.dividerLine} />
-            </View>
+            </View> */}
 
-            <TouchableOpacity style={styles.socialButton} onPress={handleGoogleSignIn}>
+            {/* <TouchableOpacity style={styles.socialButton} onPress={handleGoogleSignIn}>
               <ThemedText style={styles.socialButtonText}>
                 <LucideGoal
                   size={16}
@@ -134,17 +134,17 @@ export default function VendorLoginComponent() {
                 />{' '}
                 Sign in with Google
               </ThemedText>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
-            <TouchableOpacity style={styles.socialButton} onPress={handleAppleSignIn}>
+            {/* <TouchableOpacity style={styles.socialButton} onPress={handleAppleSignIn}>
               <ThemedText style={styles.socialButtonText}>
                 <AppleIcon size={16} /> Sign in with Apple
               </ThemedText>
             </TouchableOpacity> */}
 
             <View style={styles.customerSignInContainer}>
-              <TouchableOpacity onPress={() => router.push('/customer/login' as any)}>
-                <ThemedText style={styles.customerSignInText}>Sign in as a customer</ThemedText>
+              <TouchableOpacity onPress={() => router.push('/vendor/login' as any)}>
+                <ThemedText style={styles.customerSignInText}>Sign in as a vendor</ThemedText>
               </TouchableOpacity>
             </View>
           </View>

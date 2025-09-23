@@ -7,15 +7,13 @@ import { showError } from '@/services/api';
 import { AuthService } from '@/services/auth.service';
 import { useAuthStore } from '@/store';
 import { RegisterVendorForm } from '@/types/auth';
-import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, ImageBackground, ScrollView, TouchableOpacity, useColorScheme, View } from 'react-native';
 import { vendorSignupStyles } from './style';
 
-export default function VendorSignupComponent() {
+export default function CustomerSignupComponent() {
   const [fullName, setFullName] = useState('');
-  const [businessName, setBusinessName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [showSetupPassword, setShowSetupPassword] = useState(false);
@@ -33,7 +31,7 @@ export default function VendorSignupComponent() {
   const { setUser } = useAuthStore();
 
   const handleNext = () => {
-    if (!fullName || !businessName || !email || !phoneNumber) {
+    if (!fullName || !email || !phoneNumber) {
       Alert.alert('Error', 'Please fill in all required fields');
       return;
     }
@@ -45,7 +43,7 @@ export default function VendorSignupComponent() {
   };
 
   const handleSignIn = () => {
-    router.push('/vendor/login');
+    router.push('/customer/login');
   };
 
   const handleFileUpload = () => {
@@ -84,65 +82,23 @@ export default function VendorSignupComponent() {
     setIsLoading(true);
 
     try {
-      const signupData: RegisterVendorForm = {
+      const signupData: Omit<RegisterVendorForm, 'businessName' | 'businessDetails' | 'ninNumber' | 'currentPlan'> = {
         email,
         name: fullName,
         phoneNumber,
-        role: 'vendor' as any,
+        role: 'customer' as any,
         password,
         isActive: true,
-        ninNumber: '',
-        businessName,
-        businessDetails: {
-          businessName,
-          businessEmail: email,
-          businessPhone: phoneNumber,
-          address: {
-            street: '',
-            city: '',
-            state: '',
-            country: '',
-            postalCode: '',
-          },
-        },
-        currentPlan: {
-          plan: '67611ddb7cb41116d9bc296e', // Default plan ID
-        },
       };
-      console.log('Signup data:', signupData, {
-        email: 'xswe105ccb@daouse.com',
-        password: 'Gabriel100%',
-        name: 'John Dude',
-        phoneNumber: '',
-        role: 'vendor',
-        isActive: true,
-        ninNumber: '',
-        businessName: 'Development Testing',
-        businessDetails: {
-          businessName: 'Development Testing',
-          businessEmail: '',
-          businessPhone: '',
-          address: {
-            street: '',
-            city: '',
-            country: '',
-            postalCode: '',
-            state: '',
-          },
-        },
-        currentPlan: {
-          plan: '67611ddb7cb41116d9bc296e',
-        },
-      });
 
-      const response = await AuthService.registerVendor(signupData);
+      const response = await AuthService.registerVendor(signupData as any);
 
       if (response.success && response.data) {
         // Save user data to store
         setUser(response.data.data.doc);
 
         // Navigate to verification screen
-        router.push('/vendor/verification');
+        router.push('/customer/verification');
       } else {
         showError(response.error || 'Registration failed');
       }
@@ -171,21 +127,13 @@ export default function VendorSignupComponent() {
             </View>
 
             <View style={styles.content}>
-              <ThemedText style={styles.title}>Sign up as a Vendor</ThemedText>
+              <ThemedText style={styles.title}>Sign up as a Customer</ThemedText>
               <ThemedText lightColor="#747778" darkColor="#fff" style={styles.subtitle}>
-                In order to sell your goods services on Vazzel, you must be a verified member. Please enter your
-                information to signup as a vendor
+                Create an account to start shopping on Vazzel
               </ThemedText>
 
               <View style={styles.formContainer}>
                 <ThemedInput label="Full Name" value={fullName} onChangeText={setFullName} placeholder="E.g John Doe" />
-
-                <ThemedInput
-                  label="Business Name (Cannot be changed later)"
-                  value={businessName}
-                  onChangeText={setBusinessName}
-                  placeholder="Enter your business name"
-                />
 
                 <ThemedInput
                   label="Email"
@@ -204,7 +152,7 @@ export default function VendorSignupComponent() {
                   placeholder="1234567890"
                 />
 
-                <View style={styles.uploadSection}>
+                {/* <View style={styles.uploadSection}>
                   <View style={styles.uploadHeader}>
                     <ThemedText style={styles.uploadLabel}>Upload CAC</ThemedText>
                     <View style={styles.optionalBadge}>
@@ -220,7 +168,7 @@ export default function VendorSignupComponent() {
                       <ThemedText style={styles.browseButtonText}>Browse here</ThemedText>
                     </TouchableOpacity>
                   </TouchableOpacity>
-                </View>
+                </View> */}
 
                 <ThemedTouchableOpacity style={styles.nextButton} onPress={handleNext}>
                   <ThemedText lightColor="#fff" darkColor="#000" style={styles.nextButtonText}>
@@ -236,8 +184,8 @@ export default function VendorSignupComponent() {
                 </View>
 
                 <View style={styles.customerSignupContainer}>
-                  <TouchableOpacity onPress={() => router.push('/customer/signup' as any)}>
-                    <ThemedText style={styles.customerSignupText}>Sign up as a customer</ThemedText>
+                  <TouchableOpacity onPress={() => router.push('/vendor/signup' as any)}>
+                    <ThemedText style={styles.customerSignupText}>Sign up as a vendor</ThemedText>
                   </TouchableOpacity>
                 </View>
               </View>
