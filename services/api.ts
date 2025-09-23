@@ -39,7 +39,7 @@ api.addRequestTransform((request) => {
 api.addResponseTransform((response) => {
   if (!response.ok) {
     const errorMessage = response.data?.message || 'Something went wrong';
-    
+
     // Handle different error types
     switch (response.status) {
       case 401:
@@ -47,6 +47,8 @@ api.addResponseTransform((response) => {
           type: 'error',
           text1: 'Authentication Error',
           text2: 'Please login again',
+          text1Style: { fontSize: 14, fontWeight: 'bold' },
+          text2Style: { fontSize: 12 },
         });
         // Clear token and redirect to login
         setAuthToken(null);
@@ -56,6 +58,8 @@ api.addResponseTransform((response) => {
           type: 'error',
           text1: 'Access Denied',
           text2: errorMessage,
+          text1Style: { fontSize: 14, fontWeight: 'bold' },
+          text2Style: { fontSize: 12 },
         });
         break;
       case 404:
@@ -63,6 +67,8 @@ api.addResponseTransform((response) => {
           type: 'error',
           text1: 'Not Found',
           text2: errorMessage,
+          text1Style: { fontSize: 14, fontWeight: 'bold' },
+          text2Style: { fontSize: 12 },
         });
         break;
       case 500:
@@ -70,6 +76,8 @@ api.addResponseTransform((response) => {
           type: 'error',
           text1: 'Server Error',
           text2: 'Please try again later',
+          text1Style: { fontSize: 14, fontWeight: 'bold' },
+          text2Style: { fontSize: 12 },
         });
         break;
       default:
@@ -77,6 +85,8 @@ api.addResponseTransform((response) => {
           type: 'error',
           text1: 'Error',
           text2: errorMessage,
+          text1Style: { fontSize: 14, fontWeight: 'bold' },
+          text2Style: { fontSize: 12 },
         });
     }
   }
@@ -88,6 +98,8 @@ export const showSuccess = (message: string, title = 'Success') => {
     type: 'success',
     text1: title,
     text2: message,
+    text1Style: { fontSize: 14, fontWeight: 'bold' },
+    text2Style: { fontSize: 12 },
   });
 };
 
@@ -97,6 +109,8 @@ export const showError = (message: string, title = 'Error') => {
     type: 'error',
     text1: title,
     text2: message,
+    text1Style: { fontSize: 14, fontWeight: 'bold' },
+    text2Style: { fontSize: 12 },
   });
 };
 
@@ -106,5 +120,7 @@ export const showInfo = (message: string, title = 'Info') => {
     type: 'info',
     text1: title,
     text2: message,
+    text1Style: { fontSize: 14, fontWeight: 'bold' },
+    text2Style: { fontSize: 12 },
   });
 };
