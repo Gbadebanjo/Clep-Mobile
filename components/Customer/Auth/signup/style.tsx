@@ -3,201 +3,160 @@ import { Dimensions, StyleSheet } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-export const vendorSignupStyles = (colorScheme: 'light' | 'dark') => {
+export const customerSignupStyles = (colorScheme: 'light' | 'dark') => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      paddingBottom: 80,
+      backgroundColor: colorScheme === 'dark' ? '#000' : Colors[colorScheme].bgPrimary,
     },
     scrollContainer: {
       flexGrow: 1,
+      paddingBottom: 20,
     },
-
-    dashboardContainer: {
-      height: 200,
-      marginHorizontal: 0,
-      marginBottom: 30,
-      borderRadius: 0,
-      overflow: 'hidden',
+    logoContainer: {
+      alignItems: 'center',
+      paddingTop: 60,
+      paddingBottom: 30,
     },
-    dashboardImage: {
-      flex: 1,
+    logo: {
+      width: 120,
+      height: 40,
+    },
+    topSignInContainer: {
+      flexDirection: 'row',
       justifyContent: 'flex-end',
+      marginBottom: 30,
+      marginRight: 20,
     },
-
-    statsCard: {
-      backgroundColor: 'rgba(255, 255, 255, 0.9)',
-      borderRadius: 12,
-      padding: 15,
-      alignSelf: 'flex-start',
-    },
-    statsNumber: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      color: '#000',
-    },
-    statsLabel: {
-      fontSize: 12,
-      color: '#747778',
+    topSignInText: {
+      fontSize: 14,
+      color: Colors[colorScheme].primary800,
+      fontWeight: '600',
     },
     content: {
       paddingHorizontal: 20,
+      flex: 1,
     },
     title: {
-      fontSize: 32,
+      fontSize: 24,
       fontWeight: 'bold',
-      marginBottom: 16,
-      textAlign: 'center',
+      marginBottom: 20,
+      color: colorScheme === 'dark' ? '#fff' : '#000',
     },
-    subtitle: {
-      fontSize: 16,
-
-      lineHeight: 24,
+    infoBox: {
+      backgroundColor: '#FCE4EC',
+      borderRadius: 8,
+      padding: 15,
       marginBottom: 30,
-      textAlign: 'center',
+    },
+    infoText: {
+      fontSize: 14,
+      color: '#C2185B',
+      marginBottom: 5,
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: '600',
+      marginBottom: 20,
+      color: colorScheme === 'dark' ? '#fff' : '#000',
     },
     formContainer: {
       width: '100%',
     },
-    label: {
-      fontSize: 16,
-      fontWeight: '700',
-      marginBottom: 8,
+    errorText: {
+      fontSize: 12,
+      color: '#FF5722',
+      marginTop: -15,
+      marginBottom: 15,
     },
-    input: {
-      backgroundColor: '#F5F5F5',
-      borderRadius: 40,
-      paddingHorizontal: 16,
-      paddingVertical: 16,
-      fontSize: 16,
-      marginBottom: 20,
-      color: '#000',
-    },
-    passwordContainer: {
-      position: 'relative',
+    passwordStrengthContainer: {
+      marginTop: -15,
       marginBottom: 20,
     },
-    passwordInput: {
-      backgroundColor: '#F5F5F5',
-      borderRadius: 40,
-      paddingHorizontal: 16,
-      paddingVertical: 16,
-      paddingRight: 50,
-      fontSize: 16,
-      color: '#000',
-    },
-    eyeIcon: {
-      position: 'absolute',
-      right: 16,
-      top: 18,
-    },
-    uploadSection: {
-      marginBottom: 30,
-    },
-    uploadHeader: {
+    passwordStrengthHeader: {
       flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 12,
-      gap: 8,
-    },
-    uploadLabel: {
-      fontSize: 20,
-      fontWeight: '700',
-    },
-    optionalBadge: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 4,
-    },
-    optionalText: {
-      fontSize: 14,
-      color: '#747778',
-    },
-    uploadArea: {
-      backgroundColor: '#faf9faff',
-      borderRadius: 40,
-      borderWidth: 0,
-      borderColor: '#',
-      paddingVertical: 30,
-      paddingHorizontal: 20,
-      alignItems: 'center',
-      gap: 12,
-    },
-    uploadText: {
-      fontSize: 14,
-      color: '#747778',
-      textAlign: 'center',
-    },
-    browseButton: {
-      backgroundColor: '#ece6e8ff',
-      borderRadius: 8,
-      paddingHorizontal: 20,
-      paddingVertical: 8,
-      borderColor: '#000',
-      borderWidth: 1,
-      textAlign: 'center',
-    },
-    browseButtonText: {
-      color: Colors[colorScheme].primary800,
-      fontSize: 14,
-      fontWeight: '700',
-    },
-    nextButton: {
-      borderRadius: 40,
-      paddingVertical: 16,
-      alignItems: 'center',
-      marginBottom: 20,
-      width: '100%',
-    },
-    previousButton: {
-      backgroundColor: 'transparent',
-      borderRadius: 40,
-      paddingVertical: 16,
-      alignItems: 'center',
-      marginBottom: 20,
-      borderColor: '#000',
-      borderWidth: 1,
-      width: '50%',
-    },
-    generalButtonContainer: {
-      flex: 1,
-      flexDirection: 'row',
-      gap: 10,
-      width: '100%',
       justifyContent: 'space-between',
       alignItems: 'center',
+      marginBottom: 10,
     },
-    nextButtonText: {
-      fontSize: 16,
+    passwordStrengthLabel: {
+      fontSize: 14,
+      color: '#666',
+    },
+    passwordStrengthValue: {
+      fontSize: 14,
       fontWeight: '600',
     },
-    previousButtonText: {
-      fontSize: 16,
-      fontWeight: '600',
+    passwordRequirements: {
+      gap: 8,
     },
-    signInContainer: {
+    requirementRow: {
       flexDirection: 'row',
-      justifyContent: 'center',
-      marginBottom: 15,
+      justifyContent: 'space-between',
+    },
+    requirementItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      flex: 1,
+    },
+    requirementText: {
+      fontSize: 12,
+    },
+    createButton: {
+      borderRadius: 25,
+      paddingVertical: 16,
+      alignItems: 'center',
+      marginTop: 20,
+      marginBottom: 20,
+    },
+    createButtonText: {
+      fontSize: 16,
+      fontWeight: '600',
+    },
+    termsContainer: {
+      alignItems: 'center',
+      marginBottom: 30,
+    },
+    termsText: {
+      fontSize: 12,
+      textAlign: 'center',
+      color: colorScheme === 'dark' ? '#ccc' : '#666',
+      lineHeight: 18,
+    },
+    termsLink: {
+      color: Colors[colorScheme].primary800,
+      fontWeight: '600',
     },
     haveAccountText: {
       fontSize: 14,
-      fontWeight: '700',
+      color: colorScheme === 'dark' ? '#fff' : '#000',
     },
-    signInText: {
-      fontSize: 14,
-      color: Colors[colorScheme].primary800,
-      fontWeight: '700',
+    bottomBanner: {
+      height: 150,
+      marginTop: 20,
     },
-    customerSignupContainer: {
+    bannerImage: {
+      flex: 1,
+      justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 10,
     },
-    customerSignupText: {
+    bannerOverlay: {
+      padding: 20,
+      alignItems: 'center',
+    },
+    bannerTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#fff',
+      textAlign: 'center',
+      marginBottom: 8,
+    },
+    bannerSubtitle: {
       fontSize: 14,
-      fontWeight: '600',
-      color: Colors[colorScheme].primary800,
-      textDecorationLine: 'underline',
+      color: '#fff',
+      textAlign: 'center',
+      lineHeight: 20,
     },
   });
 };

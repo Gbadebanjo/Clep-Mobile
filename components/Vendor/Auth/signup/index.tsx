@@ -8,64 +8,43 @@ import { AuthService } from '@/services/auth.service';
 import { useAuthStore } from '@/store';
 import { RegisterVendorForm } from '@/types/auth';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, ImageBackground, ScrollView, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { Image, ScrollView, TouchableOpacity, useColorScheme, View } from 'react-native';
 import { vendorSignupStyles } from './style';
 
 export default function VendorSignupComponent() {
-  const [fullName, setFullName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [surname, setSurname] = useState('');
   const [businessName, setBusinessName] = useState('');
   const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [showSetupPassword, setShowSetupPassword] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [passwordValidation, setPasswordValidation] = useState<{ isValid: boolean; errors: string[] }>({
-    isValid: true,
-    errors: [],
+  const [passwordValidation, setPasswordValidation] = useState({
+    isValid: false,
+    hasMinLength: false,
+    hasUppercase: false,
+    hasLowercase: false,
+    hasNumber: false,
+    hasSpecialChar: false,
   });
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
   const colorScheme = useColorScheme() as 'light' | 'dark';
   const styles = vendorSignupStyles(colorScheme);
   const { setUser } = useAuthStore();
 
-  const handleNext = () => {
-    if (!fullName || !businessName || !email || !phoneNumber) {
-      Alert.alert('Error', 'Please fill in all required fields');
-      return;
-    }
-    setShowSetupPassword(true);
-  };
-
-  const handlePrevious = () => {
-    setShowSetupPassword(false);
-  };
-
-  const handleSignIn = () => {
-    router.push('/vendor/login');
-  };
-
-  const handleFileUpload = () => {
-    console.log('Upload CAC file');
-  };
-
   const handlePasswordChange = (text: string) => {
     setPassword(text);
     const validation = AuthService.validatePassword(text);
+    console.log(validation);
     setPasswordValidation(validation);
   };
 
-  const handleConfirmPasswordChange = (text: string) => {
-    setConfirmPassword(text);
-    setConfirmPasswordError(text !== password && text.length > 0);
-  };
-
-  const handleSignup = async () => {
-    if (!password || !confirmPassword) {
-      showError('Please enter both password fields');
+  const handleSignUp = async () => {
+    if (!firstName || !surname || !businessName || !email || !password || !confirmPassword) {
+      showError('Please fill in all required fields');
       return;
     }
 
@@ -74,10 +53,8 @@ export default function VendorSignupComponent() {
       return;
     }
 
-    // Use the new password validation
-    const validation = AuthService.validatePassword(password);
-    if (!validation.isValid) {
-      showError(validation.errors.join('\n'));
+    if (!passwordValidation.isValid) {
+      showError('Please ensure your password meets all requirements');
       return;
     }
 
@@ -86,9 +63,9 @@ export default function VendorSignupComponent() {
     try {
       const signupData: RegisterVendorForm = {
         email,
-        name: fullName,
-        phoneNumber,
-        role: 'vendor' as any,
+        name: `${firstName} ${surname}`,
+        phoneNumber: '',
+        role: 'vendor',
         password,
         isActive: true,
         ninNumber: '',
@@ -96,31 +73,6 @@ export default function VendorSignupComponent() {
         businessDetails: {
           businessName,
           businessEmail: email,
-          businessPhone: phoneNumber,
-          address: {
-            street: '',
-            city: '',
-            state: '',
-            country: '',
-            postalCode: '',
-          },
-        },
-        currentPlan: {
-          plan: '67611ddb7cb41116d9bc296e', // Default plan ID
-        },
-      };
-      console.log('Signup data:', signupData, {
-        email: 'xswe105ccb@daouse.com',
-        password: 'Gabriel100%',
-        name: 'John Dude',
-        phoneNumber: '',
-        role: 'vendor',
-        isActive: true,
-        ninNumber: '',
-        businessName: 'Development Testing',
-        businessDetails: {
-          businessName: 'Development Testing',
-          businessEmail: '',
           businessPhone: '',
           address: {
             street: '',
@@ -133,24 +85,26 @@ export default function VendorSignupComponent() {
         currentPlan: {
           plan: '67611ddb7cb41116d9bc296e',
         },
-      });
+      };
 
       const response = await AuthService.registerVendor(signupData);
 
       if (response.success && response.data) {
-        // Save user data to store
         setUser(response.data.data.doc);
-
-        // Navigate to verification screen
         router.push('/vendor/verification');
       } else {
-        showError(response.error || 'Registration failed');
+        showError(response?.error || 'Registration failed');
       }
     } catch (error: any) {
-      showError(error.message || 'Registration failed');
+      console.log(error);
+      showError(error || 'Registration failed');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSignIn = () => {
+    router.push('/vendor/login');
   };
 
   if (isLoading) {
@@ -160,146 +114,211 @@ export default function VendorSignupComponent() {
   return (
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* <SearchNavCompo /> */}
-        {!showSetupPassword ? (
-          <>
-            <View style={styles.dashboardContainer}>
-              <ImageBackground
-                source={require('@/assets/images/auth/signup-banner-1.png')}
-                style={styles.dashboardImage}
-              />
+        {/* Logo */}
+        <View style={styles.logoContainer}>
+          <Image source={require('@/assets/images/logo.webp')} style={styles.logo} resizeMode="contain" />
+        </View>
+
+        {/* Sign In Link */}
+        <View style={styles.topSignInContainer}>
+          <ThemedText style={styles.haveAccountText}>Already have an account? </ThemedText>
+          <TouchableOpacity onPress={handleSignIn}>
+            <ThemedText style={styles.topSignInText}>Sign In</ThemedText>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.content}>
+          <ThemedText style={styles.title}>Sign up as a Vendor</ThemedText>
+
+          {/* Info Box */}
+          <View style={styles.infoBox}>
+            <ThemedText style={styles.infoText}>• Enter first name and surname as it appears on your NIN</ThemedText>
+            <ThemedText style={styles.infoText}>• Your middle name is not required</ThemedText>
+          </View>
+
+          <ThemedText style={styles.sectionTitle}>Account Information</ThemedText>
+
+          <View style={styles.formContainer}>
+            <View>
+              <ThemedInput label="First Name" value={firstName} onChangeText={setFirstName} placeholder="John" />
+              {!firstName && <ThemedText style={styles.errorText}>First Name is required</ThemedText>}
             </View>
 
-            <View style={styles.content}>
-              <ThemedText style={styles.title}>Sign up as a Vendor</ThemedText>
-              <ThemedText lightColor="#747778" darkColor="#fff" style={styles.subtitle}>
-                In order to sell your goods services on Vazzel, you must be a verified member. Please enter your
-                information to signup as a vendor
-              </ThemedText>
+            <View>
+              <ThemedInput label="Surname" value={surname} onChangeText={setSurname} placeholder="Doe" />
+              {!surname && <ThemedText style={styles.errorText}>Last Name is required</ThemedText>}
+            </View>
 
-              <View style={styles.formContainer}>
-                <ThemedInput label="Full Name" value={fullName} onChangeText={setFullName} placeholder="E.g John Doe" />
+            <View>
+              <ThemedInput
+                label="Business Name (Cannot be changed later)"
+                value={businessName}
+                onChangeText={setBusinessName}
+                placeholder="Vazzel Enterprises"
+              />
+              {!businessName && <ThemedText style={styles.errorText}>Business name is required</ThemedText>}
+            </View>
 
-                <ThemedInput
-                  label="Business Name (Cannot be changed later)"
-                  value={businessName}
-                  onChangeText={setBusinessName}
-                  placeholder="Enter your business name"
-                />
+            <ThemedInput
+              label="Email"
+              value={email}
+              onChangeText={setEmail}
+              placeholder="Enter your email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
 
-                <ThemedInput
-                  label="Email"
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  placeholder="jubileefaith36@gmail.com"
-                />
+            <View>
+              <ThemedInput
+                label="Password"
+                value={password}
+                onChangeText={handlePasswordChange}
+                isPassword={true}
+                placeholder="Enter your password"
+              />
 
-                <ThemedInput
-                  label="Phone Number"
-                  value={phoneNumber}
-                  onChangeText={setPhoneNumber}
-                  keyboardType="phone-pad"
-                  placeholder="1234567890"
-                />
-
-                <View style={styles.uploadSection}>
-                  <View style={styles.uploadHeader}>
-                    <ThemedText style={styles.uploadLabel}>Upload CAC</ThemedText>
-                    <View style={styles.optionalBadge}>
-                      <Ionicons name="information-circle" size={16} color="#747778" />
-                      <ThemedText style={styles.optionalText}>(Optional)</ThemedText>
+              {/* Password Strength Indicator */}
+              <View style={styles.passwordStrengthContainer}>
+                <View style={styles.passwordStrengthHeader}>
+                  <ThemedText style={styles.passwordStrengthLabel}>Password strength:</ThemedText>
+                  <ThemedText
+                    style={[
+                      styles.passwordStrengthValue,
+                      { color: passwordValidation.isValid ? '#4CAF50' : '#FF9800' },
+                    ]}
+                  >
+                    {passwordValidation.isValid ? 'Strong' : 'Weak'}
+                  </ThemedText>
+                </View>
+                <View style={styles.passwordRequirements}>
+                  <View style={styles.requirementRow}>
+                    <View style={styles.requirementItem}>
+                      <Ionicons
+                        name={passwordValidation.hasMinLength ? 'checkmark-circle' : 'close-circle'}
+                        size={16}
+                        color={passwordValidation.hasMinLength ? '#4CAF50' : '#E5E5E5'}
+                      />
+                      <ThemedText
+                        style={[
+                          styles.requirementText,
+                          { color: passwordValidation.hasMinLength ? '#4CAF50' : '#999' },
+                        ]}
+                      >
+                        At least 8 characters
+                      </ThemedText>
+                    </View>
+                    <View style={styles.requirementItem}>
+                      <Ionicons
+                        name={passwordValidation.hasUppercase ? 'checkmark-circle' : 'close-circle'}
+                        size={16}
+                        color={passwordValidation.hasUppercase ? '#4CAF50' : '#E5E5E5'}
+                      />
+                      <ThemedText
+                        style={[
+                          styles.requirementText,
+                          { color: passwordValidation.hasUppercase ? '#4CAF50' : '#999' },
+                        ]}
+                      >
+                        Uppercase letter
+                      </ThemedText>
                     </View>
                   </View>
-
-                  <TouchableOpacity style={styles.uploadArea} onPress={handleFileUpload}>
-                    <Ionicons name="cloud-upload-outline" size={24} color="#747778" />
-                    <ThemedText style={styles.uploadText}>Drag and drop files or, or click to add file</ThemedText>
-                    <TouchableOpacity style={styles.browseButton}>
-                      <ThemedText style={styles.browseButtonText}>Browse here</ThemedText>
-                    </TouchableOpacity>
-                  </TouchableOpacity>
-                </View>
-
-                <ThemedTouchableOpacity style={styles.nextButton} onPress={handleNext}>
-                  <ThemedText lightColor="#fff" darkColor="#000" style={styles.nextButtonText}>
-                    Next
-                  </ThemedText>
-                </ThemedTouchableOpacity>
-
-                <View style={styles.signInContainer}>
-                  <ThemedText style={styles.haveAccountText}>Already have an Account? </ThemedText>
-                  <TouchableOpacity onPress={handleSignIn}>
-                    <ThemedText style={styles.signInText}>Sign In</ThemedText>
-                  </TouchableOpacity>
-                </View>
-
-                <View style={styles.customerSignupContainer}>
-                  <TouchableOpacity onPress={() => router.push('/customer/signup' as any)}>
-                    <ThemedText style={styles.customerSignupText}>Sign up as a customer</ThemedText>
-                  </TouchableOpacity>
+                  <View style={styles.requirementRow}>
+                    <View style={styles.requirementItem}>
+                      <Ionicons
+                        name={passwordValidation.hasLowercase ? 'checkmark-circle' : 'close-circle'}
+                        size={16}
+                        color={passwordValidation.hasLowercase ? '#4CAF50' : '#E5E5E5'}
+                      />
+                      <ThemedText
+                        style={[
+                          styles.requirementText,
+                          { color: passwordValidation.hasLowercase ? '#4CAF50' : '#999' },
+                        ]}
+                      >
+                        Lowercase letter
+                      </ThemedText>
+                    </View>
+                    <View style={styles.requirementItem}>
+                      <Ionicons
+                        name={passwordValidation.hasNumber ? 'checkmark-circle' : 'close-circle'}
+                        size={16}
+                        color={passwordValidation.hasNumber ? '#4CAF50' : '#E5E5E5'}
+                      />
+                      <ThemedText
+                        style={[styles.requirementText, { color: passwordValidation.hasNumber ? '#4CAF50' : '#999' }]}
+                      >
+                        Number
+                      </ThemedText>
+                    </View>
+                  </View>
+                  <View style={styles.requirementRow}>
+                    <View style={styles.requirementItem}>
+                      <Ionicons
+                        name={passwordValidation.hasSpecialChar ? 'checkmark-circle' : 'close-circle'}
+                        size={16}
+                        color={passwordValidation.hasSpecialChar ? '#4CAF50' : '#E5E5E5'}
+                      />
+                      <ThemedText
+                        style={[
+                          styles.requirementText,
+                          { color: passwordValidation.hasSpecialChar ? '#4CAF50' : '#999' },
+                        ]}
+                      >
+                        Special character
+                      </ThemedText>
+                    </View>
+                  </View>
                 </View>
               </View>
             </View>
-          </>
-        ) : (
-          <>
-            <View style={styles.dashboardContainer}>
-              <ImageBackground
-                source={require('@/assets/images/auth/signup-banner-2.png')}
-                style={styles.dashboardImage}
+
+            <View>
+              <ThemedInput
+                label="Confirm Password"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                isPassword={true}
+                placeholder="Confirm your password"
               />
+              {confirmPassword && password !== confirmPassword && (
+                <ThemedText style={styles.errorText}>Passwords do not match</ThemedText>
+              )}
             </View>
 
-            <View style={styles.content}>
-              <ThemedText style={styles.title}>Setup Password</ThemedText>
-              <ThemedText lightColor="#747778" darkColor="#fff" style={styles.subtitle}>
-                Create a secure password for your account
+            <ThemedTouchableOpacity
+              lightColor="#000"
+              darkColor="#fff"
+              style={styles.createButton}
+              onPress={handleSignUp}
+            >
+              <ThemedText lightColor="#fff" darkColor="#000" style={styles.createButtonText}>
+                Create Account
               </ThemedText>
+            </ThemedTouchableOpacity>
 
-              <View style={styles.formContainer}>
-                <ThemedInput
-                  label="Password"
-                  value={password}
-                  onChangeText={handlePasswordChange}
-                  isPassword={true}
-                  placeholder="Enter your password"
-                  style={
-                    !passwordValidation.isValid && password.length > 0 ? { borderColor: 'red', borderWidth: 1 } : {}
-                  }
-                />
-
-                <ThemedInput
-                  label="Confirm Password"
-                  value={confirmPassword}
-                  onChangeText={handleConfirmPasswordChange}
-                  isPassword={true}
-                  placeholder="Confirm your password"
-                  style={confirmPasswordError ? { borderColor: 'red', borderWidth: 1 } : {}}
-                />
-
-                <View style={styles.generalButtonContainer}>
-                  <ThemedTouchableOpacity style={styles.previousButton} onPress={handlePrevious}>
-                    <ThemedText style={styles.previousButtonText}>Previous</ThemedText>
-                  </ThemedTouchableOpacity>
-                  <ThemedTouchableOpacity style={{ ...styles.nextButton, width: '50%' }} onPress={handleSignup}>
-                    <ThemedText lightColor="#fff" darkColor="#000" style={styles.nextButtonText}>
-                      Sign Up
-                    </ThemedText>
-                  </ThemedTouchableOpacity>
-                </View>
-
-                <View style={styles.signInContainer}>
-                  <ThemedText style={styles.haveAccountText}>Already have an Account? </ThemedText>
-                  <TouchableOpacity onPress={handleSignIn}>
-                    <ThemedText style={styles.signInText}>Sign In</ThemedText>
-                  </TouchableOpacity>
-                </View>
-              </View>
+            <View style={styles.termsContainer}>
+              <ThemedText style={styles.termsText}>
+                By signing up, you agree to our <ThemedText style={styles.termsLink}>Terms of Service</ThemedText> and{' '}
+                <ThemedText style={styles.termsLink}>Privacy Policy</ThemedText>
+              </ThemedText>
             </View>
-          </>
-        )}
+          </View>
+        </View>
+
+        <LinearGradient
+          colors={['#E85E90', '#9F0E42']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.bottomBanner}
+        >
+          <View style={styles.bannerOverlay}>
+            <ThemedText style={styles.bannerTitle}>Become a Vendor Today</ThemedText>
+            <ThemedText style={styles.bannerSubtitle}>
+              Join Vazzel to sell your products and grow your business
+            </ThemedText>
+          </View>
+        </LinearGradient>
       </ScrollView>
     </ThemedView>
   );

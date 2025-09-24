@@ -1,3 +1,4 @@
+import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedLoader } from '@/components/ThemedLoader';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
@@ -110,7 +111,7 @@ export default function VendorVerificationComponent() {
 
           <View style={styles.codeContainer}>
             {code.map((digit, index) => (
-              <TextInput
+              <ThemedInput
                 key={index}
                 data-index={index}
                 style={[styles.codeInput, index === 0 && styles.codeInputActive]}
@@ -119,6 +120,7 @@ export default function VendorVerificationComponent() {
                 keyboardType="numeric"
                 maxLength={1}
                 textAlign="center"
+                darkColor="#fff"
                 ref={(input) => (inputs.current[index] = input)}
                 onKeyPress={({ nativeEvent }) => {
                   if (nativeEvent.key === 'Backspace' && !code[index] && index > 0) {

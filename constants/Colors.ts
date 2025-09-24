@@ -17,6 +17,7 @@ export const Colors = {
     text: '#000000',
     subTitle: '#747778',
     background: '#fff',
+    bgPrimary: '#F6F6F6',
     tint: tintColorLight,
     icon: '#687076',
     tabIconDefault: '#687076',

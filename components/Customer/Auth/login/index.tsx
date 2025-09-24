@@ -3,10 +3,11 @@ import { ThemedLoader } from '@/components/ThemedLoader';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
 import { ThemedView } from '@/components/ThemedView';
-import { Colors } from '@/constants/Colors';
 import { showError } from '@/services/api';
 import { AuthService } from '@/services/auth.service';
 import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, TouchableOpacity, useColorScheme, View } from 'react-native';
@@ -64,23 +65,30 @@ export default function CustomerLoginComponent() {
   return (
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* <SearchNav /> */}
+        {/* Logo */}
+        <View style={styles.logoContainer}>
+          <Image source={require('@/assets/images/logo.webp')} style={styles.logo} resizeMode="contain" />
+        </View>
 
-        {/* Content */}
+        {/* Sign Up Link */}
+        <View style={styles.topSignUpContainer}>
+          <ThemedText style={styles.noAccountText}>No account yet? </ThemedText>
+          <TouchableOpacity onPress={handleSignUp}>
+            <ThemedText style={styles.topSignUpText}>Sign Up</ThemedText>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.content}>
-          <ThemedText lightColor="#747778" darkColor="#fff" style={styles.welcomeText}>
-            WELCOME BACK
-          </ThemedText>
           <ThemedText style={styles.title}>Sign in as a Customer</ThemedText>
 
           <View style={styles.formContainer}>
             <ThemedInput
+              label="Email"
               value={email}
               onChangeText={setEmail}
+              placeholder="Enter your email"
               keyboardType="email-address"
               autoCapitalize="none"
-              placeholder="Email"
-              label="Email"
             />
 
             <ThemedInput
@@ -88,67 +96,49 @@ export default function CustomerLoginComponent() {
               value={password}
               onChangeText={setPassword}
               isPassword={true}
-              placeholder="**********"
+              placeholder="Enter your password"
             />
 
             <View style={styles.optionsRow}>
               <TouchableOpacity style={styles.rememberContainer} onPress={() => setRememberMe(!rememberMe)}>
-                <ThemedView
-                  style={[styles.checkbox, rememberMe && { backgroundColor: Colors[colorScheme].background }]}
-                >
-                  {rememberMe && <Ionicons name="checkmark" size={16} color={Colors[colorScheme].text} />}
-                </ThemedView>
-                <ThemedText style={styles.rememberText}>Remember Me</ThemedText>
+                <View style={[styles.checkbox, rememberMe && styles.checkboxChecked]}>
+                  {rememberMe && <Ionicons name="checkmark" size={12} color="#fff" />}
+                </View>
+                <ThemedText style={styles.rememberText}>Remember me</ThemedText>
               </TouchableOpacity>
+
               <TouchableOpacity onPress={handleForgotPassword}>
                 <ThemedText style={styles.forgotText}>Forgot Password?</ThemedText>
               </TouchableOpacity>
             </View>
 
             <ThemedTouchableOpacity style={styles.signInButton} onPress={handleLogin}>
-              <ThemedText lightColor="#fff" darkColor="#000" style={styles.signInButtonText}>
+              <ThemedText lightColor="#fff" darkColor="#fff" style={styles.signInButtonText}>
                 Sign In
               </ThemedText>
             </ThemedTouchableOpacity>
 
-            <View style={styles.signUpContainer}>
-              <ThemedText style={styles.noAccountText}>No Account yet? </ThemedText>
-              <TouchableOpacity onPress={handleSignUp}>
-                <ThemedText style={styles.signUpText}>Sign Up</ThemedText>
-              </TouchableOpacity>
-            </View>
-
-            {/* <View style={styles.dividerContainer}>
-              <View style={styles.dividerLine} />
-              <ThemedText style={styles.dividerText}>Or</ThemedText>
-              <View style={styles.dividerLine} />
-            </View> */}
-
-            {/* <TouchableOpacity style={styles.socialButton} onPress={handleGoogleSignIn}>
-              <ThemedText style={styles.socialButtonText}>
-                <LucideGoal
-                  size={16}
-                  style={{
-                    paddingTop: 5,
-                  }}
-                />{' '}
-                Sign in with Google
-              </ThemedText>
-            </TouchableOpacity> */}
-
-            {/* <TouchableOpacity style={styles.socialButton} onPress={handleAppleSignIn}>
-              <ThemedText style={styles.socialButtonText}>
-                <AppleIcon size={16} /> Sign in with Apple
-              </ThemedText>
-            </TouchableOpacity> */}
-
             <View style={styles.customerSignInContainer}>
               <TouchableOpacity onPress={() => router.push('/vendor/login' as any)}>
-                <ThemedText style={styles.customerSignInText}>Sign in as a vendor</ThemedText>
+                <ThemedText style={styles.customerSignInText}>Sign in as Vendor</ThemedText>
               </TouchableOpacity>
             </View>
           </View>
         </View>
+
+        <LinearGradient
+          colors={['#E85E90', '#9F0E42']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.bottomBanner}
+        >
+          <View style={styles.bannerOverlay}>
+            <ThemedText style={styles.bannerTitle}>Shop with Confidence</ThemedText>
+            <ThemedText style={styles.bannerSubtitle}>Discover amazing products from trusted vendors</ThemedText>
+          </View>
+        </LinearGradient>
+
+        {/* Bottom Banner */}
       </ScrollView>
     </ThemedView>
   );

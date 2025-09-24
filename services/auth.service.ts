@@ -3,28 +3,28 @@ import { LoginResponse, RegisterCustomerResponse, RegisterVendorForm } from '@/t
 import { api, setAuthToken, showError, showSuccess } from './api';
 
 export class AuthService {
-  static validatePassword(password: string): { isValid: boolean; errors: string[] } {
-    const errors: string[] = [];
-
-    if (password.length < 8) {
-      errors.push('Password must be at least 8 characters long');
-    }
-
-    if (!/[A-Z]/.test(password)) {
-      errors.push('Password must contain at least one uppercase letter');
-    }
-
-    if (!/[a-z]/.test(password)) {
-      errors.push('Password must contain at least one lowercase letter');
-    }
-
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-      errors.push('Password must contain at least one special character');
-    }
+  static validatePassword(password: string): {
+    isValid: boolean;
+    // errors: string[];
+    hasMinLength: boolean;
+    hasUppercase: boolean;
+    hasLowercase: boolean;
+    hasNumber: boolean;
+    hasSpecialChar: boolean;
+  } {
+    const hasMinLength = password.length >= 8;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
     return {
-      isValid: errors.length === 0,
-      errors,
+      isValid: hasMinLength && hasUppercase && hasLowercase && hasNumber && hasSpecialChar,
+      hasMinLength,
+      hasUppercase,
+      hasLowercase,
+      hasNumber,
+      hasSpecialChar,
     };
   }
 
@@ -147,7 +147,7 @@ export class AuthService {
         return { success: true, data: response.data as RegisterCustomerResponse };
       } else {
         showError(response.data?.error || 'Registration failed');
-        return { success: false, error: response.data?.message };
+        return { success: false, error: response.data?.error };
       }
     } catch (error: any) {
       showError('Network error. Please try again.');
