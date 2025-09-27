@@ -37,6 +37,7 @@ export function ThemedInput({
   );
 
   const textColor = useThemeColor({ light: Colors.light.inputText, dark: Colors.dark.inputText }, 'text');
+  const borderColor = useThemeColor({ light: Colors.light.border, dark: Colors.dark.inputBorder }, 'border');
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -44,7 +45,12 @@ export function ThemedInput({
 
       <View style={styles.inputContainer}>
         <TextInput
-          style={[styles.input, { backgroundColor, color: textColor }, isPassword && styles.passwordInput, style]}
+          style={[
+            styles.input,
+            { backgroundColor, color: textColor, borderColor },
+            isPassword && styles.passwordInput,
+            style,
+          ]}
           secureTextEntry={isPassword && !showPassword}
           placeholderTextColor="#999"
           value={value}
@@ -79,6 +85,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     fontSize: 16,
+    borderWidth: 1,
   },
   passwordInput: {
     paddingRight: 50,

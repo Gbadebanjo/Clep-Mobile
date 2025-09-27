@@ -24,8 +24,9 @@ export const Colors = {
     tabIconSelected: tintColorLight,
     border: '#e5e7eb',
     textMuted: '#747778',
-    inputBackground: '#F5F5F5',
+    inputBackground: '#F3F4F6',
     inputText: '#000',
+    inputBorder: '#e5e7eb',
   },
   dark: {
     primary50: '#FDF2F5',
@@ -50,5 +51,6 @@ export const Colors = {
     textMuted: '#57585aff',
     inputBackground: '#2A2A2A',
     inputText: '#fff',
+    inputBorder: '#374151',
   },
 };
