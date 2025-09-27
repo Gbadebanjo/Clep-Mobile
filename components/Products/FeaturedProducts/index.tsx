@@ -54,7 +54,7 @@ export default function FeaturedProducts() {
     fetchFeaturedProducts();
   }, []);
 
-  if (loading) return <ThemedLoader text="Loading featured products..." />;
+  if (loading) return <ThemedLoader text="" />;
   if (error) return <Text style={styles.errorText}>An error occurred. Please try again.</Text>;
 
   // Group products into rows of 2

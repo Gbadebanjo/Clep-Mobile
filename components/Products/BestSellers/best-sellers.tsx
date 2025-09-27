@@ -62,7 +62,7 @@ export default function BestSellers() {
     fetchBestSellers();
   }, [selectedCategory, selectedPeriod]);
 
-  if (loading) return <ThemedLoader text="Loading best products..." />;
+  if (loading) return <ThemedLoader text="" />;
   if (error) return <Text style={styles.errorText}>An error occurred. Please try again.</Text>;
 
   // Group products into rows of 2
