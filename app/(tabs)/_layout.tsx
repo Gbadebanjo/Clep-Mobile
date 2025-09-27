@@ -2,14 +2,24 @@ import { HapticTab } from '@/components/HapticTab';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useAuthStore } from '@/store';
 import { Ionicons } from '@expo/vector-icons';
-import { PencilRuler } from "lucide-react-native"; 
 import { Tabs } from 'expo-router';
-import React from 'react';
+import { PencilRuler } from 'lucide-react-native';
+import React, { useEffect } from 'react';
 import { Platform } from 'react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { user } = useAuthStore();
+
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setIsLoggedIn(true);
+    } else setIsLoggedIn(false);
+  }, [user]);
 
   return (
     <Tabs
@@ -34,13 +44,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Ionicons size={28} name="home" color={color} />,
         }}
       />
-        <Tabs.Screen
-          name="wishlist"
-          options={{
-            title: 'Wishlist',
-            tabBarIcon: ({ color }) => <Ionicons size={28} name="heart" color={color} />,
-          }}
-        />
+      <Tabs.Screen
+        name="wishlist"
+        options={{
+          title: 'Wishlist',
+          tabBarIcon: ({ color }) => <Ionicons size={28} name="heart" color={color} />,
+        }}
+      />
       <Tabs.Screen
         name="cart"
         options={{
@@ -55,6 +65,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <PencilRuler size={28} color={color} />,
         }}
       />
+
       <Tabs.Screen
         name="user"
         options={{

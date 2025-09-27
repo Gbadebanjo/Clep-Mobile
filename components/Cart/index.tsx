@@ -2,6 +2,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
 import { ThemedView } from '@/components/ThemedView';
 import { safeAmountFormatter } from '@/helpers/data-utils';
+import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/hooks/useCart';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
@@ -36,6 +37,7 @@ const Cart: React.FC<CartProps> = () => {
   // const isEmpty = cartItems.length === 0;
   const isOnSale = (item: any) => item.product.base_sale_price < item.product.base_price;
   const { items, isEmpty, totals, hasSelectedItems, getItemDiscount, clearCart } = useCart();
+  const { user } = useAuth();
 
   const getDiscount = (item: any) => {
     if (!isOnSale(item)) return 0;
@@ -47,6 +49,10 @@ const Cart: React.FC<CartProps> = () => {
   };
 
   const handleCheckout = () => {
+    if (!user) {
+      router.push('/customer/login');
+      return;
+    }
     if (!hasSelectedItems) return;
     router.push('/checkout');
   };
