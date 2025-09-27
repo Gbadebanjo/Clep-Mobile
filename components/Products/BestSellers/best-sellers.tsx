@@ -1,11 +1,12 @@
 import { ProductAPI } from '@/apis/product-api';
 import { product } from '@/types/product';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
-import LinkButton from '../General/link.button';
-import { ThemedLoader } from '../ThemedLoader';
-import { ThemedText } from '../ThemedText';
-import ProductCard from './product-card';
+import { Dimensions, Text, View } from 'react-native';
+import LinkButton from '../../General/link.button';
+import { ThemedLoader } from '../../ThemedLoader';
+import { ThemedText } from '../../ThemedText';
+import ProductCard from '../ProductCard/product-card';
+import styles from './style';
 
 const screenWidth = Dimensions.get('window').width;
 const productCardWidth = (screenWidth - 36) / 2; // 12 padding + 12 margin between columns
@@ -102,47 +103,3 @@ export default function BestSellers() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollContainer: {
-    paddingHorizontal: 12,
-    paddingBottom: 24,
-  },
-  banner: {
-    width: '100%',
-    height: 200,
-    borderRadius: 12,
-    marginTop: 8,
-    marginBottom: 20,
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 0,
-  },
-  exploreButton: {
-    marginBottom: 20,
-  },
-  exploreButtonInner: {
-    alignItems: 'flex-start',
-    backgroundColor: '#d97706',
-    width: '100%',
-  },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
-    marginVertical: 20,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  productWrapper: {
-    marginHorizontal: 2,
-  },
-  noProductContainer: {
-    alignItems: 'center',
-    marginTop: 20,
-  },
-});

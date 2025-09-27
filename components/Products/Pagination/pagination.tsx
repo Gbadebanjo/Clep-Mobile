@@ -1,9 +1,12 @@
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { ThemedText } from '../ThemedText';
+import { ThemedText } from '../../ThemedText';
+import { PaginationStyles } from './style';
 
 interface PaginationProps {
   currentPage: number;
@@ -19,7 +22,8 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
     },
     'background'
   );
-
+  const colorScheme = useColorScheme() as 'light' | 'dark';
+  const styles = PaginationStyles(colorScheme);
   return (
     <Animated.View entering={FadeIn.delay(300)} style={styles.container}>
       {/* Previous button */}
@@ -28,7 +32,7 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
         disabled={currentPage === 1}
         style={[styles.arrowButton, currentPage === 1 ? styles.disabledButton : styles.activeArrow]}
       >
-        <ChevronLeft size={20} color={currentPage === 1 ? '#9ca3af' : '#7f1d1d'} />
+        <ChevronLeft size={20} color={currentPage === 1 ? Colors[colorScheme].text : Colors[colorScheme].primary800} />
       </TouchableOpacity>
 
       {/* Page numbers */}
@@ -67,49 +71,11 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
         disabled={currentPage === totalPages}
         style={[styles.arrowButton, currentPage === totalPages ? styles.disabledButton : styles.activeArrow]}
       >
-        <ChevronRight size={20} color={currentPage === totalPages ? '#9ca3af' : '#7f1d1d'} />
+        <ChevronRight
+          size={20}
+          color={currentPage === totalPages ? Colors[colorScheme].text : Colors[colorScheme].primary800}
+        />
       </TouchableOpacity>
     </Animated.View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-    gap: 8,
-  },
-  arrowButton: {
-    padding: 8,
-    borderRadius: 999,
-  },
-  activeArrow: {
-    backgroundColor: '#f3e8e8', // wine-100 equivalent
-  },
-  disabledButton: {
-    backgroundColor: '#e5e7eb', // gray-100
-  },
-  pageButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 999,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  activePage: {
-    backgroundColor: '#7f1d1d', // primary
-  },
-  inactivePage: {
-    backgroundColor: '#e5e7eb', // gray-100
-  },
-  pageText: {
-    fontSize: 14,
-    color: '#070808ff', // gray-700
-  },
-  activePageText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-});

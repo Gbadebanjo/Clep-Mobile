@@ -1,7 +1,7 @@
 // import { Image } from 'expo-image';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native';
 // import Slider from '@/components/Home/slider';
-import AllProducts from '@/components/Products/all-products';
+import AllProducts from '@/components/Products/AllProducts';
 
 export default function AllProductsPage() {
   return (

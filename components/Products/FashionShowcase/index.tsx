@@ -1,8 +1,9 @@
-import { ImageBackground, Image } from 'expo-image';
+import { ThemedText } from '@/components/ThemedText';
+import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import FashionShowStyles from './styles/fashion-show';
+import FashionShowStyles from './style';
 
 interface Category {
   id: number;
@@ -97,7 +98,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, index }) => {
 const FashionShowcase: React.FC = () => {
   return (
     <View style={FashionShowStyles.container}>
-      <Text style={FashionShowStyles.heading}>Shop By Category</Text>
+      <ThemedText style={FashionShowStyles.heading}>Shop By Category</ThemedText>
 
       {/* <FlatList
         data={categories}

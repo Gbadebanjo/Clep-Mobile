@@ -22,6 +22,10 @@ export const Colors = {
     icon: '#687076',
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
+    border: '#e5e7eb',
+    textMuted: '#747778',
+    inputBackground: '#F5F5F5',
+    inputText: '#000',
   },
   dark: {
     primary50: '#FDF2F5',
@@ -42,5 +46,9 @@ export const Colors = {
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
     subTitle: '#9BA1A6',
+    border: '#374151',
+    textMuted: '#57585aff',
+    inputBackground: '#2A2A2A',
+    inputText: '#fff',
   },
 };

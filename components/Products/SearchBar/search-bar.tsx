@@ -1,8 +1,9 @@
-import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import { Search } from 'lucide-react-native'; // React Native version of lucide icons
 import React from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { SearchStyles } from './style';
 
 interface SearchBarProps {
   searchQuery: string;
@@ -11,6 +12,8 @@ interface SearchBarProps {
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, setSearchQuery, handleSearch }) => {
+  const colorScheme = useColorScheme() as 'light' | 'dark';
+  const styles = SearchStyles(colorScheme);
   return (
     <Animated.View entering={FadeInDown.duration(400)} style={styles.container}>
       <View style={styles.inputContainer}>
@@ -29,42 +32,3 @@ export const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, setSearchQuer
     </Animated.View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    marginBottom: 20,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 999,
-    borderBottomLeftRadius: 999,
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-  },
-  icon: {
-    marginRight: 6,
-  },
-  input: {
-    flex: 1,
-    height: 40,
-    color: '#111827',
-    fontSize: 14,
-  },
-  button: {
-    backgroundColor: Colors.light.primary800,
-    paddingHorizontal: 20,
-    justifyContent: 'center',
-    borderTopRightRadius: 999,
-    borderBottomRightRadius: 999,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-});

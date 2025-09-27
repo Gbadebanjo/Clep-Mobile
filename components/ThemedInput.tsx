@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View, type TextInputProps } from 'react-native';
 
+import { Colors } from '@/constants/Colors';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { ThemedText } from './ThemedText';
 
@@ -30,9 +31,12 @@ export function ThemedInput({
 }: ThemedInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const backgroundColor = useThemeColor({ light: lightColor || '#F5F5F5', dark: darkColor || '#2A2A2A' }, 'background');
+  const backgroundColor = useThemeColor(
+    { light: lightColor || Colors.light.inputBackground, dark: darkColor || Colors.dark.inputBackground },
+    'background'
+  );
 
-  const textColor = useThemeColor({ light: '#000', dark: '#fff' }, 'text');
+  const textColor = useThemeColor({ light: Colors.light.inputText, dark: Colors.dark.inputText }, 'text');
 
   return (
     <View style={[styles.container, containerStyle]}>

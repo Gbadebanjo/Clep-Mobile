@@ -1,14 +1,17 @@
 // ProductCard.tsx
 import { Heart, ShoppingBag, Store } from 'lucide-react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 // import { useCartStore } from '@/store/cartStore';
 // import { useWishlistStore } from '@/store/wishlistStore';
 // import { useAuthStore } from '@/store/authStore';
 import { Colors } from '@/constants/Colors';
 import { safeAmountFormatter } from '@/helpers/data-utils';
+import { useCart } from '@/hooks/useCart';
+import { useWishlist } from '@/hooks/useWishlist';
+import { useCartStore, useWishlistStore } from '@/store';
 import { product } from '@/types/product';
-import { ProductCardStyles as styles } from './styles/product-card';
+import { ProductCardStyles as styles } from './style';
 
 interface IProps {
   product: product;
@@ -30,15 +33,18 @@ const PopularityBadge = ({ children }: { children: React.ReactNode }) => (
 );
 const ProductCard = ({ product, isFavorite, action = true }: IProps) => {
   // const { user } = useAuthStore((store) => store);
-  // const { addToCart, carts, removeFromCart } = useCartStore((store) => store);
+  const { addToCart, removeFromCart } = useCartStore((store) => store);
+  const { addToWishlist, removeFromWishlist } = useWishlistStore((store) => store);
+  const { items } = useCart();
+  const { items: wishlistItems } = useWishlist();
   // const { addToWishlist, removeFromWishlist, Wishlists } = useWishlistStore((store) => store);
 
   // const isVendor = user && user.role === 'vendor';
   // const isAddedToCart = carts?.find((item) => item?.id === product.id);
   // const isAddedToWishlist = Wishlists?.find((item) => item?.id === product.id);
-  const isVendor = false;
-  const isAddedToCart = false;
-  const isAddedToWishlist = false;
+  const isVendor = true;
+  const [isAddedToCart, setIsAddedToCart] = useState(false);
+  const [isAddedToWishlist, setIsAddedToWishlist] = useState(false);
 
   const isOnSale = product.base_sale_price < product.base_price;
   const discount = isOnSale
@@ -48,11 +54,29 @@ const ProductCard = ({ product, isFavorite, action = true }: IProps) => {
   const isOutOfStock = product.variations[0].quantity === 0;
 
   const handleCartToggle = () => {
-    // !isAddedToCart ? addToCart(product) : removeFromCart(product.id);
+    if (isAddedToCart) {
+      removeFromCart(product.id);
+    } else {
+      addToCart(product);
+    }
   };
 
+  useEffect(() => {
+    const isAdded = items.find((item) => item?.product.id === product.id);
+    setIsAddedToCart(!!isAdded);
+  }, [items, product.id]);
+
+  useEffect(() => {
+    const isAdded = wishlistItems.find((item) => item?.product.id === product.id);
+    setIsAddedToWishlist(!!isAdded);
+  }, [wishlistItems, product.id]);
+
   const handleWishlistToggle = () => {
-    // !isAddedToWishlist ? addToWishlist(product) : removeFromWishlist(product.id);
+    if (isAddedToWishlist) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
   };
 
   return (
@@ -71,12 +95,16 @@ const ProductCard = ({ product, isFavorite, action = true }: IProps) => {
         <View style={styles.actionButtons}>
           {isVendor && (
             <TouchableOpacity onPress={handleWishlistToggle} style={styles.iconButton}>
-              <Heart size={18} color={isAddedToWishlist ? 'red' : 'black'} fill={isAddedToWishlist ? 'red' : 'none'} />
+              <Heart
+                size={18}
+                color={isAddedToWishlist ? Colors.light.primary700 : 'black'}
+                fill={isAddedToWishlist ? Colors.light.primary700 : 'none'}
+              />
             </TouchableOpacity>
           )}
           {action && !isVendor && !isOutOfStock && (
             <TouchableOpacity onPress={handleCartToggle} style={styles.iconButton}>
-              <ShoppingBag size={18} color={isAddedToCart ? 'white' : 'black'} />
+              <ShoppingBag size={18} color={isAddedToCart ? Colors.light.primary700 : 'black'} />
             </TouchableOpacity>
           )}
         </View>

@@ -1,10 +1,6 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import Cart from '@/components/Cart';
+import React from 'react';
 
-export default function cart() {
-  return (
-    <View>
-      <Text>cart</Text>
-    </View>
-  )
+export default function CartScreen() {
+  return <Cart />;
 }
