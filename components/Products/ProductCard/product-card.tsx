@@ -9,7 +9,7 @@ import { Colors } from '@/constants/Colors';
 import { safeAmountFormatter } from '@/helpers/data-utils';
 import { useCart } from '@/hooks/useCart';
 import { useWishlist } from '@/hooks/useWishlist';
-import { useCartStore, useWishlistStore } from '@/store';
+import { useAuthStore, useCartStore, useWishlistStore } from '@/store';
 import { product } from '@/types/product';
 import { ProductCardStyles as styles } from './style';
 
@@ -32,17 +32,17 @@ const PopularityBadge = ({ children }: { children: React.ReactNode }) => (
   </View>
 );
 const ProductCard = ({ product, isFavorite, action = true }: IProps) => {
-  // const { user } = useAuthStore((store) => store);
+  const { user } = useAuthStore((store) => store);
   const { addToCart, removeFromCart } = useCartStore((store) => store);
   const { addToWishlist, removeFromWishlist } = useWishlistStore((store) => store);
   const { items } = useCart();
   const { items: wishlistItems } = useWishlist();
+
   // const { addToWishlist, removeFromWishlist, Wishlists } = useWishlistStore((store) => store);
 
-  // const isVendor = user && user.role === 'vendor';
+  const isVendor = user && user.role === 'vendor';
   // const isAddedToCart = carts?.find((item) => item?.id === product.id);
   // const isAddedToWishlist = Wishlists?.find((item) => item?.id === product.id);
-  const isVendor = true;
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [isAddedToWishlist, setIsAddedToWishlist] = useState(false);
 

@@ -1,7 +1,6 @@
+import { SubmitButton } from '@/components/General/SubmitButton';
 import { ThemedInput } from '@/components/ThemedInput';
-import { ThemedLoader } from '@/components/ThemedLoader';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
 import { ThemedView } from '@/components/ThemedView';
 import { showError } from '@/services/api';
 import { AuthService } from '@/services/auth.service';
@@ -14,7 +13,7 @@ import React, { useState } from 'react';
 import { Image, ScrollView, TouchableOpacity, useColorScheme, View } from 'react-native';
 import { customerSignupStyles } from './style';
 
-export default function VendorSignupComponent() {
+export default function CustomerSignupComponent() {
   const [firstName, setFirstName] = useState('');
   const [surname, setSurname] = useState('');
   const [email, setEmail] = useState('');
@@ -37,7 +36,6 @@ export default function VendorSignupComponent() {
   const handlePasswordChange = (text: string) => {
     setPassword(text);
     const validation = AuthService.validatePassword(text);
-    console.log(validation);
     setPasswordValidation(validation);
   };
 
@@ -78,7 +76,6 @@ export default function VendorSignupComponent() {
         showError(response?.error || 'Registration failed');
       }
     } catch (error: any) {
-      console.log(error);
       showError(error || 'Registration failed');
     } finally {
       setIsLoading(false);
@@ -88,10 +85,6 @@ export default function VendorSignupComponent() {
   const handleSignIn = () => {
     router.push('/vendor/login');
   };
-
-  if (isLoading) {
-    return <ThemedLoader text="Creating your account..." />;
-  }
 
   return (
     <ThemedView style={styles.container}>
@@ -250,16 +243,13 @@ export default function VendorSignupComponent() {
               )}
             </View>
 
-            <ThemedTouchableOpacity
-              lightColor="#000"
-              darkColor="#fff"
-              style={styles.createButton}
+            <SubmitButton
+              text="Create Account"
+              isLoading={isLoading}
               onPress={handleSignUp}
-            >
-              <ThemedText lightColor="#fff" darkColor="#000" style={styles.createButtonText}>
-                Create Account
-              </ThemedText>
-            </ThemedTouchableOpacity>
+              buttonStyle={styles.createButton}
+              textStyle={styles.createButtonText}
+            />
 
             <View style={styles.termsContainer}>
               <ThemedText style={styles.termsText}>

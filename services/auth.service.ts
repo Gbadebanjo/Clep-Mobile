@@ -35,7 +35,6 @@ export class AuthService {
 
     try {
       const response = await api.post('/users/login', credentials);
-      console.log('Login response NEW ONE:', response.data);
 
       if (response.ok && response.data) {
         const { user, token, message } = (response.data as LoginResponse).data;
@@ -54,7 +53,6 @@ export class AuthService {
       }
     } catch (error: any) {
       showError('Network error. Please try again.');
-      console.log('Login error:', error);
       return { success: false, error: error.message };
     } finally {
       setLoading(false);

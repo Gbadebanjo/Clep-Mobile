@@ -1,7 +1,6 @@
+import { SubmitButton } from '@/components/General/SubmitButton';
 import { ThemedInput } from '@/components/ThemedInput';
-import { ThemedLoader } from '@/components/ThemedLoader';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
 import { ThemedView } from '@/components/ThemedView';
 import { showError } from '@/services/api';
 import { AuthService } from '@/services/auth.service';
@@ -30,14 +29,14 @@ export default function VendorLoginComponent() {
     }
     setIsLoading(true);
     const response = await AuthService.login({ email, password });
-    setIsLoading(false);
     if (response.success) {
       if (response.data?.data.user?.emailVerified) {
-        router.push('/user' as any);
+        router.push('/' as any);
         return;
       }
       router.push('/vendor/verification' as any);
     }
+    setIsLoading(false);
   };
 
   const handleSignUp = () => {
@@ -47,10 +46,6 @@ export default function VendorLoginComponent() {
   const handleForgotPassword = () => {
     router.push('/vendor/forgot-password' as any);
   };
-
-  if (isLoading) {
-    return <ThemedLoader text="Signing you in..." />;
-  }
 
   return (
     <ThemedView style={styles.container}>
@@ -102,11 +97,13 @@ export default function VendorLoginComponent() {
               </TouchableOpacity>
             </View>
 
-            <ThemedTouchableOpacity style={styles.signInButton} onPress={handleLogin}>
-              <ThemedText lightColor="#fff" darkColor="#fff" style={styles.signInButtonText}>
-                Sign In
-              </ThemedText>
-            </ThemedTouchableOpacity>
+            <SubmitButton
+              text="Sign In"
+              isLoading={isLoading}
+              onPress={handleLogin}
+              buttonStyle={styles.signInButton}
+              textStyle={styles.signInButtonText}
+            />
 
             <View style={styles.customerSignInContainer}>
               <TouchableOpacity onPress={() => router.push('/customer/login' as any)}>
