@@ -1,7 +1,6 @@
+import { SubmitButton } from '@/components/General/SubmitButton';
 import { ThemedInput } from '@/components/ThemedInput';
-import { ThemedLoader } from '@/components/ThemedLoader';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
 import { ThemedView } from '@/components/ThemedView';
 import { showError } from '@/services/api';
 import { AuthService } from '@/services/auth.service';
@@ -18,7 +17,6 @@ export default function CustomerLoginComponent() {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const colorScheme = useColorScheme() as 'light' | 'dark';
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const styles = vendorLoginStyles(colorScheme);
@@ -30,15 +28,14 @@ export default function CustomerLoginComponent() {
     }
     setIsLoading(true);
     const response = await AuthService.login({ email, password });
-    setIsLoading(false);
-    console.log('Login response:', response);
     if (response.success) {
       if (response.data?.data.user?.emailVerified) {
-        router.push('/user' as any);
+        router.push('/' as any);
         return;
       }
       router.push('/customer/verification' as any);
     }
+    setIsLoading(false);
     // router.push('/vendor/verification' as any);
   };
 
@@ -57,10 +54,6 @@ export default function CustomerLoginComponent() {
   const handleAppleSignIn = () => {
     console.log('Apple sign in');
   };
-
-  if (isLoading) {
-    return <ThemedLoader text="Logging in your account..." />;
-  }
 
   return (
     <ThemedView style={styles.container}>
@@ -112,11 +105,13 @@ export default function CustomerLoginComponent() {
               </TouchableOpacity>
             </View>
 
-            <ThemedTouchableOpacity style={styles.signInButton} onPress={handleLogin}>
-              <ThemedText lightColor="#fff" darkColor="#fff" style={styles.signInButtonText}>
-                Sign In
-              </ThemedText>
-            </ThemedTouchableOpacity>
+            <SubmitButton
+              text="Sign In"
+              isLoading={isLoading}
+              onPress={handleLogin}
+              buttonStyle={styles.signInButton}
+              textStyle={styles.signInButtonText}
+            />
 
             <View style={styles.customerSignInContainer}>
               <TouchableOpacity onPress={() => router.push('/vendor/login' as any)}>

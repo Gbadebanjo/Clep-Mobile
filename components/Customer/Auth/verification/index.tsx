@@ -1,6 +1,5 @@
-import { ThemedLoader } from '@/components/ThemedLoader';
+import { SubmitButton } from '@/components/General/SubmitButton';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
 import { ThemedView } from '@/components/ThemedView';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { showError } from '@/services/api';
@@ -92,9 +91,9 @@ export default function CustomerVerificationComponent() {
     }
   };
 
-  if (isLoading) {
-    return <ThemedLoader text="Verifying your email..." />;
-  }
+  // if (isLoading) {
+  //   return <ThemedLoader text="Verifying your email..." />;
+  // }
 
   return (
     <ThemedView style={styles.container}>
@@ -134,11 +133,13 @@ export default function CustomerVerificationComponent() {
             {countdown > 0 ? `Resend after ${countdown} seconds` : 'You can now resend the code'}
           </Text>
 
-          <ThemedTouchableOpacity style={styles.verifyButton} onPress={handleVerify}>
-            <ThemedText lightColor="#fff" darkColor="#000" style={styles.verifyButtonText}>
-              Verify Code
-            </ThemedText>
-          </ThemedTouchableOpacity>
+          <SubmitButton
+            text="Verify Code"
+            isLoading={isLoading}
+            onPress={handleVerify}
+            buttonStyle={styles.verifyButton}
+            textStyle={styles.verifyButtonText}
+          />
 
           <View style={styles.resendContainer}>
             <Text style={styles.noEmailText}>Haven&apos;t gotten the email yet? </Text>
