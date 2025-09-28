@@ -9,7 +9,7 @@ export default function UserScreen() {
   const { user } = useAuthStore();
 
   useEffect(() => {
-    if (user) {
+    if (!user) {
       router.replace('/customer/login');
     }
   }, [user]);

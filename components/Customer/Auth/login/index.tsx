@@ -18,7 +18,7 @@ export default function CustomerLoginComponent() {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const colorScheme = useColorScheme() as 'light' | 'dark';
-  const [showPassword, setShowPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const styles = vendorLoginStyles(colorScheme);
@@ -50,13 +50,13 @@ export default function CustomerLoginComponent() {
     router.push('/customer/forgot-password' as any);
   };
 
-  const handleGoogleSignIn = () => {
-    console.log('Google sign in');
-  };
+  // const handleGoogleSignIn = () => {
+  //   console.log('Google sign in');
+  // };
 
-  const handleAppleSignIn = () => {
-    console.log('Apple sign in');
-  };
+  // const handleAppleSignIn = () => {
+  //   console.log('Apple sign in');
+  // };
 
   if (isLoading) {
     return <ThemedLoader text="Logging in your account..." />;
