@@ -110,10 +110,13 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
             <View style={styles.variationContainer} key={index}>
               {variation.attributes?.map((attribute, index) => {
                 return (
-                  <View style={styles.variationRow} key={index}>
-                    <ThemedText style={styles.variationLabel}>{attribute.name}</ThemedText>
-                    <ThemedText style={styles.variationValue}>{attribute.value}</ThemedText>
-                  </View>
+                  attribute.name &&
+                  attribute.value && (
+                    <View style={styles.variationRow} key={index}>
+                      <ThemedText style={styles.variationLabel}>{attribute.name}</ThemedText>
+                      <ThemedText style={styles.variationValue}>{attribute.value}</ThemedText>
+                    </View>
+                  )
                 );
               })}
             </View>
