@@ -24,7 +24,7 @@ export default function CustomerAccountCreatedComponent() {
         style={styles.gradientOverlay}
       />
 
-      <SearchNavCompo />
+      {/* <SearchNavCompo /> */}
 
       <View style={styles.content}>
         <View style={styles.successContainer}>

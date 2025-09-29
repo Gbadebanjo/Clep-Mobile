@@ -11,7 +11,7 @@ import { storeSetupStyles } from './style';
 export default function VendorStoreSetupScreen() {
   const [businessName, setBusinessName] = useState('');
   const [storeUrl, setStoreUrl] = useState('');
-  const [storeDescription, setStoreDescription] = useState('example: Top rated fashion store on the main land');
+  const [storeDescription, setStoreDescription] = useState('');
   const [customizeNow, setCustomizeNow] = useState(true);
 
   const colorScheme = useColorScheme() as 'light' | 'dark';
@@ -33,7 +33,7 @@ export default function VendorStoreSetupScreen() {
       />
 
       <ScrollView style={styles.scrollView}>
-        <SearchNavCompo />
+        {/* <SearchNavCompo /> */}
 
         <View style={styles.content}>
           <ThemedText style={styles.title}>Create your Store</ThemedText>
@@ -61,6 +61,7 @@ export default function VendorStoreSetupScreen() {
                 onChangeText={setStoreUrl}
                 placeholder="Enter your store name"
                 placeholderTextColor="#999"
+                
               />
             </View>
 
@@ -72,6 +73,7 @@ export default function VendorStoreSetupScreen() {
               multiline
               numberOfLines={4}
               textAlignVertical="top"
+              placeholder="example: Top rated fashion store"
             />
 
             <View style={styles.customizeSection}>

@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router'; // if you're using expo-router
+import { useRouter, Link } from 'expo-router'; // if you're using expo-router
 import React from 'react';
 import { GestureResponderEvent, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { Path, Svg } from 'react-native-svg';
@@ -27,7 +27,9 @@ const LinkButton: React.FC<Props> = ({
       onPress(e);
     } else if (href) {
       router.push(href as any);
-    }
+    }  else {
+    console.warn("No href or onPress provided for LinkButton");
+  }
   };
 
   return (

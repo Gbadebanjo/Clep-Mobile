@@ -1,5 +1,6 @@
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
+import { SafeAreaView } from 'react-native-safe-area-context'; 
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useAuth } from '@/hooks/useAuth';
@@ -65,6 +66,7 @@ const Cart: React.FC<CartProps> = () => {
 
   if (isEmpty) {
     return (
+      // <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
       <ThemedView style={cartStyles.container}>
         <ThemedText style={cartStyles.title}>Shopping Cart</ThemedText>
 
@@ -91,6 +93,7 @@ const Cart: React.FC<CartProps> = () => {
           </ThemedTouchableOpacity>
         </View>
       </ThemedView>
+      // </SafeAreaView>
     );
   }
 

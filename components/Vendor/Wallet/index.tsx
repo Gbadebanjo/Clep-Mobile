@@ -51,7 +51,6 @@ export default function VendorWalletSetupComponent() {
       />
 
       <ScrollView style={styles.scrollView}>
-        <SearchNavCompo />
 
         <View style={styles.content}>
           <ThemedText style={styles.title}>Create your Wallet</ThemedText>

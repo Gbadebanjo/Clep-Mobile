@@ -24,8 +24,6 @@ export default function VendorAccountCreatedComponent() {
         style={styles.gradientOverlay}
       />
 
-      <SearchNavCompo />
-
       <View style={styles.content}>
         <View style={styles.successContainer}>
           <View style={styles.checkmarkContainer}>

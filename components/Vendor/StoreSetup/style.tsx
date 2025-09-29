@@ -6,7 +6,7 @@ export const storeSetupStyles = (colorScheme: 'light' | 'dark') =>
   StyleSheet.create({
     container: {
       flex: 1,
-      paddingBottom: 60,
+      paddingVertical: 40,
     },
     gradientOverlay: {
       position: 'absolute',
