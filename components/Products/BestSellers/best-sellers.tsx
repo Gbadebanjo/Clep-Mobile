@@ -78,7 +78,7 @@ export default function BestSellers() {
 
       <LinkButton
         text="Explore All"
-        href="/all-products/featured"
+        href="/all-products"
         containerStyle={styles.exploreButton}
         buttonStyle={styles.exploreButtonInner}
       />

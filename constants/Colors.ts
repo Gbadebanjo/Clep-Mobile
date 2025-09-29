@@ -27,6 +27,7 @@ export const Colors = {
     inputBackground: '#F3F4F6',
     inputText: '#000',
     inputBorder: '#e5e7eb',
+    stockColor: '#F97316',
   },
   dark: {
     primary50: '#FDF2F5',
@@ -52,5 +53,6 @@ export const Colors = {
     inputBackground: '#2A2A2A',
     inputText: '#fff',
     inputBorder: '#374151',
+    stockColor: '#F97316',
   },
 };

@@ -15,6 +15,8 @@ interface AuthState {
   setUser: (user: any) => void;
   setToken: (token: string) => void;
   setLoading: (loading: boolean) => void;
+  resetEmail: string;
+  setResetEmail: (resetEmail: string) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -55,6 +57,10 @@ export const useAuthStore = create<AuthState>()(
 
       setLoading: (isLoading) => {
         set({ isLoading });
+      },
+      resetEmail: '',
+      setResetEmail: (resetEmail) => {
+        set({ resetEmail });
       },
     }),
     {

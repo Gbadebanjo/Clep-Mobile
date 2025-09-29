@@ -1,3 +1,4 @@
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 import { ActivityIndicator, StyleProp, TextStyle, TouchableOpacityProps, ViewStyle } from 'react-native';
 import { ThemedText } from '../ThemedText';
 import { ThemedTouchableOpacity } from '../ThemedTouchableOpacity';
@@ -23,12 +24,29 @@ export function SubmitButton({
   const lightTextColor = lightColor || '#fff';
   const darkTextColor = darkColor || '#000';
 
+  const colorScheme = useColorScheme();
+
   return (
-    <ThemedTouchableOpacity style={buttonStyle} disabled={isLoading} {...props}>
+    <ThemedTouchableOpacity
+      lightColor="#fff"
+      darkColor="#fff"
+      style={[
+        buttonStyle,
+        {
+          backgroundColor: colorScheme === 'light' ? '#000' : '#fff',
+        },
+      ]}
+      disabled={isLoading}
+      {...props}
+    >
       {isLoading ? (
-        <ActivityIndicator color={lightTextColor} />
+        <ActivityIndicator color={colorScheme === 'light' ? '#fff' : '#000'} />
       ) : (
-        <ThemedText lightColor={lightTextColor} darkColor={darkTextColor} style={textStyle}>
+        <ThemedText
+          lightColor={darkTextColor}
+          darkColor={lightTextColor}
+          style={[textStyle, { color: colorScheme === 'light' ? lightTextColor : darkTextColor }]}
+        >
           {text}
         </ThemedText>
       )}

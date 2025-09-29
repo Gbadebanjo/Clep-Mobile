@@ -221,7 +221,18 @@ export default function AllProducts({ slug }: { slug?: string }) {
     return () => clearTimeout(timer);
   }, [updateURL]);
 
-  if (loading) return <ThemedLoader text="Loading products..." />;
+  const { height } = Dimensions.get('window');
+
+  if (loading)
+    return (
+      <View
+        style={{
+          height,
+        }}
+      >
+        <ThemedLoader text="Loading products..." />;
+      </View>
+    );
   if (error) return <Text style={styles.errorText}>An error occurred. Please try again.</Text>;
 
   // Group products into rows of 2

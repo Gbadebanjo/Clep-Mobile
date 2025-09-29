@@ -1,9 +1,10 @@
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
 import { ThemedView } from '@/components/ThemedView';
-import { safeAmountFormatter } from '@/helpers/data-utils';
+import { Colors } from '@/constants/Colors';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/hooks/useCart';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { ShoppingCart } from 'lucide-react-native';
@@ -38,6 +39,7 @@ const Cart: React.FC<CartProps> = () => {
   const isOnSale = (item: any) => item.product.base_sale_price < item.product.base_price;
   const { items, isEmpty, totals, hasSelectedItems, getItemDiscount, clearCart } = useCart();
   const { user } = useAuth();
+  const colorScheme = useColorScheme();
 
   const getDiscount = (item: any) => {
     if (!isOnSale(item)) return 0;
@@ -109,20 +111,18 @@ const Cart: React.FC<CartProps> = () => {
         ))}
       </ScrollView>
 
-      <View style={cartStyles.totalsContainer}>
+      {/* <View style={cartStyles.totalsContainer}>
         <ThemedText style={cartStyles.totalsTitle}>Totals</ThemedText>
         <ThemedView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <ThemedText style={{ ...cartStyles.totalsText, fontWeight: '700' }}>Subtotal</ThemedText>
           <ThemedText style={cartStyles.totalsText}>{safeAmountFormatter(totals.subtotal)}</ThemedText>
         </ThemedView>
 
-        {/* <ThemedText style={cartStyles.totalsText}>Shipping: {safeAmountFormatter(totals.shipping)}</ThemedText>
-        <ThemedText style={cartStyles.totalsText}>Tax: {safeAmountFormatter(totals.tax)}</ThemedText>
-        <ThemedText style={cartStyles.totalsText}>Total: {safeAmountFormatter(totals.total)}</ThemedText> */}
-      </View>
+       
+      </View> */}
 
       <ThemedTouchableOpacity style={cartStyles.checkoutButton} onPress={handleCheckout}>
-        <ShoppingCart size={20} color="white" />
+        <ShoppingCart size={20} color={Colors[colorScheme === 'dark' ? 'light' : 'dark'].text} />
         <ThemedText lightColor="#ffffff" darkColor="#000000" style={cartStyles.checkoutText}>
           Checkout
         </ThemedText>
