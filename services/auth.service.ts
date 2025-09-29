@@ -99,8 +99,9 @@ export class AuthService {
 
   static async forgotPassword(email: string) {
     try {
-      const response = await api.post('/forgot-password', { email });
+      const response = await api.post('/users/forgot-password', { email });
 
+      console.log(response);
       if (response.ok) {
         showSuccess('Reset link sent to your email');
         return { success: true };
@@ -114,10 +115,11 @@ export class AuthService {
     }
   }
 
-  static async resetPassword(token: string, password: string) {
+  static async resetPassword(code: string, newPassword: string, email: string) {
     try {
-      const response = await api.post('/reset-password', { token, password });
+      const response = await api.post('/users/reset-password', { otp: code, newPassword, email });
 
+      console.log(response);
       if (response.ok) {
         showSuccess('Password reset successful');
         return { success: true };

@@ -2,6 +2,7 @@
 import { Heart, ShoppingBag, Store } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Link } from 'expo-router';
 // import { useCartStore } from '@/store/cartStore';
 // import { useWishlistStore } from '@/store/wishlistStore';
 // import { useAuthStore } from '@/store/authStore';
@@ -80,75 +81,77 @@ const ProductCard = ({ product, isFavorite, action = true }: IProps) => {
   };
 
   return (
-    <View style={styles.cardContainer}>
-      {/* Image */}
-      <View style={styles.imageContainer}>
-        <Image
-          source={{
-            uri: (product?.default_images?.[0]?.image as any)?.url ?? 'https://via.placeholder.com/500',
-          }}
-          resizeMode="cover"
-          style={styles.image}
-        />
+    <Link href={{ pathname: '/product/[id]', params: { id: product.id } }} asChild>
+      <TouchableOpacity style={styles.cardContainer}>
+        {/* Image */}
+        <View style={styles.imageContainer}>
+          <Image
+            source={{
+              uri: (product?.default_images?.[0]?.image as any)?.url ?? 'https://via.placeholder.com/500',
+            }}
+            resizeMode="cover"
+            style={styles.image}
+          />
 
-        {/* Wishlist & Cart Buttons */}
-        <View style={styles.actionButtons}>
-          {isVendor && (
-            <TouchableOpacity onPress={handleWishlistToggle} style={styles.iconButton}>
-              <Heart
-                size={18}
-                color={isAddedToWishlist ? Colors.light.primary700 : 'black'}
-                fill={isAddedToWishlist ? Colors.light.primary700 : 'none'}
-              />
-            </TouchableOpacity>
-          )}
-          {action && !isVendor && !isOutOfStock && (
-            <TouchableOpacity onPress={handleCartToggle} style={styles.iconButton}>
-              <ShoppingBag size={18} color={isAddedToCart ? Colors.light.primary700 : 'black'} />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {isOnSale && <Badge>{discount}% OFF</Badge>}
-      </View>
-
-      {/* Info */}
-      <View style={styles.infoContainer}>
-        <Text numberOfLines={1} style={styles.productName}>
-          {product.name}
-        </Text>
-
-        {/* Store Info */}
-        {product?.store && (
-          <View style={styles.storeInfo}>
-            <Store size={12} color={Colors.light.primary700} />
-            <Text numberOfLines={1} style={styles.storeName}>
-              {product.store.storeName}
-            </Text>
-          </View>
-        )}
-
-        {/* Price */}
-        <View style={styles.priceRow}>
-          <Text style={styles.salePrice}>{safeAmountFormatter(product.base_sale_price)}</Text>
-          {isOnSale && <Text style={styles.originalPrice}>{safeAmountFormatter(product.base_price)}</Text>}
-        </View>
-
-        {/* Stock/Cart Button */}
-        {!isVendor && (
-          <View style={styles.cartButtonWrapper}>
-            {isOutOfStock ? (
-              <Text style={styles.outOfStock}>Out of Stock</Text>
-            ) : (
-              <TouchableOpacity onPress={handleCartToggle} style={styles.addToCartButton}>
-                <ShoppingBag size={16} color="white" />
-                <Text style={styles.addToCartText}>{isAddedToCart ? 'Remove from cart' : 'Add to cart'}</Text>
+          {/* Wishlist & Cart Buttons */}
+          <View style={styles.actionButtons}>
+            {isVendor && (
+              <TouchableOpacity onPress={handleWishlistToggle} style={styles.iconButton}>
+                <Heart
+                  size={18}
+                  color={isAddedToWishlist ? Colors.light.primary700 : 'black'}
+                  fill={isAddedToWishlist ? Colors.light.primary700 : 'none'}
+                />
+              </TouchableOpacity>
+            )}
+            {action && !isVendor && !isOutOfStock && (
+              <TouchableOpacity onPress={handleCartToggle} style={styles.iconButton}>
+                <ShoppingBag size={18} color={isAddedToCart ? Colors.light.primary700 : 'black'} />
               </TouchableOpacity>
             )}
           </View>
-        )}
-      </View>
-    </View>
+
+          {isOnSale && <Badge>{discount}% OFF</Badge>}
+        </View>
+
+        {/* Info */}
+        <View style={styles.infoContainer}>
+          <Text numberOfLines={1} style={styles.productName}>
+            {product.name}
+          </Text>
+
+          {/* Store Info */}
+          {product?.store && (
+            <View style={styles.storeInfo}>
+              <Store size={12} color={Colors.light.primary700} />
+              <Text numberOfLines={1} style={styles.storeName}>
+                {product.store.storeName}
+              </Text>
+            </View>
+          )}
+
+          {/* Price */}
+          <View style={styles.priceRow}>
+            <Text style={styles.salePrice}>{safeAmountFormatter(product.base_sale_price)}</Text>
+            {isOnSale && <Text style={styles.originalPrice}>{safeAmountFormatter(product.base_price)}</Text>}
+          </View>
+
+          {/* Stock/Cart Button */}
+          {!isVendor && (
+            <View style={styles.cartButtonWrapper}>
+              {isOutOfStock ? (
+                <Text style={styles.outOfStock}>Out of Stock</Text>
+              ) : (
+                <TouchableOpacity onPress={handleCartToggle} style={styles.addToCartButton}>
+                  <ShoppingBag size={16} color="white" />
+                  <Text style={styles.addToCartText}>{isAddedToCart ? 'Remove from cart' : 'Add to cart'}</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+        </View>
+      </TouchableOpacity>
+    </Link>
   );
 };
 

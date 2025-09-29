@@ -1,19 +1,42 @@
+import { SubmitButton } from '@/components/General/SubmitButton';
 import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
 import { ThemedView } from '@/components/ThemedView';
+import { showError } from '@/services/api';
+import { AuthService } from '@/services/auth.service';
+import { useAuthStore } from '@/store';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { ImageBackground, ScrollView, TouchableOpacity, useColorScheme, View } from 'react-native';
 import { forgotPasswordStyles } from './style';
 
 export default function CustomerForgotPasswordComponent() {
-  const [email, setEmail] = useState('john@example.com');
+  const [email, setEmail] = useState('');
   const colorScheme = useColorScheme() as 'light' | 'dark';
   const styles = forgotPasswordStyles(colorScheme);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleResetPassword = () => {
-    router.push('/customer/forgot-password-verification');
+  const { setResetEmail } = useAuthStore();
+
+  const handleResetPassword = async () => {
+    try {
+      if (!email) {
+        showError('Please enter your email');
+        return;
+      }
+      setIsLoading(true);
+      const response = await AuthService.forgotPassword(email);
+      if (response.success) {
+        setResetEmail(email);
+        router.push('/customer/forgot-password-verification' as any);
+      } else {
+        showError(response.error);
+      }
+    } catch (error) {
+      showError('Something went wrong');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSignIn = () => {
@@ -51,11 +74,13 @@ export default function CustomerForgotPasswordComponent() {
               placeholder="john@example.com"
             />
 
-            <ThemedTouchableOpacity style={styles.resetButton} onPress={handleResetPassword}>
-              <ThemedText lightColor="#fff" darkColor="#000" style={styles.resetButtonText}>
-                Reset Password
-              </ThemedText>
-            </ThemedTouchableOpacity>
+            <SubmitButton
+              text="Reset Password"
+              isLoading={isLoading}
+              onPress={handleResetPassword}
+              buttonStyle={styles.resetButton}
+              textStyle={styles.resetButtonText}
+            />
 
             <View style={styles.signInContainer}>
               <ThemedText style={styles.rememberText}>Remember? </ThemedText>
