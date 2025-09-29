@@ -106,16 +106,21 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
 
         {/* Variations Placeholder */}
         {product.variations.map((variation, index) => {
+          const attributes = variation.attributes?.filter((attribute) => attribute.name && attribute.value.length > 2);
           return (
             <View style={styles.variationContainer} key={index}>
-              {variation.attributes?.map((attribute, index) => {
-                return (
-                  <View style={styles.variationRow} key={index}>
-                    <ThemedText style={styles.variationLabel}>{attribute.name}</ThemedText>
-                    <ThemedText style={styles.variationValue}>{attribute.value}</ThemedText>
-                  </View>
-                );
-              })}
+              {attributes &&
+                attributes.map((attribute, index) => {
+                  return (
+                    attribute.name &&
+                    attribute.value && (
+                      <View style={styles.variationRow} key={index}>
+                        <ThemedText style={styles.variationLabel}>{attribute.name}</ThemedText>
+                        <ThemedText style={styles.variationValue}>{attribute.value}</ThemedText>
+                      </View>
+                    )
+                  );
+                })}
             </View>
           );
         })}
