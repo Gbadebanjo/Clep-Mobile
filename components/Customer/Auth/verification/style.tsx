@@ -89,6 +89,7 @@ export const verificationStyles = (colorScheme: 'light' | 'dark') =>
     resendContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
+      alignItems: 'center',
     },
     noEmailText: {
       fontSize: 14,
@@ -97,6 +98,6 @@ export const verificationStyles = (colorScheme: 'light' | 'dark') =>
     resendLinkText: {
       fontSize: 14,
       fontWeight: '600',
-      marginTop: -2,
+      marginTop: -4,
     },
   });

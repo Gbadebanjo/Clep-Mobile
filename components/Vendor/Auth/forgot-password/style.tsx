@@ -26,13 +26,11 @@ export const forgotPasswordStyles = (colorScheme: 'light' | 'dark') =>
       fontSize: 32,
       fontWeight: 'bold',
       marginBottom: 16,
-      textAlign: 'center',
     },
     subtitle: {
       fontSize: 16,
       lineHeight: 24,
       marginBottom: 40,
-      textAlign: 'center',
     },
     formContainer: {
       gap: 20,
@@ -48,19 +46,30 @@ export const forgotPasswordStyles = (colorScheme: 'light' | 'dark') =>
       fontSize: 16,
       fontWeight: '600',
     },
-    signInContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
+    logoContainer: {
       alignItems: 'center',
-      marginTop: 20,
+      paddingTop: 60,
+      // paddingBottom: 40,
     },
-    rememberText: {
-      fontSize: 14,
-      color: '#747778',
+    logo: {
+      width: 120,
+      height: 40,
     },
-    signInText: {
+    topSignUpContainer: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      marginBottom: 40,
+      marginRight: 20,
+      marginTop: 10,
+    },
+    topSignUpText: {
       fontSize: 14,
-      color: Colors[colorScheme].primary800 || '#E91E63',
+      color: Colors[colorScheme].primary800,
       fontWeight: '600',
+    },
+    noAccountText: {
+      fontSize: 14,
+      color: colorScheme === 'dark' ? '#fff' : '#000',
+      textAlign: 'right',
     },
   });

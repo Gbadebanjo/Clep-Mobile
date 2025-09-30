@@ -54,7 +54,7 @@ export const verificationStyles = (colorScheme: 'light' | 'dark') =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 30,
-      gap: 12,
+      gap: 6,
     },
     codeInput: {
       flex: 1,
@@ -97,6 +97,6 @@ export const verificationStyles = (colorScheme: 'light' | 'dark') =>
     resendLinkText: {
       fontSize: 14,
       fontWeight: '600',
-      marginTop: -2,
+      marginTop: -4,
     },
   });

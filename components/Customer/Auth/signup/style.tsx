@@ -11,7 +11,7 @@ export const customerSignupStyles = (colorScheme: 'light' | 'dark') => {
     },
     scrollContainer: {
       flexGrow: 1,
-      paddingBottom: 20,
+      paddingBottom: 0,
     },
     logoContainer: {
       alignItems: 'center',

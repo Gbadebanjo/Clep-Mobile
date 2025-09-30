@@ -20,6 +20,7 @@ export default function CustomerSignupComponent() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [passwordValidation, setPasswordValidation] = useState({
     isValid: false,
     hasMinLength: false,
@@ -61,7 +62,7 @@ export default function CustomerSignupComponent() {
       const signupData: Omit<RegisterVendorForm, 'ninNumber' | 'businessName' | 'businessDetails' | 'currentPlan'> = {
         email,
         name: `${firstName} ${surname}`,
-        phoneNumber: '',
+        phoneNumber: phoneNumber,
         role: 'customer',
         password,
         isActive: true,
@@ -116,14 +117,28 @@ export default function CustomerSignupComponent() {
               {!surname && <ThemedText style={styles.errorText}>Last Name is required</ThemedText>}
             </View>
 
-            <ThemedInput
-              label="Email"
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
+            <View>
+              <ThemedInput
+                label="Phone Number"
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                placeholder="+234806112733"
+              />
+              {!phoneNumber && <ThemedText style={styles.errorText}>Phone Number is required</ThemedText>}
+            </View>
+
+            <View>
+              <ThemedInput
+                label="Email"
+                value={email}
+                onChangeText={setEmail}
+                placeholder="Enter your email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+
+              {!email && <ThemedText style={styles.errorText}>Email address is required</ThemedText>}
+            </View>
 
             <View>
               <ThemedInput

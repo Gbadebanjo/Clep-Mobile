@@ -5,9 +5,10 @@ import { ThemedView } from '@/components/ThemedView';
 import { showError } from '@/services/api';
 import { AuthService } from '@/services/auth.service';
 import { useAuthStore } from '@/store';
+import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { ImageBackground, ScrollView, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { ScrollView, TouchableOpacity, useColorScheme, View } from 'react-native';
 import { forgotPasswordStyles } from './style';
 
 export default function CustomerForgotPasswordComponent() {
@@ -22,6 +23,11 @@ export default function CustomerForgotPasswordComponent() {
     try {
       if (!email) {
         showError('Please enter your email');
+        return;
+      }
+      //Check if email is valid
+      if (!email.includes('@')) {
+        showError('Please enter a valid email');
         return;
       }
       setIsLoading(true);
@@ -46,15 +52,20 @@ export default function CustomerForgotPasswordComponent() {
   return (
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* <SearchNavCompo /> */}
+        <View style={styles.logoContainer}>
+          <Image source={require('@/assets/images/logo.webp')} style={styles.logo} resizeMode="contain" />
+        </View>
 
-        {/* Hero Image */}
-        <View style={styles.imageContainer}>
-          <ImageBackground
-            source={require('@/assets/images/auth/forgot-password-1.png')}
-            style={styles.heroImage}
-            resizeMode="cover"
-          />
+        {/* Sign Up Link */}
+        <View style={styles.topSignUpContainer}>
+          <ThemedText style={styles.noAccountText}>Remember your password? </ThemedText>
+          <TouchableOpacity
+            onPress={() => {
+              router.push('/customer/login' as any);
+            }}
+          >
+            <ThemedText style={styles.topSignUpText}>Sign In</ThemedText>
+          </TouchableOpacity>
         </View>
 
         {/* Content */}
@@ -81,13 +92,6 @@ export default function CustomerForgotPasswordComponent() {
               buttonStyle={styles.resetButton}
               textStyle={styles.resetButtonText}
             />
-
-            <View style={styles.signInContainer}>
-              <ThemedText style={styles.rememberText}>Remember? </ThemedText>
-              <TouchableOpacity onPress={handleSignIn}>
-                <ThemedText style={styles.signInText}>Sign In</ThemedText>
-              </TouchableOpacity>
-            </View>
           </View>
         </View>
       </ScrollView>

@@ -1,8 +1,10 @@
 import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
 import { safeAmountFormatter } from '@/helpers/data-utils';
+import { useCart } from '@/hooks/useCart';
 import { useColorScheme } from '@/hooks/useColorScheme.web';
+import { useCartStore } from '@/store';
 import { product } from '@/types/product';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -26,12 +28,29 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   const [activeTab, setActiveTab] = useState('Description');
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const { addToCart, items, removeFromCart } = useCartStore();
+  const { changeQuantity } = useCart();
+
+  const [isAddedToCart, setIsAddedToCart] = useState(false);
 
   const colorScheme = useColorScheme();
 
   const styles = ProductDetailStyles(colorScheme);
 
   const flatListRef = useRef<FlatList>(null);
+
+  const handleCartToggle = () => {
+    if (isAddedToCart) {
+      removeFromCart(product.id);
+    } else {
+      addToCart(product, product.variations, quantity);
+    }
+  };
+
+  useEffect(() => {
+    const isAdded = items.find((item) => item?.product.id === product.id);
+    setIsAddedToCart(!!isAdded);
+  }, [items, product.id]);
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const scrollPosition = event.nativeEvent.contentOffset.x;
@@ -54,7 +73,12 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   );
 
   const handleQuantityChange = (amount: number) => {
-    setQuantity((prev) => Math.max(1, prev + amount));
+    const newQuantity = Math.max(1, quantity + amount);
+    setQuantity((prev) => Math.max(1, newQuantity));
+
+    if (isAddedToCart) {
+      changeQuantity(product.id, newQuantity);
+    }
   };
 
   // Mock data for sizes, should come from product
@@ -157,9 +181,14 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
 
         {/* Action Buttons */}
         <View style={styles.buttonContainer}>
-          <ThemedTouchableOpacity lightColor="#000" darkColor="#fff" style={styles.addToCartButton}>
+          <ThemedTouchableOpacity
+            onPress={handleCartToggle}
+            lightColor="#000"
+            darkColor="#fff"
+            style={styles.addToCartButton}
+          >
             <ThemedText darkColor="#000" lightColor="#fff" style={styles.buttonText}>
-              Add to Cart
+              {isAddedToCart ? 'Remove from cart' : 'Add to cart'}
             </ThemedText>
           </ThemedTouchableOpacity>
           <TouchableOpacity style={styles.buyNowButton}>

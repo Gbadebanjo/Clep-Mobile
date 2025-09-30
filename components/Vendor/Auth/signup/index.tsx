@@ -21,6 +21,7 @@ export default function VendorSignupComponent() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [passwordValidation, setPasswordValidation] = useState({
     isValid: false,
     hasMinLength: false,
@@ -62,7 +63,7 @@ export default function VendorSignupComponent() {
       const signupData: RegisterVendorForm = {
         email,
         name: `${firstName} ${surname}`,
-        phoneNumber: '',
+        phoneNumber: phoneNumber,
         role: 'vendor',
         password,
         isActive: true,
@@ -148,6 +149,16 @@ export default function VendorSignupComponent() {
 
             <View>
               <ThemedInput
+                label="Phone Number"
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                placeholder="+234806112733"
+              />
+              {!phoneNumber && <ThemedText style={styles.errorText}>Phone Number is required</ThemedText>}
+            </View>
+
+            <View>
+              <ThemedInput
                 label="Business Name (Cannot be changed later)"
                 value={businessName}
                 onChangeText={setBusinessName}
@@ -156,14 +167,18 @@ export default function VendorSignupComponent() {
               {!businessName && <ThemedText style={styles.errorText}>Business name is required</ThemedText>}
             </View>
 
-            <ThemedInput
-              label="Email"
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
+            <View>
+              <ThemedInput
+                label="Email"
+                value={email}
+                onChangeText={setEmail}
+                placeholder="Enter your email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+
+              {!email && <ThemedText style={styles.errorText}>Email address is required</ThemedText>}
+            </View>
 
             <View>
               <ThemedInput
