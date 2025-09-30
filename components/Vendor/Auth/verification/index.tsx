@@ -62,7 +62,7 @@ export default function VendorVerificationComponent() {
         setUser({ ...user, emailVerified: true });
 
         // Navigate to NIN verification screen
-        router.push('/vendor/identity-verification');
+        router.push('/vendor/account-created');
       } else {
         showError(response.error || 'Verification failed');
       }
