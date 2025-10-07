@@ -61,6 +61,9 @@ export default function RootLayout() {
           <Stack.Screen name="vendor/store-setup" options={{ headerShown: false }} />
           <Stack.Screen name="vendor/wallet-setup" options={{ headerShown: false }} />
           <Stack.Screen name="vendor/account-created" options={{ headerShown: false }} />
+          <Stack.Screen name='measurement/height' options={{ headerShown: false }} />
+          <Stack.Screen name='measurement/uploadPhoto' options={{ headerShown: false }} />
+          <Stack.Screen name='measurement/data' options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />

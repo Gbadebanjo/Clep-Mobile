@@ -1,11 +1,11 @@
-import { Colors } from '@/constants/Colors';
-import { Dimensions, StyleSheet } from 'react-native';
+import { Colors } from "@/constants/Colors";
+import { Dimensions, StyleSheet } from "react-native";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 const imageSize = width;
 const imageHeight = width * 0.9;
 
-export const ProductDetailStyles = (colorScheme: 'light' | 'dark') =>
+export const ProductDetailStyles = (colorScheme: "light" | "dark") =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -19,19 +19,19 @@ export const ProductDetailStyles = (colorScheme: 'light' | 'dark') =>
     slide: {
       width: imageSize,
       height: imageHeight,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     image: {
-      width: '100%',
-      height: '100%',
-      resizeMode: 'cover',
+      width: "100%",
+      height: "100%",
+      resizeMode: "cover",
     },
     pagination: {
-      flexDirection: 'row',
-      position: 'absolute',
+      flexDirection: "row",
+      position: "absolute",
       bottom: 15,
-      alignSelf: 'center',
+      alignSelf: "center",
     },
     dot: {
       width: 8,
@@ -44,7 +44,6 @@ export const ProductDetailStyles = (colorScheme: 'light' | 'dark') =>
     activeDot: {
       backgroundColor: Colors[colorScheme].primary800,
     },
-    // Details
     detailsContainer: {
       padding: 20,
 
@@ -52,41 +51,45 @@ export const ProductDetailStyles = (colorScheme: 'light' | 'dark') =>
     },
     productName: {
       fontSize: 24,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       marginBottom: 8,
     },
     ratingContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginBottom: 12,
     },
     priceContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginBottom: 4,
     },
     originalPrice: {
       fontSize: 16,
-      textDecorationLine: 'line-through',
+      textDecorationLine: "line-through",
       color: Colors[colorScheme].textMuted,
       marginRight: 8,
     },
     discountedPrice: {
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       color: Colors[colorScheme].primary700,
     },
     discountPercentage: {
-      fontSize: 14,
-      color: Colors[colorScheme].textMuted,
+      fontSize: 11,
+      color: "#fff",
+      backgroundColor: Colors[colorScheme].primary500,
       marginLeft: 8,
-      fontWeight: 'bold',
+      fontWeight: "bold",
+      paddingHorizontal: 6,
+      paddingVertical: 4,
+      borderRadius: 4,
     },
     stock: {
       fontSize: 14,
       color: Colors[colorScheme].stockColor,
       marginBottom: 12,
-      fontWeight: '500',
+      fontWeight: "500",
     },
     shortDescription: {
       fontSize: 16,
@@ -98,17 +101,17 @@ export const ProductDetailStyles = (colorScheme: 'light' | 'dark') =>
       marginBottom: 16,
     },
     variationRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "column",
       marginBottom: 8,
     },
     variationLabel: {
-      fontSize: 16,
-      fontWeight: '500',
+      fontSize: 14,
+      fontWeight: "700",
       marginRight: 8,
     },
     variationValue: {
-      fontSize: 16,
+      fontSize: 12,
+      color: Colors[colorScheme].textMuted,
     },
     // Size
     sizeContainer: {
@@ -116,11 +119,11 @@ export const ProductDetailStyles = (colorScheme: 'light' | 'dark') =>
     },
     sizeLabel: {
       fontSize: 16,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       marginBottom: 8,
     },
     sizeOptions: {
-      flexDirection: 'row',
+      flexDirection: "row",
     },
     sizeOption: {
       paddingVertical: 8,
@@ -139,20 +142,20 @@ export const ProductDetailStyles = (colorScheme: 'light' | 'dark') =>
     },
     // Quantity
     quantityContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginBottom: 24,
-      width: '100%',
-      justifyContent: 'space-between',
+      width: "100%",
+      justifyContent: "space-between",
     },
     quantityLabel: {
       fontSize: 16,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       marginRight: 16,
     },
     quantityToggle: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       borderWidth: 1,
       borderColor: Colors[colorScheme].border,
       borderRadius: 8,
@@ -163,40 +166,61 @@ export const ProductDetailStyles = (colorScheme: 'light' | 'dark') =>
     },
     quantityButtonText: {
       fontSize: 20,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
     quantity: {
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       paddingHorizontal: 16,
+      borderLeftWidth: 1,
+      borderRightWidth: 1,
+      borderColor: Colors[colorScheme].border,
     },
-    // Buttons
     buttonContainer: {
-      flexDirection: 'column',
-      justifyContent: 'space-between',
+      flexDirection: "column",
+      justifyContent: "space-between",
     },
     addToCartButton: {
       paddingVertical: 16,
       borderRadius: 8,
-      alignItems: 'center',
-      flex: 1,
+      alignItems: "center",
       marginVertical: 8,
+      flexDirection: "row",
+      justifyContent: "center",
+      gap: 3,
     },
     buyNowButton: {
-      backgroundColor: Colors[colorScheme].primary700,
+      backgroundColor: Colors[colorScheme].background,
       paddingVertical: 16,
       borderRadius: 8,
-      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: Colors[colorScheme].inputBorder,
+      alignItems: "center",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      gap: 3,
+      marginVertical: 8,
+    },
+    customOrderButton: {
+      backgroundColor: Colors[colorScheme].inputBorder,
+      paddingVertical: 16,
+      borderRadius: 8,
+      alignItems: "center",
       flex: 1,
       marginVertical: 8,
     },
     buttonText: {
       fontSize: 16,
-      fontWeight: 'bold',
+      fontWeight: "700",
     },
-    // Tabs
+    buttonText2: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: Colors[colorScheme].tabIconDefault,
+    },
     tabsContainer: {
-      flexDirection: 'row',
+      flexDirection: "row",
       marginTop: 24,
       borderBottomWidth: 1,
       borderBottomColor: Colors[colorScheme].border,
@@ -212,7 +236,7 @@ export const ProductDetailStyles = (colorScheme: 'light' | 'dark') =>
     },
     tabText: {
       fontSize: 16,
-      fontWeight: '500',
+      fontWeight: "500",
     },
     tabContent: {
       paddingVertical: 16,
@@ -223,8 +247,8 @@ export const ProductDetailStyles = (colorScheme: 'light' | 'dark') =>
       marginTop: 8,
     },
     specRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
       paddingVertical: 20,
       borderBottomWidth: 1,
       borderBottomColor: Colors[colorScheme].border,
@@ -236,11 +260,11 @@ export const ProductDetailStyles = (colorScheme: 'light' | 'dark') =>
     },
     specValue: {
       fontSize: 15,
-      fontWeight: '500',
+      fontWeight: "500",
     },
     // Reviews
     reviewContainer: {
-      alignItems: 'center',
+      alignItems: "center",
       paddingVertical: 24,
     },
     noReviewsText: {
@@ -258,7 +282,7 @@ export const ProductDetailStyles = (colorScheme: 'light' | 'dark') =>
     },
     writeReviewButtonText: {
       fontSize: 16,
-      fontWeight: 'bold',
-      color: Colors['dark'].text,
+      fontWeight: "bold",
+      color: Colors["dark"].text,
     },
   });

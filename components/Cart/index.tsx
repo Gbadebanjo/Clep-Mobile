@@ -14,23 +14,6 @@ import { ScrollView, View } from 'react-native';
 import CartItem from './CartItem';
 import { cartStyles } from './style';
 
-// Mock data - replace with actual cart store
-const mockCartItems = [
-  {
-    id: '1',
-    product: {
-      id: '1',
-      name: "Men's shirt",
-      store: { storeName: 'nice fashion' },
-      default_images: [{ image: { url: 'https://via.placeholder.com/100' } }],
-      base_price: 45000,
-      base_sale_price: 5000,
-    },
-    quantity: 1,
-    variation: { id: '1', name: 'Default' },
-  },
-];
-
 interface CartProps {
   cartItems?: any[];
 }

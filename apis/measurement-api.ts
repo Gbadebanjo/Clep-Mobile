@@ -7,9 +7,10 @@ import {
 } from '@/types/measurement';
 
 export class MeasurementAPI extends BaseAPI {
-    constructor(token?: string) {
-        super(token);
-    }
+
+    // constructor(token?: string) {
+    //     super(token);
+    // }
 
     public async uploadAIMeasurement(data: {
         username: string;
@@ -23,6 +24,7 @@ export class MeasurementAPI extends BaseAPI {
         const response = await this.axiosInstance.post('/ai-upload', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
+        console.log(`response.data`, response.data);
         return response.data;
     }
 

@@ -18,9 +18,6 @@ export default function UserScreen() {
     }
   }, []);
 
-  // if (user) {
-  //   return null;
-  // }
 
   return <SettingsComponent />;
 }

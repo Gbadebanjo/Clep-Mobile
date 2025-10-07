@@ -47,7 +47,7 @@ export const checkoutStyles = (colorScheme: 'light' | 'dark') => {
       gap: 20,
     },
     inputContainer: {
-      position: 'relative',
+       marginBottom: 12,
     },
     label: {
       fontSize: 16,
@@ -116,6 +116,27 @@ export const checkoutStyles = (colorScheme: 'light' | 'dark') => {
     continueButtonText: {
       fontSize: 16,
       fontWeight: '600',
+    },
+     cartSection: {
+      marginTop: 10,
+      borderWidth: 1,
+      borderColor: Colors[colorScheme].border,
+      borderRadius: 12,
+      padding: 15,
+      backgroundColor: Colors[colorScheme].background,
+    },
+    cartItemsContainer: {
+      marginTop: 10,
+    },
+    totalContainer: {
+      marginTop: 10,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    totalText: {
+      fontWeight: 'bold',
+      fontSize: 16,
     },
   });
 };

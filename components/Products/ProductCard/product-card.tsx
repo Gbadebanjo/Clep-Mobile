@@ -95,7 +95,7 @@ const ProductCard = ({ product, isFavorite, action = true }: IProps) => {
 
           {/* Wishlist & Cart Buttons */}
           <View style={styles.actionButtons}>
-            {isVendor && (
+            {!isVendor && (
               <TouchableOpacity onPress={handleWishlistToggle} style={styles.iconButton}>
                 <Heart
                   size={18}

@@ -75,7 +75,7 @@ const ProductDetailPage = () => {
 
   return (
     <>
-      <Stack.Screen options={{ title: selectedProduct.name, headerBackTitle: 'Back' }} />
+      {/* <Stack.Screen options={{ title: selectedProduct.name, headerBackTitle: 'Back' }} /> */}
       <ProductDetail product={selectedProduct} />
     </>
   );
