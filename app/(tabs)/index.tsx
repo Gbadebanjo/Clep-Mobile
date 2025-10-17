@@ -2,6 +2,9 @@
 import { ScrollView, StyleSheet } from 'react-native';
 // import Slider from '@/components/Home/slider';
 import SliderComp from '@/components/Home/slider-comp';
+import BestSellers from '@/components/Products/BestSellers/best-sellers';
+import FashionShowcase from '@/components/Products/FashionShowcase';
+import FeaturedProducts from '@/components/Products/FeaturedProducts';
 import { ThemedView } from '@/components/ThemedView';
 
 export default function HomeScreen() {
@@ -9,9 +12,9 @@ export default function HomeScreen() {
     <ScrollView>
       <ThemedView>
         <SliderComp />
-        {/* <FeaturedProducts /> */}
-        {/* <FashionShowcase /> */}
-        {/* <BestSellers /> */}
+        <FeaturedProducts />
+        <FashionShowcase />
+        <BestSellers />
       </ThemedView>
     </ScrollView>
   );

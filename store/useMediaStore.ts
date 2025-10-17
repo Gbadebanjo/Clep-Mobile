@@ -86,7 +86,7 @@ export const useMediaStore = create<MediaState>((set, get) => ({
   usage: null,
   isUsageLoading: false,
 
-  // ✅ Setters
+  // Setters
   setMedia: (media) => set({ media }),
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),
@@ -94,7 +94,7 @@ export const useMediaStore = create<MediaState>((set, get) => ({
   setUsageLoading: (loading) => set({ isUsageLoading: loading }),
   setSuccess: (message: string) => set({ success: message }),
 
-  // ✅ CRUD
+  //  CRUD
   addMedia: (file) => {
     const { media } = get();
     set({ media: [file, ...media] });
@@ -142,7 +142,7 @@ export const useMediaStore = create<MediaState>((set, get) => ({
         console.error("❌ deleteMedia failed:", message);
         setError?.(message);
 
-        // 🔥 Show error toast
+        // Show error toast
         Toast.show({
           type: "error",
           text1: "Delete Failed",
@@ -153,9 +153,7 @@ export const useMediaStore = create<MediaState>((set, get) => ({
 
         throw new Error(message);
       }
-
-      // ✅ Handle success
-      console.log("✅ Media deleted successfully:", data);
+      // ✅ Success - remove from store
       removeMedia(mediaId);
 
       const successMsg = data?.message || "Media deleted successfully.";
@@ -200,12 +198,8 @@ fetchMedia: async (page = 1, search = '', limit = 20) => {
     params.append('limit', limit.toString());
     if (search) params.append('search', search);
 
-    console.log("🔍 Fetching user media with params:", params.toString());
-
     // Fetch data
     const res: any = await api.get(`/media/user-media?${params.toString()}`);
-    console.log("✅ fetchMedia response:", res);
-
     const data = res.data?.data;
     if (!data) throw new Error("Invalid media response format");
 
@@ -217,7 +211,7 @@ fetchMedia: async (page = 1, search = '', limit = 20) => {
       currentPage: data.page || 1,
     });
   } catch (error: any) {
-    console.error("❌ fetchMedia error:", error);
+    console.error(" fetchMedia error:", error);
     setError(
       error.response?.data?.message ||
       error.message ||
