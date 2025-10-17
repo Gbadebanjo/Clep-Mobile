@@ -150,3 +150,9 @@ export const formatChatDate = (isoDate: string): string => {
         year: 'numeric',
     });
 };
+// Convert bytes to KB (rounded to 2 decimal places)
+ export const formatFileSize = (bytes: number | undefined) => {
+    if (!bytes || isNaN(bytes)) return "0 KB";
+    return `${(bytes / 1024).toFixed(2)} KB`;
+  };
+  
