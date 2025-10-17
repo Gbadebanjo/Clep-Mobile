@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-       "infoPlist": {
+      "infoPlist": {
         "NSPhotoLibraryUsageDescription": "This app requires access to your photo library to upload photos."
       }
     },
@@ -52,8 +52,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "03441c16-ddad-48be-9d75-09bfd7d8fa4c"
+        "projectId": "3d065886-990e-43d8-be0d-b48a67395655"
       }
-    }
+    },
+    "owner": "foodpadi"
   }
 }
