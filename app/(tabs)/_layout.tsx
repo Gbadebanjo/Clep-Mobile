@@ -44,13 +44,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Ionicons size={28} name="home" color={color} />,
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="wishlist"
         options={{
           title: 'Wishlist',
           tabBarIcon: ({ color }) => <Ionicons size={28} name="heart" color={color} />,
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="cart"
         options={{

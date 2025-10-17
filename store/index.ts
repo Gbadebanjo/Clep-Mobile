@@ -604,3 +604,34 @@ export const useWishlistStore = create<WishlistState>()(
     }
   )
 );
+
+// Measurement Store
+interface MeasurementData {
+  [key: string]: string;
+}
+
+interface MeasurementState {
+  measurements: MeasurementData | null;
+  setMeasurements: (data: MeasurementData) => void;
+  clearMeasurements: () => void;
+}
+
+export const useMeasurementStore = create<MeasurementState>()(
+  persist(
+    (set) => ({
+      measurements: null,
+
+      setMeasurements: (data) => {
+        set({ measurements: data });
+      },
+
+      clearMeasurements: () => {
+        set({ measurements: null });
+      },
+    }),
+    {
+      name: 'measurement-storage',
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);

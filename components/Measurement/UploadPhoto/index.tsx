@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useMutation } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
-import { useAuthStore } from '@/store';
+import { useAuthStore, useMeasurementStore } from '@/store';
 import { ThemedView } from '@/components/ThemedView';
 import { UploadPhotoStyles } from './style';
 import { AIScanAnimation } from '@/components/General/AIScanAnimationProps';
@@ -17,6 +17,7 @@ export default function UploadPhoto() {
   const styles = UploadPhotoStyles(colorScheme);
   const router = useRouter();
   const user = useAuthStore((store) => store.user);
+  const setMeasurements = useMeasurementStore((state) => state.setMeasurements);
 
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [showOptions, setShowOptions] = useState(false);
@@ -24,6 +25,7 @@ export default function UploadPhoto() {
   const measurementAPI = new MeasurementAPI(user?.token);
 
   const uploadImage = useMutation({
+
     mutationFn: async ({
       username,
       height,
@@ -45,7 +47,11 @@ export default function UploadPhoto() {
         image: imageFile,
       });
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
+      const measurementData = response?.data?.measurements;
+      if (measurementData) {
+        setMeasurements(measurementData as any);
+      }
       Toast.show({
         type: 'success',
         text1: 'Image uploaded successfully!',
@@ -164,13 +170,13 @@ export default function UploadPhoto() {
           >
             <View style={{ flex:1, justifyContent:'center', alignItems:'center', backgroundColor:'rgba(0,0,0,0.5)' }}>
               <View style={{ backgroundColor:'#fff', borderRadius:10, padding:24, width:280 }}>
-                <Text style={{ fontSize:18, marginBottom:16, color: '#3E071A' }}>Select Option</Text>
+                <Text style={{ fontSize:18, marginBottom:26, color: 'red' }}>Select Option</Text>
                 <TouchableOpacity
                   onPress={() => {
                     setShowOptions(false);
                     setTimeout(() => handlePickOption(false), 300);
                   }}
-                  style={{ marginBottom:16 }}
+                  style={{ marginBottom: 26 }}
                 >
                   <Text style={{ fontSize:16 }}>Choose from Gallery</Text>
                 </TouchableOpacity>

@@ -2,8 +2,9 @@ import { ThemedInput } from '@/components/ThemedInput';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedTouchableOpacity } from '@/components/ThemedTouchableOpacity';
 import { ThemedView } from '@/components/ThemedView';
-import { showError } from '@/services/api';
+import { showError, showSuccess } from '@/services/api';
 import { Ionicons } from '@expo/vector-icons';
+import { usePaystack } from 'react-native-paystack-webview';
 import React, { useState } from 'react';
 import {
   ScrollView,
@@ -11,10 +12,11 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import PaymentComponent from '../Payment';
 import { checkoutStyles } from './style';
 import { useCart } from '@/hooks/useCart';
 import CartItem from '@/components/Cart/CartItem';
+import axios from 'axios'; // 🆕 API handling
+import { useNavigation } from '@react-navigation/native'; // 🆕 For routing after order
 
 export default function CheckoutComponent() {
   const [street, setStreet] = useState('');
@@ -23,20 +25,18 @@ export default function CheckoutComponent() {
   const [zipcode, setZipcode] = useState('');
   const [country, setCountry] = useState('NG');
   const [showStateDropdown, setShowStateDropdown] = useState(false);
-  const [showPayment, setShowPayment] = useState(false);
-
+  const [loading, setLoading] = useState(false); // 🆕
+  const { popup } = usePaystack();
+  const navigation = useNavigation(); // 🆕
   const colorScheme = useColorScheme() as 'light' | 'dark';
   const styles = checkoutStyles(colorScheme);
+  const { items, getItemDiscount, clearCart } = useCart(); // 🆕 added clearCart
 
-  const { items, getItemDiscount } = useCart();
-  const email = 'test@example.com'; // Replace with actual user email
-
-  // ✅ Calculate total price manually
+  // ✅ Calculate total price
   const totalPrice = items.reduce((acc, item) => {
     const discount = getItemDiscount ? getItemDiscount(item) : 0;
     const priceAfterDiscount = item.price - discount;
     return acc + priceAfterDiscount * (item.quantity || 1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, 0);
 
   const states = [
@@ -47,37 +47,82 @@ export default function CheckoutComponent() {
     'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara',
   ];
 
-  const handleContinue = () => {
-    if (!street || !city || !state || !zipcode) {
-      showError('Please fill in all required fields');
-      return;
-    }
-    setShowPayment(true);
-  };
-
   const handleStateSelect = (selectedState: string) => {
     setState(selectedState);
     setShowStateDropdown(false);
   };
 
-  const handlePaymentSuccess = () => {
-    setShowPayment(false);
+  // 🆕 Refund handler (fallback if order fails)
+  const refundPayment = async (reference: string) => {
+    try {
+      await axios.post(
+        'https://api.paystack.co/refund',
+        { transaction: reference, amount: totalPrice * 100 },
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.EXPO_PUBLIC_PAYSTACK_SECRET_KEY}`,
+          },
+        }
+      );
+      showSuccess('Refund initiated');
+    } catch (err) {
+      console.error('Refund failed', err);
+    }
   };
 
-  const handlePaymentCancel = () => {
-    setShowPayment(false);
+  // 🆕 Create order after successful payment
+  const createOrder = async (reference: string) => {
+    try {
+      const payload = {
+        items: items.map((i) => ({
+          product: i.id,
+          quantity: i.quantity,
+          price: i.price,
+        })),
+        total_amount: totalPrice,
+        shipping_address: { street, city, state, zipcode, country },
+        payment_info: {
+          method: 'paystack',
+          reference,
+        },
+      };
+
+      const res = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/orders`, payload);
+
+      showSuccess('Order placed successfully');
+      clearCart();
+      navigation.navigate('OrderHistory', { orderId: res.data.id });
+    } catch (err) {
+      console.error('Order creation failed', err);
+      showError('Order creation failed. Initiating refund...');
+      refundPayment(reference);
+    }
   };
 
-  if (showPayment) {
-    return (
-      <PaymentComponent
-        email={email}
-        amount={totalPrice}
-        onSuccess={handlePaymentSuccess}
-        onCancel={handlePaymentCancel}
-      />
-    );
-  }
+  // 🆕 Main Paystack payment handler
+  const handlePayment = () => {
+    if (!street || !city || !state || !zipcode) {
+      showError('Please fill in all required fields');
+      return;
+    }
+
+    popup.checkout({
+      email: 'testuser@example.com', // ideally, use logged-in user email
+      amount: totalPrice * 100, // Paystack expects kobo
+      reference: 'ref-' + Date.now(),
+      onSuccess: (res) => {
+        const reference = res.data.transactionRef.reference;
+        console.log('✅ Payment success:', reference);
+        createOrder(reference);
+      },
+      onCancel: () => {
+        console.log('❌ Payment cancelled');
+      },
+      onError: (err) => {
+        console.log('🚨 Payment error:', err);
+      },
+    });
+  };
 
   return (
     <ThemedView style={styles.container}>
@@ -125,7 +170,9 @@ export default function CheckoutComponent() {
                   style={styles.dropdown}
                   onPress={() => setShowStateDropdown(!showStateDropdown)}
                 >
-                  <ThemedText style={[styles.dropdownText, !state && styles.placeholder]}>
+                  <ThemedText
+                    style={[styles.dropdownText, !state && styles.placeholder]}
+                  >
                     {state || 'Select State'}
                   </ThemedText>
                   <Ionicons
@@ -144,7 +191,9 @@ export default function CheckoutComponent() {
                           style={styles.dropdownItem}
                           onPress={() => handleStateSelect(stateOption)}
                         >
-                          <ThemedText style={styles.dropdownItemText}>{stateOption}</ThemedText>
+                          <ThemedText style={styles.dropdownItemText}>
+                            {stateOption}
+                          </ThemedText>
                         </TouchableOpacity>
                       ))}
                     </ScrollView>
@@ -183,7 +232,11 @@ export default function CheckoutComponent() {
               <ThemedText style={styles.sectionTitle}>Summary</ThemedText>
               <View style={styles.cartItemsContainer}>
                 {items.map((item) => (
-                  <CartItem key={item.id} item={item} discount={getItemDiscount(item)} />
+                  <CartItem
+                    key={item.id}
+                    item={item}
+                    discount={getItemDiscount(item)}
+                  />
                 ))}
               </View>
 
@@ -196,8 +249,15 @@ export default function CheckoutComponent() {
             </View>
           )}
 
-          <ThemedTouchableOpacity style={styles.continueButton} onPress={handleContinue}>
-            <ThemedText lightColor="#fff" darkColor="#000" style={styles.continueButtonText}>
+          <ThemedTouchableOpacity
+            style={styles.continueButton}
+            onPress={handlePayment}
+          >
+            <ThemedText
+              lightColor="#fff"
+              darkColor="#000"
+              style={styles.continueButtonText}
+            >
               Continue to Payment
             </ThemedText>
           </ThemedTouchableOpacity>
