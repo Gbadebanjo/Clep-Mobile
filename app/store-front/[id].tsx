@@ -11,19 +11,17 @@ import {
   useColorScheme,
   Dimensions,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import {
   Heart,
   Star,
-  ChevronRight,
-  MapPin,
   Mail,
   Phone,
   ShoppingBag,
-  Filter,
-  Grid3X3,
+  TrendingUp,
   List as ListIcon,
 } from "lucide-react-native";
 import { ThemedView } from "@/components/ThemedView";
@@ -248,11 +246,12 @@ const StoreHeader = ({
 }) => (
   <View style={{ backgroundColor: "#fff", paddingBottom: 16 }}>
     {/* Hero Image */}
-    {store?.hero_slides?.[0]?.slide?.url && (
+    {store?.hero_slides?.[0]?.slide?.url ? (
       <Image
         source={{ uri: store.hero_slides[0].slide.url }}
-        style={{ width: "100%", height: 200, backgroundColor: "#e5e7eb" }}
-      />
+        style={{ width: "100%", height: 130, backgroundColor: "#e5e7eb" }}
+      /> ) : (
+        <Image source={require("@/assets/images/product-cloth.png")} style={{ width: "100%", height: 130, backgroundColor: "#e5e7eb" }}/>
     )}
 
     {/* Store Info */}
@@ -556,8 +555,31 @@ export default function StoreFront() {
           isFollowLoading={isFollowLoading}
         />
 
+        {/* Exclusive Collection */}         
+          <LinearGradient colors={['#3B82F6', '#9333EA']} start={{x:0, y:0}} end={{x:0, y:1}} style={{alignItems: 'center', paddingVertical: 202, borderRadius: 10, margin: 20, justifyContent: "center"}} >
+              <ThemedText style={{ fontSize: 20, fontWeight: "700", marginTop: 12, color: "#fff" }}>
+                Special Offers
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: "400", marginTop: 12, color: "#fff" , paddingHorizontal:25, justifyContent: 'center', alignContent: 'center', textAlign: "center" }}>
+                Discover amazing deals on our featured products
+              </ThemedText>  
+              <TouchableOpacity style={{ backgroundColor: '#fff', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginTop: 15 }}>
+                <ThemedText style={{ color: '#2563EB', }}>Shop Now</ThemedText>
+              </TouchableOpacity>         
+           </LinearGradient>
+
+        {/* Exclusive Collection */}         
+          <LinearGradient colors={['#22C55E', '#0D9488']} start={{x:0, y:0}} end={{x:1, y:0}} style={{alignItems: 'center', paddingVertical: 52, borderRadius: 10, margin: 20, justifyContent: "center"}} >
+              <ThemedText style={{ fontSize: 20, fontWeight: "700", marginTop: 12, color: "#fff" }}>
+                New Arrivals
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: "400", marginTop: 12, color: "#fff" , paddingHorizontal:25, justifyContent: 'center', alignContent: 'center', textAlign: "center" }}>
+                Check out our latest collection
+              </ThemedText>           
+           </LinearGradient>
+
         {/* Categories Section */}
-        {categories.length > 0 && (
+        {categories.length > 0 ? (
           <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
             <Text style={{ fontSize: 16, fontWeight: "700", marginBottom: 12, color: "#1f2937" }}>
               Categories
@@ -578,10 +600,27 @@ export default function StoreFront() {
               ))}
             </ScrollView>
           </View>
-        )}
+        ) : (
+          <ThemedText style={{textAlign: 'center', paddingVertical: 70}}>No recent products available</ThemedText>
+        )
+        }
+
+         {/* Exclusive Collection */}         
+          <LinearGradient colors={['#9333EA', '#EC4899']} start={{x:0, y:0}} end={{x:1, y:0}} style={{alignItems: 'center', paddingVertical: 32, borderRadius: 10, margin: 20, justifyContent: "center"}} >
+              <ThemedText style={{ fontSize: 20, fontWeight: "700", marginTop: 12, color: "#fff" }}>
+                Exclusive Collection
+              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: "400", marginTop: 12, color: "#fff" , paddingHorizontal:25, justifyContent: 'center', alignContent: 'center', textAlign: "center" }}>
+                Discover premium quality products curated just for you
+              </ThemedText>           
+               <TouchableOpacity style={{ backgroundColor: '#fff', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginTop: 15 }}>
+                <ThemedText style={{ color: '#9333EA', }}>Explore Now</ThemedText>
+              </TouchableOpacity> 
+           </LinearGradient>
+          
 
         {/* Sort Options */}
-        <View style={{ paddingHorizontal: 16, marginTop: 16, marginBottom: 8 }}>
+        <View style={{ paddingHorizontal: 20, marginTop: 16, marginBottom: 8 }}>
           <Text style={{ fontSize: 14, fontWeight: "600", marginBottom: 8, color: "#6b7280" }}>
             Sort by:
           </Text>
@@ -623,9 +662,6 @@ export default function StoreFront() {
 
         {/* Products Section */}
         <View style={{ paddingHorizontal: 8 }}>
-          <Text style={{ fontSize: 16, fontWeight: "700", marginBottom: 12, color: "#1f2937", paddingHorizontal: 8 }}>
-            Products
-          </Text>
           {sortedProducts.length > 0 ? (
             <FlatList
               data={sortedProducts}
@@ -640,11 +676,49 @@ export default function StoreFront() {
               )}
             />
           ) : (
-            <View style={{ alignItems: "center", paddingVertical: 32 }}>
-              <ShoppingBag size={48} color="#d1d5db" />
-              <Text style={{ fontSize: 16, fontWeight: "600", marginTop: 12, color: "#374151" }}>
-                No products available
-              </Text>
+            <ThemedView style={{ alignItems: "center", paddingVertical: 32, backgroundColor: "#fff" , margin: 15, borderRadius: 10 }}>
+              <ShoppingBag size={48} color="#F5CCDA" />
+              <ThemedText style={{ fontSize: 16, fontWeight: "600", marginTop: 12, color: "#374151" }}>
+                No products found
+              </ThemedText>
+              <ThemedText style={{ fontSize: 12, fontWeight: "400", marginTop: 12, color: "#6B7280" }}>
+                We couldn&apos;t find any products that match your filters
+              </ThemedText>
+              <TouchableOpacity style={{ backgroundColor: '#850D37', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 10, marginTop: 15 }}>
+                <ThemedText style={{ color: '#fff', }}>Reset Filters</ThemedText>
+              </TouchableOpacity>
+              
+            </ThemedView>
+          )}
+        </View>
+
+        {/* Trending Section */}
+        <View style={{ paddingHorizontal: 20 }}>
+          {sortedProducts.length > 0 ? (
+            <FlatList
+              data={sortedProducts}
+              numColumns={2}
+              keyExtractor={(item) => item.id}
+              scrollEnabled={false}
+              renderItem={({ item }) => (
+                <ProductCard
+                  product={item}
+                  onPress={() => router.push(`/product-details/${item.id}`)}
+                />
+              )}
+            />
+          ) : (
+            <View>
+              <ThemedText style={{fontSize: 16, fontWeight: "600", paddingTop: 20}}>Trending Products</ThemedText>
+            <ThemedView style={{ alignItems: "center", paddingVertical: 32, backgroundColor: "#fff" , borderRadius: 10, marginVertical: 20 }}>
+              <TrendingUp size={48} color="#9CA3AF" />
+              <ThemedText style={{ fontSize: 16, fontWeight: "600", marginTop: 12, color: "#374151" }}>
+                No trending products yet
+              </ThemedText>
+              <ThemedText style={{ fontSize: 12, fontWeight: "400", marginTop: 12, color: "#6B7280" }}>
+                Check back soon for trending products from this store
+              </ThemedText>            
+            </ThemedView>
             </View>
           )}
         </View>

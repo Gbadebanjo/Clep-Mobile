@@ -116,10 +116,10 @@ export default function VendorDashboard() {
   useEffect(() => {
     fetchMedia();
     fetchUsage();
-  }, [currentPage]);
+  }, [currentPage, fetchMedia, fetchUsage]);
 
 
-  console.log("user in vendor dashboard", user);
+  // console.log("user in vendor dashboard", user);
   return (
     <ThemedView style={styles.container}>
       {/* ✅ Fixed Header */}
@@ -128,7 +128,7 @@ export default function VendorDashboard() {
       {/* ✅ Welcome Section (outside scrollview) */}
       <View style={styles.welcomeSection}>
         <ThemedText style={styles.welcomeSubtitle}>
-          Here's Your Current Sales Overview
+          Here&apos;s Your Current Sales Overview
         </ThemedText>
 
         <TouchableOpacity
