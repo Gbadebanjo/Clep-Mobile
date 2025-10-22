@@ -13,13 +13,12 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
+  TouchableWithoutFeedback
 } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { ThemedTouchableOpacity } from "./ThemedTouchableOpacity";
+import { ThemedView } from "./ThemedView";
 
 const { width } = Dimensions.get("window");
 
@@ -103,27 +102,27 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   ];
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.leftSection}>
+      <ThemedView style={styles.header}>
+        <ThemedView style={styles.leftSection}>
           {showBackButton && (
             <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
               <Ionicons name="arrow-back" size={26} color="#000" />
             </TouchableOpacity>
           )}
-          <Text style={styles.title}>{title}</Text>
-        </View>
+          <ThemedText style={styles.title}>{title}</ThemedText>
+        </ThemedView>
 
         <TouchableOpacity style={styles.menuButton} onPress={toggleSidebar}>
           <Feather name="menu" size={26} color="#000" />
         </TouchableOpacity>
-      </View>
+      </ThemedView>
 
       {/* Sidebar */}
       <Modal animationType="none" transparent visible={isOpen} onRequestClose={handleClose}>
         <TouchableWithoutFeedback onPress={handleClose}>
-          <View style={styles.overlay} />
+          <ThemedView style={styles.overlay} />
         </TouchableWithoutFeedback>
 
         <Animated.View
@@ -155,31 +154,31 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 
           {/* Bottom Section */}
           {user?.role?.toLowerCase() === "customer" && (
-            <View style={styles.customerBottomSection}>
+            <ThemedView style={styles.customerBottomSection}>
               <TouchableOpacity style={styles.menuRow}>
                 <Feather name="settings" size={22} color="#292D32" />
-                <Text style={styles.menuText}>Settings</Text>
+                <ThemedText style={styles.menuText}>Settings</ThemedText>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.menuRow}>
                 <Ionicons name="help-circle-outline" size={22} color="#292D32" />
-                <Text style={styles.menuText}>Platform Support</Text>
+                <ThemedText style={styles.menuText}>Platform Support</ThemedText>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.menuRow} onPress={handleLogout}>
                 <Feather name="log-out" size={22} color="#292D32" style={{ transform: [{ rotate: "180deg" }] }} />
-                <Text style={styles.menuText}>Log out</Text>
+                <ThemedText style={styles.menuText}>Log out</ThemedText>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.vendorButton}>
                 <Ionicons name="storefront-outline" size={18} color="#fff" />
-                <Text style={styles.vendorButtonText}>Become a Vendor</Text>
+                <ThemedText style={styles.vendorButtonText}>Become a Vendor</ThemedText>
               </TouchableOpacity>
-            </View>
+            </ThemedView>
           )}
 
           {user?.role?.toLowerCase() === "vendor" && (
-            <View style={styles.bottomSection}>
+            <ThemedView style={styles.bottomSection}>
               <TouchableOpacity style={styles.bottomButton} onPress={toggleSettings}>
                 <Feather name="settings" size={22} color="#000" />
                 <ThemedText>Settings</ThemedText>
@@ -192,12 +191,12 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
               </TouchableOpacity>
 
               {showSettingsMenu && (
-                <View style={styles.settingsMenu}>
+                <ThemedView style={styles.settingsMenu}>
                   <TouchableOpacity style={styles.subItem}>
                     <Ionicons name="key-outline" size={18} color="#333" />
-                    <Text style={styles.subItemText}>Security</Text>
+                    <ThemedText style={styles.subItemText}>Security</ThemedText>
                   </TouchableOpacity>
-                </View>
+                </ThemedView>
               )}
 
               <ThemedTouchableOpacity style={styles.bottomButton} onPress={handleLogout}>
@@ -209,11 +208,11 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
                 />
                 <ThemedText>Logout</ThemedText>
               </ThemedTouchableOpacity>
-            </View>
+            </ThemedView>
           )}
         </Animated.View>
       </Modal>
-    </View>
+    </ThemedView>
   );
 };
 
@@ -232,12 +231,12 @@ const SidebarItem: React.FC<{
       onPress={onPress}
       style={[styles.sidebarItem, disabled && { opacity: 0.6 }]}
     >
-      <View style={styles.icon}>{coloredIcon}</View>
-      <Text style={{ color: disabled ? "#aaa" : "#000", fontSize: 16 }}>{label}</Text>
+      <ThemedView style={styles.icon}>{coloredIcon}</ThemedView>
+      <ThemedText style={{ color: disabled ? "#aaa" : "#000", fontSize: 16 }}>{label}</ThemedText>
       {badgeText && (
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>{badgeText}</Text>
-        </View>
+        <ThemedView style={styles.badge}>
+          <ThemedText style={styles.badgeText}>{badgeText}</ThemedText>
+        </ThemedView>
       )}
     </TouchableOpacity>
   );
@@ -251,6 +250,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
+    paddingHorizontal: 16,
     marginTop: Platform.OS === "android" ? 20 : 60,
     zIndex: 100,
   },

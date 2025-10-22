@@ -40,6 +40,7 @@ export default function MeasurementRoot() {
         <DynamicButton
           text="Start"
           href="/measurement/height"
+          // href="/measurement/share"
           backgroundColor={Colors[colorScheme].text}
           textColor={Colors[colorScheme].background}
           size="large"

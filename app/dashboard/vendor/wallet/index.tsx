@@ -33,7 +33,6 @@ const WalletDashboard = () => {
       setLoading(true);
       const response = await authAPI.wallet();
       setWalletData(response.data as unknown as WalletResponse['data']);
-      console.log('Wallet data fetched:', response.data);
     } catch (error: any) {
       console.error('Error fetching wallet:', error.message);
       Alert.alert('Error', error.message || 'Unable to load wallet data');
@@ -67,9 +66,7 @@ const WalletDashboard = () => {
 
   if (loading && !walletData) {
     return (
-    //   <SafeAreaView style={styles.loaderContainer}>
       <ThemedLoader/>
-    //   </SafeAreaView>
     );
   }
 
@@ -109,9 +106,7 @@ const WalletDashboard = () => {
             <ThemedView style={styles.balanceCardLight}>
               <ThemedView style={styles.totalBalanceHeader}>
                 <ThemedText style={styles.cardTitleLight}>Total Balance</ThemedText>
-                {/* <TouchableOpacity onPress={fetchWalletData}>
-                  <Ionicons name="refresh" size={20} color="#333" />
-                </TouchableOpacity> */}
+              
                    <Image
               source={require("../../../../assets/images/dashboard/Ellipse 369.png")}
               style={{ width: 25, height: 25 }}

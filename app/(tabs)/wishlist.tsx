@@ -1,6 +1,0 @@
-import Wishlist from '@/components/Wishlist';
-import React from 'react';
-
-export default function wishlistScreen() {
-  return <Wishlist />;
-}

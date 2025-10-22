@@ -4,6 +4,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
+import { PaystackProvider } from 'react-native-paystack-webview';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { setAuthToken } from '@/services/api';
@@ -43,6 +44,7 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <PaystackProvider publicKey={process.env.EXPO_PUBLIC_PAYSTACK_PUBLIC_KEY!}>
       <QueryClientProvider client={queryClient}>
         <Stack
           screenOptions={{
@@ -64,11 +66,14 @@ export default function RootLayout() {
           <Stack.Screen name='measurement/height' options={{ headerShown: false }} />
           <Stack.Screen name='measurement/uploadPhoto' options={{ headerShown: false }} />
           <Stack.Screen name='measurement/data' options={{ headerShown: false }} />
+          <Stack.Screen name='measurement/share' options={{ headerShown: false }} />
+          <Stack.Screen name='store-front/[id]' options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />
         <Toast />
       </QueryClientProvider>
+      </PaystackProvider>
     </ThemeProvider>
   );
 }

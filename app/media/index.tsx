@@ -1,6 +1,8 @@
 "use client";
 import Header from "@/components/Header";
 import { ThemedLoader } from "@/components/ThemedLoader";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
 import { formatChatDate, formatFileSize } from "@/helpers/data-utils";
 import { useAuthStore } from "@/store";
 import { useMediaStore } from "@/store/useMediaStore";
@@ -11,10 +13,8 @@ import {
   Alert,
   Image,
   ScrollView,
-  Text,
   TextInput,
-  TouchableOpacity,
-  View,
+  TouchableOpacity
 } from "react-native";
 import Toast from "react-native-toast-message";
 import { styles } from "./style";
@@ -41,9 +41,20 @@ export default function MediaGalleryScreen() {
   } = useMediaStore();
 
   useEffect(() => {
-    fetchMedia();
-    fetchUsage();
-  }, [currentPage]);
+    const loadData = async () => {
+      try {
+        await Promise.all([fetchMedia(), fetchUsage()]);
+      } catch (err) {
+        // console.error("❌ Failed to load media or usage", err);
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Failed to load media data. Please try again.",
+        });
+      }
+    };
+    loadData();
+  }, [currentPage, fetchMedia, fetchUsage]);
 
   const handleDelete = (id: string) => {
     Alert.alert("Delete Media", "Are you sure you want to delete this file?", [
@@ -84,7 +95,7 @@ export default function MediaGalleryScreen() {
       if (result.canceled || !result.assets?.length) return;
 
       const file = result.assets[0];
-      console.log("📸 Picked file:", file);
+      // console.log("📸 Picked file:", file);
 
       const formData = new FormData();
       formData.append("file", {
@@ -97,9 +108,9 @@ export default function MediaGalleryScreen() {
       formData.append("uploadedBy", user?.name);
 
       // Debug
-      for (const pair of formData as any) {
-        console.log("🧾 FormData =>", pair[0], pair[1]);
-      }
+      // for (const pair of formData as any) {
+      //   console.log("🧾 FormData =>", pair[0], pair[1]);
+      // }
 
       Toast.show({
         type: "info",
@@ -119,47 +130,45 @@ export default function MediaGalleryScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      {/* ✅ Fixed Header (not scrollable) */}
+    <ThemedView style={styles.container}>
       <Header title="Media Gallery" />
-      <View style={styles.titleSection}>
-        <Text style={styles.subtitle}>
+      <ThemedView style={styles.titleSection}>
+        <ThemedText style={styles.subtitle}>
           Manage your media files in one place. You can view, select, upload,
           and delete your media files.
-        </Text>
-      </View>
-      {/* ✅ Scrollable content below */}
+        </ThemedText>
+      </ThemedView>
       <ScrollView
         style={styles.scrollArea}
         showsVerticalScrollIndicator={false}
       >
         {/* Page Title */}
         {/* Storage Card */}
-        <View style={styles.storageCard}>
-          <Text style={styles.storageTitle}>Storage Usage</Text>
+        <ThemedView style={styles.storageCard}>
+          <ThemedText style={styles.storageTitle}>Storage Usage</ThemedText>
 
           {isUsageLoading ? (
           <ThemedLoader />
           ) : usage ? (
             <>
-              <View>
-                <View style={styles.storageRow}>
-                  <Text style={styles.storageLabel}>Used:</Text>
-                  <Text style={styles.storageValue}>
+              <ThemedView>
+                <ThemedView style={styles.storageRow}>
+                  <ThemedText style={styles.storageLabel}>Used:</ThemedText>
+                  <ThemedText style={styles.storageValue}>
                     {(usage.usedStorage / 1024 / 1024).toFixed(2)} MB
-                  </Text>
-                </View>
-                <View style={styles.storageRow}>
-                  <Text style={styles.storageLabel}>Limit:</Text>
-                  <Text style={styles.storageValue}>
+                  </ThemedText>
+                </ThemedView>
+                <ThemedView style={styles.storageRow}>
+                  <ThemedText style={styles.storageLabel}>Limit:</ThemedText>
+                  <ThemedText style={styles.storageValue}>
                     {usage.isUnlimited
                       ? "Unlimited"
                       : usage.storageLimit
                       ? `${(usage.storageLimit / 1024 / 1024).toFixed(2)} MB`
                       : "N/A"}
-                  </Text>
-                </View>
-              </View>
+                  </ThemedText>
+                </ThemedView>
+              </ThemedView>
 
               {/* ✅ Dynamic Progress Bar */}
               {(() => {
@@ -171,30 +180,30 @@ export default function MediaGalleryScreen() {
 
                 return (
                   <>
-                    <View style={styles.progressBarContainer}>
-                      <View
+                    <ThemedView style={styles.progressBarContainer}>
+                      <ThemedView
                         style={[
                           styles.progressBar,
                           { width: `${usedPercent}%` },
                         ]}
                       />
-                    </View>
+                    </ThemedView>
 
-                    <Text style={styles.storageNote}>
+                    <ThemedText style={styles.storageNote}>
                       Unlimited storage available
-                    </Text>
+                    </ThemedText>
                   </>
                 );
               })()}
             </>
           ) : (
-            <Text style={{ color: "#999" }}>No usage data available</Text>
+            <ThemedText style={{ color: "#999" }}>No usage data available</ThemedText>
           )}
-        </View>
+        </ThemedView>
 
         {/* View Controls */}
-        <View style={styles.controlsRow}>
-          <View style={styles.viewToggle}>
+        <ThemedView style={styles.controlsRow}>
+          <ThemedView style={styles.viewToggle}>
             <TouchableOpacity
               style={[
                 styles.toggleButton,
@@ -207,14 +216,14 @@ export default function MediaGalleryScreen() {
                 size={16}
                 color={viewMode === "grid" ? "#fff" : "#000"}
               />
-              <Text
+              <ThemedText
                 style={[
                   styles.toggleText,
                   viewMode === "grid" && styles.toggleTextActive,
                 ]}
               >
                 Grid
-              </Text>
+              </ThemedText>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -228,16 +237,16 @@ export default function MediaGalleryScreen() {
                 size={16}
                 color={viewMode === "list" ? "#fff" : "#000"}
               />
-              <Text
+              <ThemedText
                 style={[
                   styles.toggleText,
                   viewMode === "list" && styles.toggleTextActive,
                 ]}
               >
                 List
-              </Text>
+              </ThemedText>
             </TouchableOpacity>
-          </View>
+          </ThemedView>
 
           <TouchableOpacity
             style={styles.refreshButton}
@@ -248,10 +257,10 @@ export default function MediaGalleryScreen() {
           >
             <Feather name="refresh-cw" size={18} color="#000" />
           </TouchableOpacity>
-        </View>
+        </ThemedView>
 
         {/* Search Input */}
-        <View style={styles.searchContainer}>
+        <ThemedView style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
             placeholder="Search media..."
@@ -282,21 +291,21 @@ export default function MediaGalleryScreen() {
           >
             <Feather name="search" size={18} color="#000" />
           </TouchableOpacity>
-        </View>
+        </ThemedView>
 
         {/* Upload Button */}
         <TouchableOpacity style={styles.uploadButton} onPress={handleUpload}>
           <Feather name="upload" size={18} color="#fff" />
-          <Text style={styles.uploadButtonText}>Upload</Text>
+          <ThemedText style={styles.uploadButtonText}>Upload</ThemedText>
         </TouchableOpacity>
 
         {/* ✅ Media Section */}
         {isLoading && !isSearching ? (
          <ThemedLoader />
         ) : media.length === 0 ? (
-          <View style={{ alignItems: "center", marginTop: 60 }}>
+          <ThemedView style={{ alignItems: "center", marginTop: 60 }}>
             <Feather name="upload" size={48} color="#ccc" />
-            <Text
+            <ThemedText
               style={{
                 color: "#999",
                 fontSize: 16,
@@ -305,18 +314,18 @@ export default function MediaGalleryScreen() {
               }}
             >
               No media items found
-            </Text>
+            </ThemedText>
             {/* Upload Button */}
             <TouchableOpacity
               style={styles.uploadButtonEmpty}
               onPress={handleUpload}
             >
               <Feather name="plus" size={18} color="#fff" />
-              <Text style={styles.uploadButtonText}>Upload</Text>
+              <ThemedText style={styles.uploadButtonText}>Upload</ThemedText>
             </TouchableOpacity>
-          </View>
+          </ThemedView>
         ) : viewMode === "grid" ? (
-          <View style={styles.mediaGrid}>
+          <ThemedView style={styles.mediaGrid}>
             {media.map((item) => (
               <TouchableOpacity key={item?.id} style={styles.mediaItem}>
                 <Image
@@ -326,9 +335,9 @@ export default function MediaGalleryScreen() {
                 />
               </TouchableOpacity>
             ))}
-          </View>
+          </ThemedView>
         ) : (
-          <View style={styles.mediaList}>
+          <ThemedView style={styles.mediaList}>
             {media.map((item) => (
               <TouchableOpacity key={item.id} style={styles.listItem}>
                 <Image
@@ -336,18 +345,18 @@ export default function MediaGalleryScreen() {
                   style={styles.listImage}
                   resizeMode="cover"
                 />
-                <View style={styles.listTextContainer}>
-                  <Text style={styles.listTitle}>{item?.filename}</Text>
-                  <Text style={styles.listFileSize}>
+                <ThemedView style={styles.listTextContainer}>
+                  <ThemedText style={styles.listTitle}>{item?.filename}</ThemedText>
+                  <ThemedText style={styles.listFileSize}>
                     {formatFileSize(item?.filesize)}
-                  </Text>
-                  <Text style={styles.listFileSize}>
+                  </ThemedText>
+                  <ThemedText style={styles.listFileSize}>
                     {formatChatDate(item?.createdAt)}
-                  </Text>
-                </View>
+                  </ThemedText>
+                </ThemedView>
 
                 {/* Action Buttons */}
-                <View style={styles.actionIcons}>
+                <ThemedView style={styles.actionIcons}>
                   <TouchableOpacity
                     onPress={() => handleInfo(item)}
                     style={styles.iconButton}
@@ -361,19 +370,19 @@ export default function MediaGalleryScreen() {
                   >
                     <Feather name="trash" size={18} color="#dc2626" />
                   </TouchableOpacity>
-                </View>
+                </ThemedView>
               </TouchableOpacity>
             ))}
-          </View>
+          </ThemedView>
         )}
 
         {/* Pagination */}
         {media.length > 0 && totalPages > 1 && (
-          <View style={styles.pagination}>
-            <Text style={styles.paginationText}>
+          <ThemedView style={styles.pagination}>
+            <ThemedText style={styles.paginationText}>
               {totalDocs} items • Page {currentPage} of {totalPages || 1}
-            </Text>
-            <View style={styles.paginationButtons}>
+            </ThemedText>
+            <ThemedView style={styles.paginationButtons}>
               <TouchableOpacity
                 style={[
                   styles.paginationButton,
@@ -403,12 +412,12 @@ export default function MediaGalleryScreen() {
                   color={currentPage === totalPages ? "#ccc" : "#000"}
                 />
               </TouchableOpacity>
-            </View>
-          </View>
+            </ThemedView>
+          </ThemedView>
         )}
 
-        <View style={{ height: 40 }} />
+        <ThemedView style={{ height: 40 }} />
       </ScrollView>
-    </View>
+    </ThemedView>
   );
 }

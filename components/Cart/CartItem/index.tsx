@@ -8,6 +8,7 @@ import { Minus, Plus, Trash2 } from 'lucide-react-native';
 import React from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 import { cartItemStyles } from './style';
+import Toast from 'react-native-toast-message';
 
 interface CartItemProps {
   item: {
@@ -29,7 +30,7 @@ interface CartItemProps {
 }
 
 const CartItem: React.FC<CartItemProps> = ({ item, discount = 0 }) => {
-  const { product, quantity, selected } = item;
+  const { product, quantity } = item;
   const { removeItemFromCart, changeQuantity, toggleSelection, isOnSale } = useCart();
 
   const colorScheme = useColorScheme();
@@ -40,7 +41,15 @@ const CartItem: React.FC<CartItemProps> = ({ item, discount = 0 }) => {
   };
 
   const increaseQuantity = () => {
-    changeQuantity(item.id, quantity + 1);
+    const maxQty = item.variation?.quantity ?? product?.variations?.[0]?.quantity ?? Infinity;
+    if (quantity < maxQty) {
+      changeQuantity(item.id, quantity + 1);
+    } else {
+      Toast.show({
+         type: 'error',
+        text1: `Only ${maxQty} product${maxQty > 1 ? 's' : ''} left in stock.`,
+      });
+  }
   };
 
   const decreaseQuantity = () => {
