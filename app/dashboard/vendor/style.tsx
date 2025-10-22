@@ -18,7 +18,6 @@ export const DashboardStyles = (colorScheme: "light" | "dark") =>
       height: 24,
     },
     welcomeSection: {
-   
       backgroundColor: Colors[colorScheme].background,
       paddingHorizontal: 20,
       paddingVertical: 2,
@@ -46,7 +45,6 @@ export const DashboardStyles = (colorScheme: "light" | "dark") =>
       backgroundColor: "#F5F5F5",
       borderRadius: 8,
       alignSelf: "flex-start",
-    
     },
     dateButtonThemedText: {
       fontSize: 14,
@@ -94,29 +92,35 @@ export const DashboardStyles = (colorScheme: "light" | "dark") =>
       alignItems: "center",
     },
     walletCard: {
-      backgroundColor: "#000",
+      backgroundColor: Colors[colorScheme].text,
       marginHorizontal: 20,
       borderRadius: 12,
       padding: 20,
       marginBottom: 16,
+      height: 120,
     },
     walletContent: {
       flexDirection: "row",
+      backgroundColor: Colors[colorScheme].text,
       justifyContent: "space-between",
       alignItems: "center",
     },
+    walletInfo: {
+      backgroundColor: Colors[colorScheme].text,
+      gap: 10,
+    },
     walletLabel: {
       fontSize: 14,
-      color: "Colors[colorScheme].background",
+      color: Colors[colorScheme].background,
       marginBottom: 4,
     },
     walletAmount: {
       fontSize: 28,
       fontWeight: "bold",
-      color: "Colors[colorScheme].background",
+      color: Colors[colorScheme].background,
     },
     section: {
-      backgroundColor: "Colors[colorScheme].background",
+      backgroundColor: Colors[colorScheme].background,
       paddingHorizontal: 20,
       paddingVertical: 16,
       marginBottom: 16,
@@ -212,7 +216,7 @@ export const DashboardStyles = (colorScheme: "light" | "dark") =>
       fontWeight: "bold",
     },
     card: {
-      backgroundColor: "Colors[colorScheme].background",
+      backgroundColor: Colors[colorScheme].background,
       borderColor: "#848484",
       borderWidth: 1,
       borderRadius: 10,

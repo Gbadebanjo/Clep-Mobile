@@ -57,7 +57,7 @@ const StatCard: React.FC<StatCardProps> = ({
   return (
     <ThemedView style={[styles.statCard, { backgroundColor }]}>
       <ThemedView style={[styles.statCardContent, { backgroundColor }]}>
-        <ThemedView style={styles.statCardLeft}>
+        <ThemedView style={[styles.statCardLeft, { backgroundColor }]}>
           <ThemedText style={styles.statCardTitle}>{title}</ThemedText>
           <ThemedText style={styles.statCardValue}>{value}</ThemedText>
         </ThemedView>
@@ -143,7 +143,7 @@ export default function VendorDashboard() {
       {/* Welcome Section */}
       <ThemedView style={styles.welcomeSection}>
         <ThemedText style={styles.welcomeSubtitle}>
-          Here's Your Current Sales Overview
+          Here&apos;s Your Current Sales Overview
         </ThemedText>
 
         <TouchableOpacity
@@ -197,7 +197,7 @@ export default function VendorDashboard() {
         {/* Wallet Balance */}
         <ThemedView style={styles.walletCard}>
           <ThemedView style={styles.walletContent}>
-            <ThemedView>
+            <ThemedView style={styles.walletInfo}>
               <ThemedText style={styles.walletLabel}>Wallet Balance</ThemedText>
               <ThemedText style={styles.walletAmount}>
                 {amountFormatter(

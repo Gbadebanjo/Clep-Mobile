@@ -1,29 +1,20 @@
-// import { Image } from 'expo-image';
-import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
-// import Slider from '@/components/Home/slider';
+import { ScrollView, } from 'react-native';
 import SliderComp from '@/components/Home/slider-comp';
 import { ThemedView } from '@/components/ThemedView';
-import { router } from 'expo-router';
+import FeaturedProducts from '@/components/Products/FeaturedProducts';
+import FashionShowcase from '@/components/Products/FashionShowcase';
+import BestSellers from '@/components/Products/BestSellers/best-sellers';
 
 export default function HomeScreen() {
   return (
     <ScrollView>
       <ThemedView>
         <SliderComp />
-        {/* <FeaturedProducts />
+        <FeaturedProducts />
         <FashionShowcase />
-        <BestSellers /> */}
-
-           <TouchableOpacity onPress={()=>router.push("/dashboard/vendor/wallet")}>
-      <Text>Callsss....</Text>
-      </TouchableOpacity>
+        <BestSellers />
       </ThemedView>
     </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-  },
-});
