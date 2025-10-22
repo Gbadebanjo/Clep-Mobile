@@ -128,144 +128,92 @@ export class AuthAPI extends BaseAPI {
 
     public async wallet(): Promise<{ data: WalletResponse }> {
         try {
-            // First ensure we have the vendor profile
-            const userResponse = await this.axiosInstance.get('/users/me');
-            const userData = userResponse.data;
+          // Get user data first
+          const userResponse = await this.axiosInstance.get('/users/me');
+          const userData = userResponse.data;
+      
+          let vendorId: string | null = null;
 
-            // The user data may have different structures - try all the paths where vendor ID might be
-            let vendorId = null;
-
-            // Check if data.user.vendorProfile.id exists
-            if (userData?.data?.user?.vendorProfile?.id) {
-                vendorId = userData.data.user.vendorProfile.id;
-            }
-            // Check if user.vendorProfile.id exists
-            else if (userData?.user?.vendorProfile?.id) {
-                vendorId = userData.user.vendorProfile.id;
-            }
-            // Check if data is directly the vendor profile
-            else if (userData?.id && userData?.verificationTier) {
-                vendorId = userData.id;
-            }
-            // Try to get from cookies as fallback
-            else {
-                // Try to get from cookies
-                const vendorIdFromCookie =
-                    typeof window !== 'undefined'
-                        ? window.document.cookie
-                              .split('; ')
-                              .find((row) => row.startsWith('vendor_id='))
-                              ?.split('=')[1]
-                        : null;
-
-                if (vendorIdFromCookie) {
-                    vendorId = vendorIdFromCookie;
-                }
-            }
-
-            if (!vendorId) {
-                console.error(
-                    'Could not extract valid vendor ID from user data:',
-                    userData
-                );
-                throw new Error(
-                    'Vendor profile not found. Please ensure you are logged in as a vendor.'
-                );
-            }
-            // Make the wallet balance request
-            const response = await this.axiosInstance.get(
-                '/vendors/wallet-balance'
+          console.log('User Data:', userData);
+      
+          // Try extracting vendor ID from various possible structures
+          if (userData?.data?.user?.vendorProfile?.id) {
+            vendorId = userData.data.user.vendorProfile.id;
+          } else if (userData?.user?.vendorProfile?.id) {
+            vendorId = userData.user.vendorProfile.id;
+          } else if (userData?.id && userData?.verificationTier) {
+            vendorId = userData.id;
+          }
+      
+          if (!vendorId) {
+            console.warn('⚠️ Vendor ID not found in user data:', userData);
+            throw new Error(
+              'Vendor profile not found. Please ensure you are logged in as a vendor.'
             );
-
-            if (!response.data) {
-                throw new Error('Invalid response from wallet balance server');
-            }
-
-            // Handle data directly or nested under data property
-            return {
-                data: response.data.data || response.data,
-            };
+          }
+      
+          // Fetch wallet balance
+          const response = await this.axiosInstance.get('/vendors/wallet-balance');
+      
+          if (!response.data) {
+            throw new Error('Invalid response from wallet balance server');
+          }
+      
+          return {
+            data: response.data.data || response.data,
+          };
         } catch (error: any) {
-            console.error('Error fetching wallet balance:', error);
-            const errorMessage =
-                error.response?.data?.message ||
-                error.message ||
-                'Failed to fetch wallet balance';
-            throw new Error(errorMessage);
+          console.error('Error fetching wallet balance:', error);
+          throw new Error(
+            error.response?.data?.message ||
+              error.message ||
+              'Failed to fetch wallet balance'
+          );
         }
-    }
-
-    public async commissionReport(): Promise<{
-        data: CommissionReportResponse;
-    }> {
+      }
+      
+      public async commissionReport(): Promise<{ data: CommissionReportResponse }> {
         try {
-            // First ensure we have the vendor profile
-            const userResponse = await this.axiosInstance.get('/users/me');
-            const userData = userResponse.data;
-
-            // The user data may have different structures - try all the paths where vendor ID might be
-            let vendorId = null;
-
-            // Check if data.user.vendorProfile.id exists
-            if (userData?.data?.user?.vendorProfile?.id) {
-                vendorId = userData.data.user.vendorProfile.id;
-            }
-            // Check if user.vendorProfile.id exists
-            else if (userData?.user?.vendorProfile?.id) {
-                vendorId = userData.user.vendorProfile.id;
-            }
-            // Check if data is directly the vendor profile
-            else if (userData?.id && userData?.verificationTier) {
-                vendorId = userData.id;
-            }
-            // Try to get from cookies as fallback
-            else {
-                // Try to get from cookies
-                const vendorIdFromCookie =
-                    typeof window !== 'undefined'
-                        ? window.document.cookie
-                              .split('; ')
-                              .find((row) => row.startsWith('vendor_id='))
-                              ?.split('=')[1]
-                        : null;
-
-                if (vendorIdFromCookie) {
-                    vendorId = vendorIdFromCookie;
-                }
-            }
-
-            if (!vendorId) {
-                console.error(
-                    'Could not extract valid vendor ID for commission report:',
-                    userData
-                );
-                throw new Error(
-                    'Vendor profile not found. Please ensure you are logged in as a vendor.'
-                );
-            }
-            // Make the commission report request
-            const response = await this.axiosInstance.get(
-                '/vendors/commission-report'
+          // Get user data first
+          const userResponse = await this.axiosInstance.get('/users/me');
+          const userData = userResponse.data;
+      
+          let vendorId: string | null = null;
+      
+          // Try extracting vendor ID from various possible structures
+          if (userData?.data?.user?.vendorProfile?.id) {
+            vendorId = userData.data.user.vendorProfile.id;
+          } else if (userData?.user?.vendorProfile?.id) {
+            vendorId = userData.user.vendorProfile.id;
+          } else if (userData?.id && userData?.verificationTier) {
+            vendorId = userData.id;
+          }
+      
+          if (!vendorId) {
+            console.warn('⚠️ Vendor ID not found in user data:', userData);
+            throw new Error(
+              'Vendor profile not found. Please ensure you are logged in as a vendor.'
             );
-
-            if (!response.data) {
-                throw new Error(
-                    'Invalid response from commission report server'
-                );
-            }
-
-            // Handle data directly or nested under data property
-
-            return {
-                data: response.data.data || response.data,
-            };
+          }
+      
+          // Fetch commission report
+          const response = await this.axiosInstance.get('/vendors/commission-report');
+      
+          if (!response.data) {
+            throw new Error('Invalid response from commission report server');
+          }
+      
+          return {
+            data: response.data.data || response.data,
+          };
         } catch (error: any) {
-            console.error('Error fetching commission report:', error);
-            const errorMessage =
-                error.response?.data?.message ||
-                error.message ||
-                'Failed to fetch commission report';
-            throw new Error(errorMessage);
+          console.error('Error fetching commission report:', error);
+          throw new Error(
+            error.response?.data?.message ||
+              error.message ||
+              'Failed to fetch commission report'
+          );
         }
-    }
+      }
+      
 }

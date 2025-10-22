@@ -17,8 +17,7 @@ import {
   Image,
   Platform,
   ScrollView,
-  TouchableOpacity,
-  View
+  TouchableOpacity
 } from "react-native";
 import { styles } from "./style";
 
@@ -51,13 +50,13 @@ const StatCard: React.FC<StatCardProps> = ({
   backgroundColor,
   imageSource,
 }) => (
-  <View style={[styles.statCard, { backgroundColor }]}>
-    <View style={styles.statCardContent}>
-      <View style={styles.statCardLeft}>
+  <ThemedView  style={[styles.statCard, { backgroundColor }]}>
+    <ThemedView  style={styles.statCardContent}>
+      <ThemedView  style={styles.statCardLeft}>
         <ThemedText style={styles.statCardTitle}>{title}</ThemedText>
         <ThemedText style={styles.statCardValue}>{value}</ThemedText>
-      </View>
-      <View style={styles.statCardIcon}>
+      </ThemedView >
+      <ThemedView  style={styles.statCardIcon}>
         {imageSource ? (
           <Image
             source={imageSource}
@@ -67,9 +66,9 @@ const StatCard: React.FC<StatCardProps> = ({
         ) : (
           icon
         )}
-      </View>
-    </View>
-  </View>
+      </ThemedView >
+    </ThemedView >
+  </ThemedView >
 );
 
 const OrderItem: React.FC<OrderItemProps> = ({
@@ -78,23 +77,23 @@ const OrderItem: React.FC<OrderItemProps> = ({
   date,
   status,
 }) => (
-  <View style={styles.orderItem}>
-    <View style={styles.orderItemLeft}>
+  <ThemedView  style={styles.orderItem}>
+    <ThemedView  style={styles.orderItemLeft}>
       <ThemedText style={styles.orderItemId}>{orderId}</ThemedText>
       <ThemedText style={styles.orderItemDate}>{date}</ThemedText>
-    </View>
-    <View style={styles.orderItemRight}>
+    </ThemedView >
+    <ThemedView  style={styles.orderItemRight}>
       <ThemedText style={styles.orderItemAmount}>{amount}</ThemedText>
       <ThemedText style={styles.orderItemStatus}>{status}</ThemedText>
-    </View>
-  </View>
+    </ThemedView >
+  </ThemedView >
 );
 
 const ProductItem: React.FC<ProductItemProps> = ({ name, soldCount }) => (
-  <View style={styles.productItem}>
+  <ThemedView  style={styles.productItem}>
     <ThemedText style={styles.productName}>{name}</ThemedText>
     <ThemedText style={styles.productSold}>{soldCount} sold</ThemedText>
-  </View>
+  </ThemedView >
 );
 
 export default function VendorDashboard() {
@@ -126,7 +125,7 @@ export default function VendorDashboard() {
       <Header title={`Welcome ${user?.name}`} showBackButton={false}/>
 
       {/* ✅ Welcome Section (outside scrollview) */}
-      <View style={styles.welcomeSection}>
+      <ThemedView  style={styles.welcomeSection}>
         <ThemedText style={styles.welcomeSubtitle}>
           Here's Your Current Sales Overview
         </ThemedText>
@@ -149,7 +148,7 @@ export default function VendorDashboard() {
             onChange={onChange}
           />
         )}
-      </View>
+      </ThemedView >
 
       {/* ✅ Scrollable Content */}
       <ScrollView
@@ -158,7 +157,7 @@ export default function VendorDashboard() {
         showsVerticalScrollIndicator={false}
       >
         {/* Stats Cards */}
-        <View style={styles.statsContainer}>
+        <ThemedView  style={styles.statsContainer}>
           <StatCard
             title="Total Sales"
             value="₦136,000"
@@ -177,54 +176,54 @@ export default function VendorDashboard() {
             backgroundColor="#F3FFF4"
             imageSource={require("../../../assets/images/dashboard/solar_box-outline.png")}
           />
-        </View>
+        </ThemedView >
 
         {/* Wallet Balance */}
-        <View style={styles.walletCard}>
-          <View style={styles.walletContent}>
-            <View>
+        <ThemedView  style={styles.walletCard}>
+          <ThemedView  style={styles.walletContent}>
+            <ThemedView >
               <ThemedText style={styles.walletLabel}>Wallet Balance</ThemedText>
               <ThemedText style={styles.walletAmount}>{amountFormatter(user?.vendorProfile?.wallet?.balances?.total)}</ThemedText>
-            </View>
+            </ThemedView >
             <Image
               source={require("../../../assets/images/dashboard/Frame 1321314936 (1).png")}
               style={{ width: 32, height: 32 }}
               resizeMode="contain"
             />
-          </View>
-        </View>
+          </ThemedView >
+        </ThemedView >
 
         {/* Total Orders */}
-        <View style={styles.section}>
+        <ThemedView  style={styles.section}>
           <StatCard
             title="Total Orders"
             value="33"
             backgroundColor="#FFFFFF"
             imageSource={require("../../../assets/images/dashboard/lets-icons_order.png")}
           />
-        </View>
+        </ThemedView >
 
         {/* Recent Orders */}
-        <View style={[styles.card, { width: width * 0.9 }]}>
-          <View style={styles.sectionHeader}>
+        <ThemedView  style={[styles.card, { width: width * 0.9 }]}>
+          <ThemedView  style={styles.sectionHeader}>
             <ThemedText style={styles.sectionTitle}>Recent Orders</ThemedText>
             <TouchableOpacity style={styles.viewAllButton}>
               <ThemedText style={styles.viewAllThemedText}>View All</ThemedText>
               <Ionicons name="arrow-forward" size={20} color="#6B0C2D" />
             </TouchableOpacity>
-          </View>
-          <View style={styles.ordersList}>
+          </ThemedView >
+          <ThemedView  style={styles.ordersList}>
             <OrderItem orderId="#GRDC3" amount="₦4,000" date="03/08/2025" status="successful" />
             <OrderItem orderId="#D9I3O" amount="₦8,000" date="03/08/2025" status="pending" />
             <OrderItem orderId="#4M_OC" amount="₦4,000" date="22/07/2025" status="pending" />
             <OrderItem orderId="#XPW8U" amount="₦8,000" date="17/07/2025" status="pending" />
             <OrderItem orderId="#TEQC3" amount="₦4,000" date="17/07/2025" status="pending" />
-          </View>
-        </View>
+          </ThemedView >
+        </ThemedView >
 
         {/* Popular Products */}
-        <View style={[styles.card, { width: width * 0.9, paddingHorizontal: 10 }]}>
-          <View style={styles.sectionHeader}>
+        <ThemedView  style={[styles.card, { width: width * 0.9, paddingHorizontal: 10 }]}>
+          <ThemedView  style={styles.sectionHeader}>
             <ThemedText style={styles.sectionTitle}>Popular Products</ThemedText>
             <TouchableOpacity style={styles.viewAllButton}>
               <ThemedText style={styles.viewAllThemedText}>
@@ -232,41 +231,41 @@ export default function VendorDashboard() {
               </ThemedText>
               <Ionicons name="arrow-forward" size={20} color="#6B0C2D" />
             </TouchableOpacity>
-          </View>
+          </ThemedView >
           <ProductItem name="Brown gown" soldCount={25} />
-        </View>
+        </ThemedView >
 
         {/* Customer Insights */}
-        <View style={[styles.card, { width: width * 0.9 }]}>
+        <ThemedView  style={[styles.card, { width: width * 0.9 }]}>
           <ThemedText style={styles.sectionTitle}>Customer Insights</ThemedText>
-          <View style={styles.insightsRow}>
-            <View style={styles.insightItem}>
+          <ThemedView  style={styles.insightsRow}>
+            <ThemedView  style={styles.insightItem}>
               <ThemedText style={styles.insightLabel}>New Customers</ThemedText>
               <ThemedText style={styles.insightValue}>0</ThemedText>
-            </View>
-            <View style={styles.insightItem}>
+            </ThemedView >
+            <ThemedView  style={styles.insightItem}>
               <ThemedText style={styles.insightLabel}>Returning</ThemedText>
               <ThemedText style={styles.insightValue}>2</ThemedText>
-            </View>
-          </View>
-        </View>
+            </ThemedView >
+          </ThemedView >
+        </ThemedView >
 
         {/* Media Library */}
-        <View style={[styles.card, { width: width * 0.9 }]}>
-          <View style={styles.header}>
+        <ThemedView  style={[styles.card, { width: width * 0.9 }]}>
+          <ThemedView  style={styles.header}>
             <Ionicons name="image-outline" size={22} color="#000" />
             <ThemedText style={styles.headerThemedText}>Media Library</ThemedText>
-          </View>
+          </ThemedView >
 
-          <View style={styles.row}>
+          <ThemedView  style={styles.row}>
             <ThemedText style={styles.label}>Storage Usage</ThemedText>
             <ThemedText style={styles.value}>
               {usage ? (usage.usedStorage / 1024 / 1024).toFixed(2) : '0.00'} MB
             </ThemedText>
-          </View>
+          </ThemedView >
 
-          <View style={styles.row}>
-            <View style={styles.fileCount}>
+          <ThemedView  style={styles.row}>
+            <ThemedView  style={styles.fileCount}>
             <Image
               source={require("../../../assets/images/dashboard/Vector (1).png")}
               style={{ width: 16, height: 16 }}
@@ -274,11 +273,11 @@ export default function VendorDashboard() {
             />
             
               <ThemedText style={styles.fileThemedText}>{media?.length} files</ThemedText>
-            </View>
+            </ThemedView >
             <ThemedText style={styles.percentThemedText}>
               {usage?.percentUsed}% Used
             </ThemedText>
-          </View>
+          </ThemedView >
 
           <TouchableOpacity
             style={styles.manageButton}
@@ -289,9 +288,9 @@ export default function VendorDashboard() {
             </ThemedText>
             <Ionicons name="open-outline" size={16} color="#000" />
           </TouchableOpacity>
-        </View>
+        </ThemedView >
 
-        <View style={styles.bottomSpacer} />
+        <ThemedView  style={styles.bottomSpacer} />
       </ScrollView>
     </ThemedView>
   );

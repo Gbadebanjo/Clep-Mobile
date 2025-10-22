@@ -38,47 +38,46 @@ export class ProductAPI extends BaseAPI {
         const response = await this.axiosInstance.post('/upload-media', data);
         return response.data;
     }
-
     public async getProducts(
         queryParams?: Record<string, any>
-    ): Promise<{ data: productResponse }> {
+      ): Promise<{ data: productResponse }> {
+        console.log('📦 Entered getProducts with params:', queryParams);
         try {
-            // Ensure queryParams is always an object
-            const params = queryParams || {};
-            // Make the API request
-            const response = await this.axiosInstance.get('/products', {
-                params,
-            });
-            return response.data;
+          const params = queryParams || {};
+      
+          const response = await this.axiosInstance.get('/products', { params });
+      console.log('✅ ProductAPI.getProducts - Response:', JSON.stringify(response.data, null, 2));
+
+      
+          // ✅ Ensure consistent structure
+          return {
+            data: response.data?.data || response.data,
+          };
         } catch (error: any) {
-            // Centralized error logging
-            console.error('ProductAPI.getProducts - Error:', error);
-
-            if (typeof window === 'undefined') {
-                console.error(
-                    '[ Server ] ProductAPI.getProducts - Query params:',
-                    queryParams
-                );
-            }
-
-            // Return an empty response structure instead of throwing
-            return {
-                data: {
-                    docs: [],
-                    totalDocs: 0,
-                    limit: 10,
-                    totalPages: 0,
-                    page: 1,
-                    pagingCounter: 0,
-                    hasPrevPage: false,
-                    hasNextPage: false,
-                    prevPage: 0,
-                    nextPage: 0,
-                },
-            };
+          console.error('❌ ProductAPI.getProducts - Error:', error);
+      
+          if (typeof window === 'undefined') {
+            console.error('[ Server ] ProductAPI.getProducts - Query params:', queryParams);
+          }
+      
+          // ✅ Return empty response on failure
+          return {
+            data: {
+              docs: [],
+              totalDocs: 0,
+              limit: 10,
+              totalPages: 0,
+              page: 1,
+              pagingCounter: 0,
+              hasPrevPage: false,
+              hasNextPage: false,
+              prevPage: 0,
+              nextPage: 0,
+            },
+          };
         }
-    }
-
+      }
+      
     public async getFeaturedProducts(
         queryParams?: Record<string, any>
     ): Promise<{ data: productResponse }> {
