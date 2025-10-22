@@ -1,6 +1,8 @@
+import { Colors } from "@/constants/Colors";
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+export const DashboardStyles = (colorScheme: "light" | "dark") =>
+  StyleSheet.create({
     container: {
       flex: 1,
       paddingTop: "5%",
@@ -16,7 +18,8 @@ export const styles = StyleSheet.create({
       height: 24,
     },
     welcomeSection: {
-      backgroundColor: "#fff",
+   
+      backgroundColor: Colors[colorScheme].background,
       paddingHorizontal: 20,
       paddingVertical: 2,
       marginBottom: 10,
@@ -85,7 +88,8 @@ export const styles = StyleSheet.create({
       width: 48,
       height: 48,
       borderRadius: 24,
-      backgroundColor: "rgba(255, 255, 255, 0.5)",
+      backgroundColor: Colors[colorScheme].background,
+      // backgroundColor: "rgba(255, 255, 255, 0.5)",
       justifyContent: "center",
       alignItems: "center",
     },
@@ -103,16 +107,16 @@ export const styles = StyleSheet.create({
     },
     walletLabel: {
       fontSize: 14,
-      color: "#fff",
+      color: "Colors[colorScheme].background",
       marginBottom: 4,
     },
     walletAmount: {
       fontSize: 28,
       fontWeight: "bold",
-      color: "#fff",
+      color: "Colors[colorScheme].background",
     },
     section: {
-      backgroundColor: "#fff",
+      backgroundColor: "Colors[colorScheme].background",
       paddingHorizontal: 20,
       paddingVertical: 16,
       marginBottom: 16,
@@ -208,7 +212,7 @@ export const styles = StyleSheet.create({
       fontWeight: "bold",
     },
     card: {
-      backgroundColor: "#FFF",
+      backgroundColor: "Colors[colorScheme].background",
       borderColor: "#848484",
       borderWidth: 1,
       borderRadius: 10,

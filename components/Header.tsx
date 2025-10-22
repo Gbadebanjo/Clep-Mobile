@@ -13,23 +13,14 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
+  TouchableWithoutFeedback
 } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { ThemedTouchableOpacity } from "./ThemedTouchableOpacity";
+import { ThemedView } from "./ThemedView";
 
 const { width } = Dimensions.get("window");
-
-// Enable LayoutAnimation on Android
-// if (
-//   Platform.OS === "android" &&
-//   UIManager.setLayoutAnimationEnabledExperimental
-// ) {
-//   UIManager.setLayoutAnimationEnabledExperimental(true);
-// }
 
 interface CustomHeaderProps {
   title: string;
@@ -42,10 +33,9 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
-  const { setUser } = useAuthStore();
+  const { setUser, user } = useAuthStore();
   const sidebarWidth = width * 0.8;
   const slideAnim = useRef(new Animated.Value(-sidebarWidth)).current;
-  const { user } = useAuthStore();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
@@ -68,23 +58,18 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   }, [isOpen]);
 
   const handleLogout = () => {
-    Alert.alert(
-      "Logout",
-      "Are you sure you want to logout?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Logout",
-          style: "destructive",
-          onPress: () => {
-            handleClose();
-            setUser(null);
-            router.replace("/customer/login" as any);
-          },
+    Alert.alert("Logout", "Are you sure you want to logout?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Logout",
+        style: "destructive",
+        onPress: () => {
+          handleClose();
+          setUser(null);
+          router.replace("/customer/login" as any);
         },
-      ],
-      { cancelable: true }
-    );
+      },
+    ]);
   };
 
   const toggleSettings = () => {
@@ -92,158 +77,57 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
     setShowSettingsMenu(!showSettingsMenu);
   };
 
+  // ✅ MENU ITEMS WITH ROUTES
   const menuItems = [
-    {
-      label: "Dashboard Overview",
-      icon: <Feather name="home" size={22} />,
-      roles: ["vendor"],
-    },
-    {
-      label: "Wallet",
-      icon: <Ionicons name="wallet-outline" size={22} />,
-      roles: ["vendor"],
-    },
-    {
-      label: "Orders",
-      icon: <Ionicons name="bag-outline" size={22} />,
-      roles: ["vendor"],
-    },
-    {
-      label: "Products",
-      icon: <Ionicons name="cube-outline" size={22} />,
-      roles: ["vendor"],
-    },
-    {
-      label: "Dispute",
-      icon: <Ionicons name="chatbubble-ellipses-outline" size={22} />,
-      roles: ["vendor"],
-    },
-    {
-      label: "Measurements",
-      icon: <PencilRuler size={22} />,
-      roles: ["vendor"],
-    },
-    {
-      label: "Store Fonts",
-      icon: <Ionicons name="chatbubble-ellipses-outline" size={22} />,
-      roles: ["vendor"],
-    },
-    {
-      label: "Custom",
-      icon: <Feather name="user" size={22} />,
-      roles: ["vendor"],
-      disabled: true,
-      badgeText: "Coming Soon!",
-    },
-    {
-      label: "Bargain",
-      icon: <Calculator size={22} />,
-      roles: ["vendor"],
-      disabled: true,
-      badgeText: "Coming Soon!",
-    },
-    {
-      label: "Automation",
-      icon: <PencilRuler size={22} />,
-      roles: ["vendor"],
-      disabled: true,
-      badgeText: "Coming Soon!",
-    },
-    {
-      label: "Messages",
-      icon: <Ionicons name="chatbubble-ellipses-outline" size={22} />,
-      roles: ["vendor"],
-      disabled: true,
-      badgeText: "Coming Soon!",
-    },
-    {
-      label: "Coupons",
-      icon: <Calculator size={22} />,
-      roles: ["vendor"],
-      disabled: true,
-      badgeText: "Coming Soon!",
-    },
-    {
-      label: "Profile Management",
-      icon: <Feather name="user" size={22} />,
-      roles: ["customer"],
-    },
-    {
-      label: "Order History",
-      icon: <Ionicons name="time-outline" size={22} />,
-      roles: ["customer"],
-    },
-    {
-      label: "Saved Measurements",
-      icon: <PencilRuler size={22} />,
-      roles: ["customer"],
-    },
-    {
-      label: "Wishlist",
-      icon: <Feather name="heart" size={22} />,
-      roles: ["customer"],
-    },
-    {
-      label: "Shipping and Return",
-      icon: <Feather name="package" size={22} />,
-      roles: ["customer"],
-    },
-    {
-      label: "Size Guide",
-      icon: <Feather name="package" size={22} />,
-      roles: ["customer"],
-    },
-    {
-      label: "Track Orders",
-      icon: <Ionicons name="locate-outline" size={22} />,
-      roles: ["customer"],
-    },
-    {
-      label: "Contact Us",
-      icon: <Feather name="phone" size={22} />,
-      roles: ["customer"],
-    },
+    { label: "Dashboard Overview", icon: <Feather name="home" size={22} />, roles: ["vendor"], route: "/vendor/dashboard" },
+    { label: "Wallet", icon: <Ionicons name="wallet-outline" size={22} />, roles: ["vendor"], route: "/dashboard/vendor/wallet" },
+    { label: "Orders", icon: <Ionicons name="bag-outline" size={22} />, roles: ["vendor"], route: "/dashboard/vendor/orders" },
+    { label: "Products", icon: <Ionicons name="cube-outline" size={22} />, roles: ["vendor"], route: "/dashboard/vendor/products" },
+    { label: "Dispute", icon: <Ionicons name="chatbubble-ellipses-outline" size={22} />, roles: ["vendor"], route: "/vendor/dispute" },
+    { label: "Measurements", icon: <PencilRuler size={22} />, roles: ["vendor"], route: "/vendor/measurements" },
+    { label: "Store Fonts", icon: <Ionicons name="storefront-outline" size={22} />, roles: ["vendor"], route: "/vendor/store-fonts" },
+    { label: "Custom", icon: <Feather name="user" size={22} />, roles: ["vendor"], disabled: true, badgeText: "Coming Soon!" },
+    { label: "Bargain", icon: <Calculator size={22} />, roles: ["vendor"], disabled: true, badgeText: "Coming Soon!" },
+    { label: "Automation", icon: <PencilRuler size={22} />, roles: ["vendor"], disabled: true, badgeText: "Coming Soon!" },
+    { label: "Messages", icon: <Ionicons name="chatbubble-ellipses-outline" size={22} />, roles: ["vendor"], disabled: true, badgeText: "Coming Soon!" },
+    { label: "Coupons", icon: <Calculator size={22} />, roles: ["vendor"], disabled: true, badgeText: "Coming Soon!" },
+    { label: "Profile Management", icon: <Feather name="user" size={22} />, roles: ["customer"], route: "/customer/profile" },
+    { label: "Order History", icon: <Ionicons name="time-outline" size={22} />, roles: ["customer"], route: "/customer/orders" },
+    { label: "Saved Measurements", icon: <PencilRuler size={22} />, roles: ["customer"], route: "/customer/saved-measurements" },
+    { label: "Wishlist", icon: <Feather name="heart" size={22} />, roles: ["customer"], route: "/customer/wishlist" },
+    { label: "Shipping and Return", icon: <Feather name="package" size={22} />, roles: ["customer"], route: "/customer/shipping-return" },
+    { label: "Size Guide", icon: <Feather name="book" size={22} />, roles: ["customer"], route: "/customer/size-guide" },
+    { label: "Track Orders", icon: <Ionicons name="locate-outline" size={22} />, roles: ["customer"], route: "/customer/track-orders" },
+    { label: "Contact Us", icon: <Feather name="phone" size={22} />, roles: ["customer"], route: "/customer/contact" },
   ];
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.leftSection}>
+      <ThemedView style={styles.header}>
+        <ThemedView style={styles.leftSection}>
           {showBackButton && (
-            <TouchableOpacity
-              onPress={() => router.back()}
-              style={styles.backButton}
-            >
+            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
               <Ionicons name="arrow-back" size={26} color="#000" />
             </TouchableOpacity>
           )}
-          <Text style={styles.title}>{title}</Text>
-        </View>
+          <ThemedText style={styles.title}>{title}</ThemedText>
+        </ThemedView>
 
         <TouchableOpacity style={styles.menuButton} onPress={toggleSidebar}>
           <Feather name="menu" size={26} color="#000" />
         </TouchableOpacity>
-      </View>
+      </ThemedView>
 
-      {/* Sidebar Modal */}
-      <Modal
-        animationType="none"
-        transparent
-        visible={isOpen}
-        onRequestClose={handleClose}
-      >
+      {/* Sidebar */}
+      <Modal animationType="none" transparent visible={isOpen} onRequestClose={handleClose}>
         <TouchableWithoutFeedback onPress={handleClose}>
-          <View style={styles.overlay} />
+          <ThemedView style={styles.overlay} />
         </TouchableWithoutFeedback>
 
         <Animated.View
-          style={[
-            styles.sidebarLight,
-            { width: sidebarWidth, transform: [{ translateX: slideAnim }] },
-          ]}
+          style={[styles.sidebarLight, { width: sidebarWidth, transform: [{ translateX: slideAnim }] }]}
         >
-          {/* Main Menu */}
           <ScrollView
             style={styles.menuList}
             contentContainerStyle={{ paddingBottom: 16 }}
@@ -258,51 +142,44 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
                   label={item.label}
                   disabled={item.disabled}
                   badgeText={item.badgeText}
+                  onPress={() => {
+                    if (!item.disabled && item.route) {
+                      handleClose();
+                      router.push(item.route as any);
+                    }
+                  }}
                 />
               ))}
           </ScrollView>
 
-          {/* --- Bottom Section --- */}
+          {/* Bottom Section */}
           {user?.role?.toLowerCase() === "customer" && (
-            <View style={styles.customerBottomSection}>
+            <ThemedView style={styles.customerBottomSection}>
               <TouchableOpacity style={styles.menuRow}>
                 <Feather name="settings" size={22} color="#292D32" />
-                <Text style={styles.menuText}>Settings</Text>
+                <ThemedText style={styles.menuText}>Settings</ThemedText>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.menuRow}>
-                <Ionicons
-                  name="help-circle-outline"
-                  size={22}
-                  color="#292D32"
-                />
-                <Text style={styles.menuText}>Platform Support</Text>
+                <Ionicons name="help-circle-outline" size={22} color="#292D32" />
+                <ThemedText style={styles.menuText}>Platform Support</ThemedText>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.menuRow} onPress={handleLogout}>
-                <Feather
-                  name="log-out"
-                  size={22}
-                  color="#292D32"
-                  style={{ transform: [{ rotate: "180deg" }] }}
-                />
-                <Text style={styles.menuText}>Log out</Text>
+                <Feather name="log-out" size={22} color="#292D32" style={{ transform: [{ rotate: "180deg" }] }} />
+                <ThemedText style={styles.menuText}>Log out</ThemedText>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.vendorButton}>
                 <Ionicons name="storefront-outline" size={18} color="#fff" />
-                <Text style={styles.vendorButtonText}>Become a Vendor</Text>
+                <ThemedText style={styles.vendorButtonText}>Become a Vendor</ThemedText>
               </TouchableOpacity>
-            </View>
+            </ThemedView>
           )}
 
-          {/* --- For Counsellor --- */}
           {user?.role?.toLowerCase() === "vendor" && (
-            <View style={styles.bottomSection}>
-              <TouchableOpacity
-                style={styles.bottomButton}
-                onPress={toggleSettings}
-              >
+            <ThemedView style={styles.bottomSection}>
+              <TouchableOpacity style={styles.bottomButton} onPress={toggleSettings}>
                 <Feather name="settings" size={22} color="#000" />
                 <ThemedText>Settings</ThemedText>
                 <Ionicons
@@ -314,18 +191,15 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
               </TouchableOpacity>
 
               {showSettingsMenu && (
-                <View style={styles.settingsMenu}>
+                <ThemedView style={styles.settingsMenu}>
                   <TouchableOpacity style={styles.subItem}>
                     <Ionicons name="key-outline" size={18} color="#333" />
-                    <Text style={styles.subItemText}>Security</Text>
+                    <ThemedText style={styles.subItemText}>Security</ThemedText>
                   </TouchableOpacity>
-                </View>
+                </ThemedView>
               )}
 
-              <ThemedTouchableOpacity
-                style={styles.bottomButton}
-                onPress={handleLogout}
-              >
+              <ThemedTouchableOpacity style={styles.bottomButton} onPress={handleLogout}>
                 <Feather
                   name="log-out"
                   size={22}
@@ -334,39 +208,41 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
                 />
                 <ThemedText>Logout</ThemedText>
               </ThemedTouchableOpacity>
-            </View>
+            </ThemedView>
           )}
         </Animated.View>
       </Modal>
-    </View>
+    </ThemedView>
   );
 };
 
+// ✅ Sidebar Item
 const SidebarItem: React.FC<{
   icon: JSX.Element;
   label: string;
   disabled?: boolean;
   badgeText?: string;
-}> = ({ icon, label, disabled = false, badgeText }) => {
-  const coloredIcon = React.cloneElement(icon, {
-    color: disabled ? "#aaa" : "#000",
-  });
-
+  onPress?: () => void;
+}> = ({ icon, label, disabled = false, badgeText, onPress }) => {
+  const coloredIcon = React.cloneElement(icon, { color: disabled ? "#aaa" : "#000" });
   return (
-    <View style={[styles.sidebarItem, disabled && { opacity: 0.6 }]}>
-      <View style={styles.icon}>{coloredIcon}</View>
-      <Text style={{ color: disabled ? "#aaa" : "#000", fontSize: 16 }}>
-        {label}
-      </Text>
+    <TouchableOpacity
+      disabled={disabled}
+      onPress={onPress}
+      style={[styles.sidebarItem, disabled && { opacity: 0.6 }]}
+    >
+      <ThemedView style={styles.icon}>{coloredIcon}</ThemedView>
+      <ThemedText style={{ color: disabled ? "#aaa" : "#000", fontSize: 16 }}>{label}</ThemedText>
       {badgeText && (
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>{badgeText}</Text>
-        </View>
+        <ThemedView style={styles.badge}>
+          <ThemedText style={styles.badgeText}>{badgeText}</ThemedText>
+        </ThemedView>
       )}
-    </View>
+    </TouchableOpacity>
   );
 };
 
+// ✅ Styles remain unchanged
 const styles = StyleSheet.create({
   container: { width: "100%" },
   header: {
@@ -382,14 +258,7 @@ const styles = StyleSheet.create({
   backButton: { padding: 4 },
   title: { fontSize: 20, fontWeight: "bold" },
   menuButton: { padding: 4 },
-  overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.3)",
-  },
+  overlay: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.3)" },
   sidebarLight: {
     position: "absolute",
     left: 0,
@@ -405,15 +274,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 6,
   },
-  sidebarItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 14,
-  },
+  sidebarItem: { flexDirection: "row", alignItems: "center", paddingVertical: 14 },
   icon: { marginRight: 12 },
-  menuList: {
-    flexGrow: 1,
-  },
+  menuList: { flexGrow: 1 },
   bottomSection: {
     backgroundColor: "#fff",
     borderTopWidth: 1,
@@ -421,62 +284,15 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 24,
   },
-  bottomButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    paddingVertical: 12,
-    backgroundColor: "#fff",
-  },
-  settingsMenu: {
-    paddingLeft: 28,
-    paddingBottom: 8,
-  },
-  subItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 8,
-    gap: 8,
-  },
-  subItemText: {
-    fontSize: 15,
-    color: "#333",
-  },
-  badge: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
-    marginLeft: 8,
-  },
-  badgeText: {
-    fontSize: 10,
-    fontWeight: "700",
-    color: "red",
-    opacity: 0.25,
-  },
-  menuRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 14,
-    gap: 12,
-  },
-  menuText: {
-    fontSize: 16,
-    fontFamily: "Outfit-Regular",
-    color: "#292D32",
-  },
-  customerBottomSection: {
-    borderTopWidth: 1,
-    borderTopColor: "#E5E5E5",
-    paddingTop: 24,
-    paddingBottom: 20,
-  },
-  counsellorBottomSection: {
-    borderTopWidth: 1,
-    borderTopColor: "#E5E5E5",
-    paddingTop: 24,
-    paddingBottom: 20,
-  },
+  bottomButton: { flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 12, backgroundColor: "#fff" },
+  settingsMenu: { paddingLeft: 28, paddingBottom: 8 },
+  subItem: { flexDirection: "row", alignItems: "center", paddingVertical: 8, gap: 8 },
+  subItemText: { fontSize: 15, color: "#333" },
+  badge: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, marginLeft: 8 },
+  badgeText: { fontSize: 10, fontWeight: "700", color: "red", opacity: 0.25 },
+  menuRow: { flexDirection: "row", alignItems: "center", paddingVertical: 14, gap: 12 },
+  menuText: { fontSize: 16, color: "#292D32" },
+  customerBottomSection: { borderTopWidth: 1, borderTopColor: "#E5E5E5", paddingTop: 24, paddingBottom: 20 },
   vendorButton: {
     marginTop: 30,
     backgroundColor: "#000",
@@ -486,13 +302,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 50,
   },
-  vendorButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "800",
-    marginLeft: 8,
-    fontFamily: "Outfit-Medium",
-  },
+  vendorButtonText: { color: "#fff", fontSize: 16, fontWeight: "800", marginLeft: 8 },
 });
 
 export default CustomHeader;
