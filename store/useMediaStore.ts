@@ -230,8 +230,6 @@ fetchMedia: async (page = 1, search = '', limit = 20) => {
     try {
       setUsageLoading(true);
       const res: any = await api.get("/media/usage");
-      console.log("fetchUsage response", res);
-
       const data = res.data?.data;
       if (!data) throw new Error("Invalid usage response format");
 

@@ -38,6 +38,7 @@ export type productResponse = {
 };
 
 export type CreateProductForm = {
+    productName?:string;
     id?: string;
     name: string;
     description: string;
@@ -251,3 +252,15 @@ export interface Variation {
     is_visible?: boolean;
     low_stock_threshold?: number;
 }
+
+export interface ProductItemProps {
+    name: string;
+    soldCount: number;
+  }
+  export interface StatCardProps {
+    title: string;
+    value: string;
+    icon?: React.ReactNode;
+    backgroundColor: string;
+    imageSource?: any;
+  }

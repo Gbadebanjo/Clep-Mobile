@@ -1,0 +1,105 @@
+import { Dimensions, StyleSheet } from "react-native";
+
+const { width } = Dimensions.get("window");
+export const MediaGalleryModalStyles = (colorScheme: "light" | "dark") =>
+  StyleSheet.create({
+    overlay: {
+      flex: 1,
+      backgroundColor: "rgba(0,0,0,0.6)",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    modal: {
+      backgroundColor: "#fff",
+      width: "90%",
+      maxHeight: "90%",
+      borderRadius: 12,
+      padding: 16,
+    },
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 10,
+    },
+    title: { fontSize: 18, fontWeight: "600", color:"#6B0C2D" },
+    tabs: {
+      flexDirection: "row",
+      borderBottomWidth: 1,
+      borderColor: "#848484",
+      marginBottom: 10,
+    },
+    tab: { flex: 1, alignItems: "center", paddingVertical: 8 },
+    activeTab: { borderBottomWidth: 2, borderColor: "#6B0C2D" },
+    tabText: { color: "#666" },
+    activeTabText: { color: "#6B0C2D", fontWeight: "500" },
+    grid: { gap: 8 },
+    mediaItem: {
+      width: width / 3 - 20,
+      height: width / 3 - 20,
+      margin: 5,
+      borderWidth: 1,
+      borderColor: "#848484",
+      borderRadius: 8,
+      overflow: "hidden",
+      position: "relative",
+    },
+    mediaItemSelected: { borderColor: "#007bff", borderWidth: 2 },
+    image: { width: "100%", height: "100%", resizeMode: "cover" },
+    fileContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
+    fileName: { fontSize: 10, marginTop: 4, color: "#444" },
+    checkmark: {
+      position: "absolute",
+      top: 6,
+      right: 6,
+      backgroundColor: "#007bff",
+      padding: 4,
+      borderRadius: 12,
+    },
+    contentContainer: {
+      minHeight: 300,
+    },
+    uploadContainer: {
+      minHeight: 300,
+      justifyContent: "center",
+      alignItems: "center",
+      paddingVertical: 30,
+      paddingHorizontal: 20,
+    },
+    uploadContent: {
+      alignItems: "center",
+      gap: 16,
+      width: "100%",
+    },
+    uploadIcon: {
+      marginBottom: 8,
+    },
+    uploadTitle: {
+      fontSize: 20,
+      fontWeight: "700",
+      color: "#000",
+    },
+    uploadSubtitle: {
+      fontSize: 13,
+      color: "#999",
+      marginBottom: 4,
+    },
+    uploadButton: {
+      backgroundColor: "#6B0C2D",
+      paddingVertical: 14,
+      paddingHorizontal: 32,
+      borderRadius: 8,
+      marginTop: 16,
+      width: "100%",
+      alignItems: "center",
+    },
+    uploadButtonText: { color: "#fff", fontWeight: "600", fontSize: 15 },
+    footer: {
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      marginTop: 12,
+    },
+    cancelButton: { padding: 10 },
+    selectButton: { backgroundColor: "#6B0C2D", padding: 10, borderRadius: 8 },
+    errorText: { textAlign: "center", color: "red" },
+  });

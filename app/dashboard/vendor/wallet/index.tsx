@@ -1,25 +1,23 @@
-import { AuthAPI } from "@/apis/auth-api";
-import Header from "@/components/Header";
-import { amountFormatter } from "@/helpers/data-utils";
-import { useAuthStore } from "@/store";
-import { WalletResponse } from "@/types/store";
+"use client";
 
+import React, { useCallback, useEffect, useState } from "react";
+import { Alert, Image, RefreshControl, ScrollView, TouchableOpacity, useColorScheme, View } from "react-native";
+
+import Header from "@/components/Header";
+import Table from "@/components/Table";
 import { ThemedLoader } from "@/components/ThemedLoader";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import React, { useCallback, useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  Alert,
-  FlatList,
-  Image,
-  RefreshControl,
-  TouchableOpacity,
-} from "react-native";
-import TransactionList from "./components/transactionList";
-import { styles } from "./style";
+
+import { AuthAPI } from "@/apis/auth-api";
+import { amountFormatter } from "@/helpers/data-utils";
+import { useAuthStore } from "@/store";
+import { WalletResponse } from "@/types/store";
+import { WalletStyles } from "./style";
 
 const WalletDashboard = () => {
+  const colorScheme = useColorScheme() as "light" | "dark";
+  const styles = WalletStyles(colorScheme);
   const [activeTab, setActiveTab] = useState<
     "Recent" | "Escrow credit" | "Withdrawal"
   >("Recent");
@@ -28,8 +26,8 @@ const WalletDashboard = () => {
   const [walletData, setWalletData] = useState<WalletResponse["data"] | null>(
     null
   );
-  const { user } = useAuthStore();
 
+  const { user } = useAuthStore();
   const authAPI = new AuthAPI(user?.token);
 
   const fetchWalletData = async () => {
@@ -68,103 +66,168 @@ const WalletDashboard = () => {
     }
   };
 
+  const transactions = getActiveTransactions();
+
+  const columns = [
+    {
+      header: "ID",
+      width: 140,
+      cell: (row: any) => (
+        <ThemedText numberOfLines={1}>{row.transactionId || "N/A"}</ThemedText>
+      ),
+    },
+    {
+      header: "Date",
+      width: 120,
+      cell: (row: any) => (
+        <ThemedText>
+          {row.createdAt ? row.createdAt.split("T")[0] : "N/A"}
+        </ThemedText>
+      ),
+    },
+    {
+      header: "Amount",
+      width: 120,
+      cell: (row: any) => (
+        <ThemedText>{amountFormatter(row.netAmount)}</ThemedText>
+      ),
+    },
+    {
+      header: "Transaction Type",
+      width: 120,
+      cell: (row: any) => <ThemedText
+      style={{
+        color: row.status === "completed" ? "green" : "orange",
+       
+      }}>{row.type || "-"}</ThemedText>,
+    },
+    {
+      header: "Status",
+      width: 120,
+      cell: (row: any) => (
+        <ThemedText
+          style={{
+            color: row.status === "completed" ? "green" : "orange",
+            fontWeight: "600",
+          }}
+        >
+          {row.status || "Pending"}
+        </ThemedText>
+      ),
+    },
+    {
+      header: "Details",
+      width: 120,
+      cell: (row: any) => (
+        <ThemedText
+      
+        >
+       
+        </ThemedText>
+      ),
+    },
+  ];
+
   if (loading && !walletData) {
     return <ThemedLoader />;
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Fixed Header */}
+    <ThemedView style={styles.container}>
+      {/* Header */}
       <Header title={`Hello, ${user?.name || ""}`} />
-
-      {/* Scrollable content below header */}
-      <FlatList
-        data={getActiveTransactions()}
-        keyExtractor={(item, index) => item.id || index.toString()}
-        renderItem={({ item }) => <TransactionList data={[item]} />}
-        ListHeaderComponent={
-          <ThemedView style={styles.balanceContainer}>
-            {/* Balances */}
-            <ThemedView style={styles.balanceCard}>
-              <ThemedView style={styles.cardHeader}>
-                <ThemedText style={styles.cardTitle}>
-                  Available Balance
-                </ThemedText>
-                <ThemedView style={styles.switchCircle} />
-              </ThemedView>
-              <ThemedText style={styles.balanceAmount}>
-                {amountFormatter(walletData?.balances?.available || 0)}
-              </ThemedText>
-              <TouchableOpacity style={styles.withdrawalButton}>
-                <ThemedText style={styles.withdrawalButtonText}>
-                  Withdraw
-                </ThemedText>
-              </TouchableOpacity>
-            </ThemedView>
-
-            <ThemedView style={styles.balanceCardLight}>
-              <ThemedText style={styles.cardTitleLight}>
-                Escrow Balance
-              </ThemedText>
-              <ThemedText style={styles.balanceAmountLight}>
-                {amountFormatter(walletData?.balances?.escrow || 0)}
-              </ThemedText>
-            </ThemedView>
-
-            <ThemedView style={styles.balanceCardLight}>
-              <ThemedView style={styles.totalBalanceHeader}>
-                <ThemedText style={styles.cardTitleLight}>
-                  Total Balance
-                </ThemedText>
-
-                <Image
-                  source={require("../../../../assets/images/dashboard/Ellipse 369.png")}
-                  style={{ width: 25, height: 25 }}
-                  resizeMode="contain"
-                />
-              </ThemedView>
-              <ThemedText style={styles.balanceAmountLight}>
-                {amountFormatter(walletData?.balances?.total || 0)}
-              </ThemedText>
-            </ThemedView>
-
-            {/* Tabs */}
-            <ThemedView style={styles.transactionSection}>
-              <ThemedText style={styles.sectionTitle}>
-                Transaction History
-              </ThemedText>
-
-              <ThemedView style={styles.tabsContainer}>
-                {["Recent", "Escrow credit", "Withdrawal"].map((tab) => (
-                  <TouchableOpacity
-                    key={tab}
-                    style={[styles.tab, activeTab === tab && styles.activeTab]}
-                    onPress={() => setActiveTab(tab as any)}
-                  >
-                    <ThemedText
-                      style={[
-                        styles.tabText,
-                        activeTab === tab && styles.activeTabText,
-                      ]}
-                    >
-                      {tab}
-                    </ThemedText>
-                  </TouchableOpacity>
-                ))}
-              </ThemedView>
-            </ThemedView>
-          </ThemedView>
-        }
+  
+      {/* Scrollable Content with Pull-to-Refresh */}
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: 80 }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        ListEmptyComponent={
+      >
+        {/* Balance Summary */}
+        <ThemedView style={styles.balanceContainer}>
+          <ThemedView style={styles.balanceCard}>
+            <ThemedView style={styles.cardHeader}>
+              <ThemedText style={styles.cardTitle}>Available Balance</ThemedText>
+              <ThemedView style={styles.switchCircle} />
+            </ThemedView>
+            <ThemedText style={styles.balanceAmount}>
+              {amountFormatter(walletData?.balances?.available || 0)}
+            </ThemedText>
+            <TouchableOpacity style={styles.withdrawalButton}>
+              <ThemedText style={styles.withdrawalButtonText}>Withdraw</ThemedText>
+            </TouchableOpacity>
+          </ThemedView>
+  
+          <ThemedView style={styles.balanceCardLight}>
+            <ThemedText style={styles.cardTitleLight}>Escrow Balance</ThemedText>
+            <ThemedText style={styles.balanceAmountLight}>
+              {amountFormatter(walletData?.balances?.escrow || 0)}
+            </ThemedText>
+          </ThemedView>
+  
+          <ThemedView style={styles.balanceCardLight}>
+            <ThemedView style={styles.totalBalanceHeader}>
+              <ThemedText style={styles.cardTitleLight}>Total Balance</ThemedText>
+              <Image
+                source={require("../../../../assets/images/dashboard/Ellipse 369.png")}
+                style={{ width: 25, height: 25 }}
+                resizeMode="contain"
+              />
+            </ThemedView>
+            <ThemedText style={styles.balanceAmountLight}>
+              {amountFormatter(walletData?.balances?.total || 0)}
+            </ThemedText>
+          </ThemedView>
+        </ThemedView>
+  
+        {/* Tabs */}
+        <ThemedView style={styles.transactionSection}>
+          <ThemedText style={styles.sectionTitle}>Transaction History</ThemedText>
+  
+          <ThemedView style={styles.tabsContainer}>
+            {["Recent", "Escrow credit", "Withdrawal"].map((tab) => (
+              <TouchableOpacity
+                key={tab}
+                style={[styles.tab, activeTab === tab && styles.activeTab]}
+                onPress={() => setActiveTab(tab as any)}
+              >
+                <ThemedText
+                  style={[
+                    styles.tabText,
+                    activeTab === tab && styles.activeTabText,
+                  ]}
+                >
+                  {tab}
+                </ThemedText>
+              </TouchableOpacity>
+            ))}
+          </ThemedView>
+        </ThemedView>
+  
+        {/* Transactions Table */}
+        {loading ? (
+          <ThemedLoader />
+        ) : transactions.length === 0 ? (
           <ThemedText style={styles.empty}>No transactions found</ThemedText>
-        }
-        contentContainerStyle={{ paddingBottom: 80 }}
-      />
-    </SafeAreaView>
+        ) : (
+          <View style={{ flex: 1, }}>
+            <Table
+              columns={columns}
+              data={transactions}
+              currentPage={1}
+              totalPages={1}
+              onPageChange={() => {}}
+              isLoading={loading}
+              onRowClick={(row) => console.log("Clicked transaction:", row)}
+            />
+          </View>
+        )}
+      </ScrollView>
+      </ThemedView>
   );
+  
 };
 
 export default WalletDashboard;

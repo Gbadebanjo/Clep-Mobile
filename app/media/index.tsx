@@ -14,7 +14,7 @@ import {
   Image,
   ScrollView,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import Toast from "react-native-toast-message";
 import { styles } from "./style";
@@ -131,7 +131,7 @@ export default function MediaGalleryScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <Header title="Media Gallery" />
+      <Header title="Media Gallery" showBottomBorder={false} />
       <ThemedView style={styles.titleSection}>
         <ThemedText style={styles.subtitle}>
           Manage your media files in one place. You can view, select, upload,
@@ -148,7 +148,7 @@ export default function MediaGalleryScreen() {
           <ThemedText style={styles.storageTitle}>Storage Usage</ThemedText>
 
           {isUsageLoading ? (
-          <ThemedLoader />
+            <ThemedLoader />
           ) : usage ? (
             <>
               <ThemedView>
@@ -197,7 +197,9 @@ export default function MediaGalleryScreen() {
               })()}
             </>
           ) : (
-            <ThemedText style={{ color: "#999" }}>No usage data available</ThemedText>
+            <ThemedText style={{ color: "#999" }}>
+              No usage data available
+            </ThemedText>
           )}
         </ThemedView>
 
@@ -301,7 +303,7 @@ export default function MediaGalleryScreen() {
 
         {/* ✅ Media Section */}
         {isLoading && !isSearching ? (
-         <ThemedLoader />
+          <ThemedLoader />
         ) : media.length === 0 ? (
           <ThemedView style={{ alignItems: "center", marginTop: 60 }}>
             <Feather name="upload" size={48} color="#ccc" />
@@ -346,7 +348,9 @@ export default function MediaGalleryScreen() {
                   resizeMode="cover"
                 />
                 <ThemedView style={styles.listTextContainer}>
-                  <ThemedText style={styles.listTitle}>{item?.filename}</ThemedText>
+                  <ThemedText style={styles.listTitle}>
+                    {item?.filename}
+                  </ThemedText>
                   <ThemedText style={styles.listFileSize}>
                     {formatFileSize(item?.filesize)}
                   </ThemedText>

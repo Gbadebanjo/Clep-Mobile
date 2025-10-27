@@ -1,13 +1,13 @@
 import BaseAPI from '@/apis/base-api';
 import {
-    LoginForm,
-    LoginResponse,
-    RegisterCustomerForm,
-    RegisterCustomerResponse,
-    RegisterVendorForm,
-    User,
-    VerifyEmailForm,
-    resetPasswordForm,
+  LoginForm,
+  LoginResponse,
+  RegisterCustomerForm,
+  RegisterCustomerResponse,
+  RegisterVendorForm,
+  User,
+  VerifyEmailForm,
+  resetPasswordForm,
 } from '@/types/auth';
 import { CommissionReportResponse, WalletResponse } from '@/types/store';
 
@@ -133,9 +133,6 @@ export class AuthAPI extends BaseAPI {
           const userData = userResponse.data;
       
           let vendorId: string | null = null;
-
-          console.log('User Data:', userData);
-      
           // Try extracting vendor ID from various possible structures
           if (userData?.data?.user?.vendorProfile?.id) {
             vendorId = userData.data.user.vendorProfile.id;

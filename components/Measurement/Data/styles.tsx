@@ -44,7 +44,7 @@ export const DataStyles = (colorScheme: "light" | "dark") =>
       flexDirection: "row",
       justifyContent: "space-between",
       borderBottomWidth: 1,
-      borderBottomColor: "#eee",
+      borderBottomColor: "#848484",
       paddingVertical: 12,
       paddingHorizontal: 16,
       backgroundColor: "#fafafa",

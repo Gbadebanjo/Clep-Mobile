@@ -41,14 +41,10 @@ export class ProductAPI extends BaseAPI {
     public async getProducts(
         queryParams?: Record<string, any>
       ): Promise<{ data: productResponse }> {
-        console.log('📦 Entered getProducts with params:', queryParams);
         try {
           const params = queryParams || {};
       
-          const response = await this.axiosInstance.get('/products', { params });
-      console.log('✅ ProductAPI.getProducts - Response:', JSON.stringify(response.data, null, 2));
-
-      
+          const response = await this.axiosInstance.get('/products', { params });    
           // ✅ Ensure consistent structure
           return {
             data: response.data?.data || response.data,

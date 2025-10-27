@@ -238,3 +238,9 @@ export interface DeliveryStatus {
     is_item_cod: number;
     cod_amount: string | null;
 }
+export interface OrderItemProps {
+    orderId: string;
+    amount: string;
+    date: string;
+    status: string;
+  }

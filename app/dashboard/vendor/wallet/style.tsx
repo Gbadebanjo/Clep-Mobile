@@ -1,18 +1,20 @@
+import { Colors } from "@/constants/Colors";
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+export const WalletStyles = (colorScheme: "light" | "dark") =>
+  StyleSheet.create({
   loaderContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: "5%",
+    paddingTop: "4%",
   },
-  container: { flex: 1, backgroundColor: "#FAFAFA" },
+  container: { flex: 1, backgroundColor: Colors[colorScheme].background,  paddingTop: "4%", },
   balanceContainer: {
     paddingHorizontal: 16,
     gap: 12,
     marginBottom: 24,
-    paddingTop: "5%",
+    paddingTop: "4%",
   },
   balanceCard: { backgroundColor: "#000", borderRadius: 12, padding: 20 },
   cardHeader: {
@@ -42,10 +44,16 @@ export const styles = StyleSheet.create({
   },
   withdrawalButtonText: { color: "#000", fontSize: 16, fontWeight: "600" },
   balanceCardLight: {
-    backgroundColor: "#EFEFEF",
+    // backgroundColor: "#EFEFEF",
     borderRadius: 12,
     padding: 16,
     height: 120,
+    backgroundColor: Colors[colorScheme].background,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
   cardTitleLight: { fontSize: 14, fontWeight: "600", },
   balanceAmountLight: {
@@ -58,9 +66,9 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#EFEFEF",
+   
   },
-  transactionSection: { marginTop: 20 },
+  transactionSection: {  marginHorizontal:16 },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "700",

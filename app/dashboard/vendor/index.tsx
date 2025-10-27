@@ -3,13 +3,16 @@
 import Header from "@/components/Header";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { MediaLibrary } from "@/components/Vendor/MediaLibrary";
+import { OrderItem } from "@/components/Vendor/OrderItem";
+import { ProductItem } from "@/components/Vendor/ProductItem";
+import { StatCard } from "@/components/Vendor/StatCard";
 import { amountFormatter } from "@/helpers/data-utils";
 import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { useAuthStore } from "@/store";
 import { useMediaStore } from "@/store/useMediaStore";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { router } from "expo-router";
 import { Calendar, DollarSign } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
@@ -23,98 +26,6 @@ import { DashboardStyles } from "./style";
 
 const { width } = Dimensions.get("window");
 
-interface StatCardProps {
-  title: string;
-  value: string;
-  icon?: React.ReactNode;
-  backgroundColor: string;
-  imageSource?: any;
-}
-
-interface OrderItemProps {
-  orderId: string;
-  amount: string;
-  date: string;
-  status: string;
-}
-
-interface ProductItemProps {
-  name: string;
-  soldCount: number;
-}
-
-/* ------------------------------ StatCard ------------------------------ */
-const StatCard: React.FC<StatCardProps> = ({
-  title,
-  value,
-  icon,
-  backgroundColor,
-  imageSource,
-}) => {
-  const colorScheme = useColorScheme();
-  const styles = DashboardStyles(colorScheme);
-
-  return (
-    <ThemedView style={[styles.statCard, { backgroundColor }]}>
-      <ThemedView style={[styles.statCardContent, { backgroundColor }]}>
-        <ThemedView style={[styles.statCardLeft, { backgroundColor }]}>
-          <ThemedText style={styles.statCardTitle}>{title}</ThemedText>
-          <ThemedText style={styles.statCardValue}>{value}</ThemedText>
-        </ThemedView>
-        <ThemedView style={styles.statCardIcon}>
-          {imageSource ? (
-            <Image
-              source={imageSource}
-              style={styles.imageIcon}
-              resizeMode="contain"
-            />
-          ) : (
-            icon
-          )}
-        </ThemedView>
-      </ThemedView>
-    </ThemedView>
-  );
-};
-
-/* ------------------------------ OrderItem ------------------------------ */
-const OrderItem: React.FC<OrderItemProps> = ({
-  orderId,
-  amount,
-  date,
-  status,
-}) => {
-  const colorScheme = useColorScheme();
-  const styles = DashboardStyles(colorScheme);
-
-  return (
-    <ThemedView style={styles.orderItem}>
-      <ThemedView style={styles.orderItemLeft}>
-        <ThemedText style={styles.orderItemId}>{orderId}</ThemedText>
-        <ThemedText style={styles.orderItemDate}>{date}</ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.orderItemRight}>
-        <ThemedText style={styles.orderItemAmount}>{amount}</ThemedText>
-        <ThemedText style={styles.orderItemStatus}>{status}</ThemedText>
-      </ThemedView>
-    </ThemedView>
-  );
-};
-
-/* ------------------------------ ProductItem ------------------------------ */
-const ProductItem: React.FC<ProductItemProps> = ({ name, soldCount }) => {
-  const colorScheme = useColorScheme();
-  const styles = DashboardStyles(colorScheme);
-
-  return (
-    <ThemedView style={styles.productItem}>
-      <ThemedText style={styles.productName}>{name}</ThemedText>
-      <ThemedText style={styles.productSold}>{soldCount} sold</ThemedText>
-    </ThemedView>
-  );
-};
-
-/* ------------------------------ Main Component ------------------------------ */
 export default function VendorDashboard() {
   const { user } = useAuthStore();
   const colorScheme = useColorScheme();
@@ -138,7 +49,7 @@ export default function VendorDashboard() {
   return (
     <ThemedView style={styles.container}>
       {/* Header */}
-      <Header title={`Welcome ${user?.name || ""}`} showBackButton={false} />
+      <Header title={`Welcome ${user?.name || ""}`}  showBottomBorder={false}  />
 
       {/* Welcome Section */}
       <ThemedView style={styles.welcomeSection}>
@@ -299,45 +210,10 @@ export default function VendorDashboard() {
         </ThemedView>
 
         {/* Media Library */}
-        <ThemedView style={[styles.card, { width: width * 0.9 }]}>
-          <ThemedView style={styles.header}>
-            <Ionicons name="image-outline" size={22} color="#000" />
-            <ThemedText style={styles.headerThemedText}>Media Library</ThemedText>
-          </ThemedView>
-
-          <ThemedView style={styles.row}>
-            <ThemedText style={styles.label}>Storage Usage</ThemedText>
-            <ThemedText style={styles.value}>
-              {usage ? (usage.usedStorage / 1024 / 1024).toFixed(2) : "0.00"} MB
-            </ThemedText>
-          </ThemedView>
-
-          <ThemedView style={styles.row}>
-            <ThemedView style={styles.fileCount}>
-              <Image
-                source={require("../../../assets/images/dashboard/Vector (1).png")}
-                style={{ width: 16, height: 16 }}
-                resizeMode="contain"
-              />
-              <ThemedText style={styles.fileThemedText}>
-                {media?.length} files
-              </ThemedText>
-            </ThemedView>
-            <ThemedText style={styles.percentThemedText}>
-              {usage?.percentUsed ?? 0}% Used
-            </ThemedText>
-          </ThemedView>
-
-          <TouchableOpacity
-            style={styles.manageButton}
-            onPress={() => router.push("/media")}
-          >
-            <ThemedText style={styles.manageThemedText}>
-              Manage Media Library
-            </ThemedText>
-            <Ionicons name="open-outline" size={16} color="#000" />
-          </TouchableOpacity>
-        </ThemedView>
+        <MediaLibrary
+          usage={usage ?? { usedStorage: 0, percentUsed: 0 }}
+          media={media}
+        />
 
         <ThemedView style={styles.bottomSpacer} />
       </ScrollView>

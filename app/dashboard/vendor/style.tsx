@@ -5,7 +5,7 @@ export const DashboardStyles = (colorScheme: "light" | "dark") =>
   StyleSheet.create({
     container: {
       flex: 1,
-      paddingTop: "5%",
+      paddingTop: "4%",
     },
     scrollView: {
       flex: 1,
@@ -23,7 +23,7 @@ export const DashboardStyles = (colorScheme: "light" | "dark") =>
       paddingVertical: 2,
       marginBottom: 10,
       borderBottomWidth: 1,
-      borderColor: "#eee",
+      borderColor: "#848484",
       paddingBottom: 12,
     },
     welcomeTitle: {

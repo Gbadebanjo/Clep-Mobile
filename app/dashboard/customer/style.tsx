@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: "#fff",
-      paddingTop: "5%",
+      paddingTop: "4%",
     },
     header: {
       flexDirection: "row",
@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
       paddingVertical: 2,
       marginBottom: 10,
       borderBottomWidth: 1,
-      borderColor: "#eee",
+      borderColor: "#848484",
       paddingBottom: 12,
     },
     welcomeTitle: {
