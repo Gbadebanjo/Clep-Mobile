@@ -1,19 +1,18 @@
 import SliderComp from '@/components/Home/slider-comp';
+import BestSellers from '@/components/Products/BestSellers/best-sellers';
+import FashionShowcase from '@/components/Products/FashionShowcase';
+import FeaturedProducts from '@/components/Products/FeaturedProducts';
 import { ThemedView } from '@/components/ThemedView';
-import { router } from 'expo-router';
-import { ScrollView, Text, TouchableOpacity } from 'react-native';
+import { ScrollView } from 'react-native';
 
 export default function HomeScreen() {
   return (
     <ScrollView>
       <ThemedView>
         <SliderComp />
-        {/* <FeaturedProducts />
+        <FeaturedProducts />
         <FashionShowcase />
-        <BestSellers /> */}
-          <TouchableOpacity onPress={()=>router.push("/dashboard/vendor/store-front")}>
-      <Text>Callsss....</Text>
-      </TouchableOpacity>
+        <BestSellers />
       </ThemedView>
     </ScrollView>
   );
