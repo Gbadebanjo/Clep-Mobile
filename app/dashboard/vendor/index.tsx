@@ -1,5 +1,6 @@
 "use client";
 
+import { OrderAPI } from "@/apis/order-api";
 import Header from "@/components/Header";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -13,6 +14,7 @@ import { useAuthStore } from "@/store";
 import { useMediaStore } from "@/store/useMediaStore";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { router } from "expo-router";
 import { Calendar, DollarSign } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
@@ -30,10 +32,10 @@ export default function VendorDashboard() {
   const { user } = useAuthStore();
   const colorScheme = useColorScheme();
   const styles = DashboardStyles(colorScheme);
-
+  const authAPI = new OrderAPI(user?.token);
   const [date, setDate] = useState<Date | null>(null);
   const [showPicker, setShowPicker] = useState(false);
-
+  const storeId = user?.store?.id;
   const { media, fetchMedia, currentPage, usage, fetchUsage } = useMediaStore();
 
   useEffect(() => {
@@ -44,7 +46,31 @@ export default function VendorDashboard() {
   const onChange = (_event: any, selectedDate?: Date) => {
     setShowPicker(Platform.OS === "ios");
     if (selectedDate) setDate(selectedDate);
+
+
   };
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const fetchOrders = async (search?: string, page = 1, status?: string) => {
+    try {
+      setLoading(true);
+      const params: Record<string, any> = { page };
+      const response = await authAPI.getMyStoreOrders(storeId, params);
+      const orderList = response?.data?.data || [];
+      setOrders(orderList);
+      setTotalPages(response?.data?.pagination?.totalPages || 1);
+    } catch (error) {
+      console.error("❌ Error fetching orders:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
   return (
     <ThemedView style={styles.container}>
@@ -135,10 +161,10 @@ export default function VendorDashboard() {
         </ThemedView>
 
         {/* Recent Orders */}
-        <ThemedView style={[styles.card, { width: width * 0.9 }]}>
+        {/* <ThemedView style={[styles.card, { width: width * 0.9 }]}>
           <ThemedView style={styles.sectionHeader}>
             <ThemedText style={styles.sectionTitle}>Recent Orders</ThemedText>
-            <TouchableOpacity style={styles.viewAllButton}>
+            <TouchableOpacity style={styles.viewAllButton} onPress={()=>router.push("/dashboard/vendor/orders")}>
               <ThemedText style={styles.viewAllThemedText}>View All</ThemedText>
               <Ionicons name="arrow-forward" size={20} color="#6B0C2D" />
             </TouchableOpacity>
@@ -176,7 +202,43 @@ export default function VendorDashboard() {
               status="pending"
             />
           </ThemedView>
-        </ThemedView>
+        </ThemedView> */}
+
+<ThemedView style={[styles.card, { width: width * 0.9 }]}>
+  <ThemedView style={styles.sectionHeader}>
+    <ThemedText style={styles.sectionTitle}>Recent Orders</ThemedText>
+    <TouchableOpacity
+      style={styles.viewAllButton}
+      onPress={() => router.push("/dashboard/vendor/orders")}
+    >
+      <ThemedText style={styles.viewAllThemedText}>View All</ThemedText>
+      <Ionicons name="arrow-forward" size={20} color="#6B0C2D" />
+    </TouchableOpacity>
+  </ThemedView>
+
+  <ThemedView style={styles.ordersList}>
+    {loading ? (
+      <ThemedText>Loading orders...</ThemedText>
+    ) : orders.length === 0 ? (
+      <ThemedText>No recent orders found.</ThemedText>
+    ) : (
+      orders.slice(0, 5).map((order) => (
+        <OrderItem
+          key={order.id}
+          orderId={`${order.orderNumber.slice(0, 5)}`}
+          amount={`${amountFormatter(order.total_amount ?? 0)}`}
+          date={
+            order.createdAt
+              ? new Date(order.createdAt).toLocaleDateString()
+              : "N/A"
+          }
+          status={order.status ?? "pending"}
+        />
+      ))
+    )}
+  </ThemedView>
+</ThemedView>
+
 
         {/* Popular Products */}
         <ThemedView

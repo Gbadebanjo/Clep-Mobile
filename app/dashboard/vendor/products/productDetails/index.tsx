@@ -31,13 +31,11 @@ export default function ProductDetailsScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [query, setQuery] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize] = useState(10);
-  const [activeTab, setActiveTab] = useState<"all" | "published" | "draft">(
-    "all"
-  );
+  const [activeTab, setActiveTab] = useState<"all" | "published" | "draft">("all");
 
   const fetchProducts = async (search?: string, page = 1, status?: string) => {
     try {
@@ -250,15 +248,6 @@ export default function ProductDetailsScreen() {
     product.default_images?.[0] ||
     "https://via.placeholder.com/400";
 
-  console.log("🖼️ Product image URL:", imageUrl);
-  console.log("📄 Product fields:", {
-    name: product.name,
-    description: product.description,
-    price: product.base_price,
-    salePrice: product.base_sale_price,
-    status: product.status,
-  });
-
   const statusColor =
     product.status === "draft"
       ? "#FACC15"
@@ -268,9 +257,8 @@ export default function ProductDetailsScreen() {
 
   return (
     <>
-      <ThemedView
-        style={{ flex: 1, backgroundColor: "#fff", paddingTop: "4%" }}
-      >
+      <ThemedView style={{ flex: 1, backgroundColor: "#fff", paddingTop: "7%" }}>
+
         <Header title="Products Detail" />
         <ScrollView style={styles.container}>
           <ThemedView style={styles.imgContainer}>

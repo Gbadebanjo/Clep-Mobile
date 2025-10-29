@@ -7,14 +7,14 @@ export const WalletStyles = (colorScheme: "light" | "dark") =>
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: "4%",
+    paddingTop: "7%",
   },
-  container: { flex: 1, backgroundColor: Colors[colorScheme].background,  paddingTop: "4%", },
+  container: { flex: 1, backgroundColor: Colors[colorScheme].background,  paddingTop: "7%", },
   balanceContainer: {
     paddingHorizontal: 16,
     gap: 12,
     marginBottom: 24,
-    paddingTop: "4%",
+    paddingTop: "7%",
   },
   balanceCard: { backgroundColor: "#000", borderRadius: 12, padding: 20 },
   cardHeader: {

@@ -12,7 +12,7 @@ export default function HomeScreen() {
         <SliderComp />
         <FeaturedProducts />
         <FashionShowcase />
-        <BestSellers />
+         <BestSellers />
       </ThemedView>
     </ScrollView>
   );

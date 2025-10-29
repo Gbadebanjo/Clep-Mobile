@@ -2,12 +2,11 @@ import { Dimensions, StyleSheet } from "react-native";
 const { width, height } = Dimensions.get("window")
 
 export const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff",  paddingTop: "4%", },
+  container: { flex: 1, backgroundColor: "#fff",  paddingTop: "7%", },
   scrollArea: { flex: 1, paddingHorizontal: width * 0.05 },
   titleSection: { marginTop: height * 0.01, marginBottom: height * 0.04,paddingHorizontal: width * 0.05  },
   title: { fontSize: 22, fontWeight: "700", color: "#000", marginBottom: 6 },
   subtitle: { fontSize: 14, color: "#666", lineHeight: 20 },
-
   // Storage
   storageCard: {
     backgroundColor: "#fff",

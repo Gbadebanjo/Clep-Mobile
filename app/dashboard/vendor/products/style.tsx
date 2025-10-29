@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 
 export const ProductsStyles = (colorScheme: "light" | "dark") =>
     StyleSheet.create({
-      container: { flex: 1, backgroundColor: Colors[colorScheme].background,  paddingTop: "4%", },
+      container: { flex: 1, backgroundColor: Colors[colorScheme].background,  paddingTop: "7%", },
     centered: {
       flex: 1,
       justifyContent: "center",

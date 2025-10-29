@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 
 export const AddProductsStyles = (colorScheme: "light" | "dark") =>
     StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#fff", paddingTop: "4%" },
+    container: { flex: 1, backgroundColor: "#fff", paddingTop: "7%" },
     scrollView: { flex: 1 },
     card:{
       backgroundColor: "#fff",
@@ -13,9 +13,9 @@ export const AddProductsStyles = (colorScheme: "light" | "dark") =>
       padding:16
     },
     section: {
-    //   marginBottom:10,  
+      marginBottom:10,  
       paddingHorizontal:16,
-    //   marginTop:15
+      marginTop:15
     },
     sectionTitle: {
       fontSize: 18,
