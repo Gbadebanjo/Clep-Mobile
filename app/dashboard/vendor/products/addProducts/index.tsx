@@ -22,10 +22,9 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  SafeAreaView,
   ScrollView,
   TextInput,
-  useColorScheme,
+  useColorScheme
 } from "react-native";
 import { AddProductsStyles } from "./style";
 
@@ -354,7 +353,7 @@ const AddProductScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <ThemedView style={styles.container}>
       <Header title={isEditing ? "Edit Product" : "Add New Product"} />
 
       <ScrollView
@@ -494,7 +493,7 @@ const AddProductScreen = () => {
 
         <ThemedView style={{ height: 40 }} />
       </ScrollView>
-    </SafeAreaView>
+    </ThemedView>
   );
 };
 

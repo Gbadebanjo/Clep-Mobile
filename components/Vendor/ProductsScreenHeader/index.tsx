@@ -3,13 +3,16 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Ionicons } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Calendar } from "lucide-react-native";
+import { useState } from "react";
 import {
+  Platform,
   TextInput,
   TouchableOpacity,
   useColorScheme
 } from "react-native";
 import { ProductsScreenStyles } from "./style";
-
 export default function ProductsHeader({
   activeTab,
   setActiveTab,
@@ -21,7 +24,12 @@ export default function ProductsHeader({
 }: any) {
   const colorScheme = useColorScheme() as "light" | "dark";
   const styles = ProductsScreenStyles(colorScheme);
-
+  const [showPicker, setShowPicker] = useState(false);
+  const [date, setDate] = useState<Date | null>(null);
+  const onChange = (_event: any, selectedDate?: Date) => {
+    setShowPicker(Platform.OS === "ios");
+    if (selectedDate) setDate(selectedDate);
+  };
   return (
     <ThemedView style={styles.container}>
       {/* === Header Title + Buttons === */}
@@ -88,11 +96,31 @@ export default function ProductsHeader({
             style={styles.searchInput}
           />
         </ThemedView>
-
+{/* 
         <TouchableOpacity style={styles.datePicker}>
           <Ionicons name="calendar-outline" size={16} color="#374151" />
           <ThemedText style={styles.dateText}>October 04, 2025</ThemedText>
+        </TouchableOpacity> */}
+                 <ThemedView>
+           <TouchableOpacity
+          style={styles.datePicker}
+          onPress={() => setShowPicker(true)}
+        >
+          <Calendar size={16} color="#666" />
+          <ThemedText style={styles.dateText}>
+            {date ? date.toDateString() : "Select Date"}
+          </ThemedText>
         </TouchableOpacity>
+
+        {showPicker && (
+          <DateTimePicker
+            value={date || new Date()}
+            mode="date"
+            display="default"
+            onChange={onChange}
+          />
+        )}
+      </ThemedView>
       </ThemedView>
     </ThemedView>
   );

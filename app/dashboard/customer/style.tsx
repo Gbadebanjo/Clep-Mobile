@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: "#fff",
-      paddingTop: "4%",
+      paddingTop: "7%",
     },
     header: {
       flexDirection: "row",

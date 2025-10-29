@@ -141,13 +141,18 @@ export class StoreAPI extends BaseAPI {
     public async updateStoreBranding(
         storeId: string,
         data: { [key: string]: any }
-    ): Promise<{ [key: string]: string | number }> {
-        const response = await this.axiosInstance.patch(
-            `/stores/${storeId}`,
-            data
-        );
-        return response.data;
-    }
+      ): Promise<{ [key: string]: string | number }> {
+      
+      try {
+          const response = await this.axiosInstance.patch(`/stores/${storeId}`, data);
+     
+          return response.data;
+        } catch (error: any) {
+          console.log("🟥 API Error:", error?.response?.data || error?.message);
+          throw error?.response?.data || error;
+        }
+      }
+      
 
     public async updateStoreHeroSlides(
         storeId: string,

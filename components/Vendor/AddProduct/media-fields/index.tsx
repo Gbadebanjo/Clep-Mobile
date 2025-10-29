@@ -1,13 +1,13 @@
-
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
-    Image,
-    ScrollView,
-    TouchableOpacity,
-    useColorScheme,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  useColorScheme,
+  ViewStyle,
 } from "react-native";
 import { MediaItem } from "../media-gallery-modal";
 import { useMediaGallery } from "../use-media-gallery";
@@ -19,7 +19,9 @@ interface IProps {
   keyToStore: string;
   title: string;
   maxFiles?: number;
-  value?: any; 
+  value?: any;
+  addBoxStyle?: ViewStyle; // 👈 custom style for “Add Image” box
+  extraText?: string; // 👈 optional additional text below button
 }
 
 export default function MediaFields({
@@ -28,7 +30,9 @@ export default function MediaFields({
   keyToStore,
   title,
   maxFiles = 1,
-  value = [], 
+  value = [],
+  addBoxStyle,
+  extraText,
 }: IProps) {
   const [selectedMedia, setSelectedMedia] = useState<MediaItem[]>([]);
   const colorScheme = useColorScheme() as "light" | "dark";
@@ -48,7 +52,6 @@ export default function MediaFields({
         })
         .filter(Boolean);
 
-      console.log("🖼️ Normalized Images:", normalized);
       setSelectedMedia(normalized);
     }
   }, [value]);
@@ -61,8 +64,7 @@ export default function MediaFields({
       setSelectedMedia(items);
 
       const images = items.map((m) => ({ image: m }));
-      console.log("📸 Selected media:", items);
-      console.log("🧩 Updating form key:", keyToStore, "with images:", images);
+
       if (setValues) {
         setValues((prev: any) => ({
           ...prev,
@@ -85,7 +87,7 @@ export default function MediaFields({
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <ThemedView style={styles.card}>
-        <ThemedText style={styles.title}>{title}</ThemedText>
+        {title ? <ThemedText style={styles.title}>{title}</ThemedText> : null}
 
         <ThemedView style={styles.grid}>
           {selectedMedia.map((media) => (
@@ -108,15 +110,29 @@ export default function MediaFields({
 
           {selectedMedia.length < maxFiles && (
             <TouchableOpacity
-              style={styles.addBox}
+              style={[styles.addBox, addBoxStyle]} // 👈 allow full width override
               onPress={mediaGallery.openGallery}
             >
               <Ionicons name="image-outline" size={32} color="#9CA3AF" />
               <ThemedText style={styles.addText}>Add Image</ThemedText>
+              {extraText && (
+                <ThemedText
+                  style={{
+                    color: "#888",
+                    fontSize: 12,
+                    marginTop: 4,
+                    textAlign: "center",
+                    paddingHorizontal: 8,
+                  }}
+                >
+                  {extraText}
+                </ThemedText>
+              )}
             </TouchableOpacity>
           )}
         </ThemedView>
 
+        {/* 👇 Media Gallery modal */}
         <ThemedView>{mediaGallery.MediaGallery()}</ThemedView>
       </ThemedView>
     </ScrollView>

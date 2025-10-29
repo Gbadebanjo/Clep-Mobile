@@ -1,18 +1,18 @@
 "use client";
 
-import { OrderAPI } from "@/apis/order-api";
+import { DisputeAPI } from "@/apis/dispute-api";
 import Header from "@/components/Header";
 import Table from "@/components/Table";
 import { ThemedLoader } from "@/components/ThemedLoader";
+import { ThemedView } from "@/components/ThemedView";
 import OrdersHeader from "@/components/Vendor/OrderScreenHeader";
 import { useAuthStore } from "@/store";
 import React, { useEffect, useState } from "react";
-import { Text, useColorScheme, View } from "react-native";
+import { Text, useColorScheme } from "react-native";
 import { OrdersStyles } from "./style";
 
 export default function OrdersScreen() {
   const { user } = useAuthStore();
-  const storeId = user?.store?.id;
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
@@ -21,7 +21,7 @@ export default function OrdersScreen() {
   const [totalPages, setTotalPages] = useState(1);
   const colorScheme = useColorScheme() as 'light' | 'dark';
   const styles = OrdersStyles(colorScheme);
-  const authAPI = new OrderAPI(user?.token);
+  const authAPI = new DisputeAPI(user?.token);
 
   const normalizeStatus = (tab: string) => {
     switch (tab) {
@@ -44,7 +44,7 @@ export default function OrdersScreen() {
       const normalizedStatus = normalizeStatus(status || activeTab);
       if (normalizedStatus) params.status = normalizedStatus;
 
-      const response = await authAPI.getMyStoreOrders(storeId, params);
+      const response = await authAPI.vendorDisputes();
 
       const orderList = Array.isArray(response?.data?.data)
         ? response.data.data
@@ -57,9 +57,9 @@ export default function OrdersScreen() {
         : orderList;
 
       setOrders(filtered);
-      const pagination = response?.data?.pagination;
-      setTotalPages(pagination?.totalPages || 1);
-      setCurrentPage(pagination?.page || 1);
+    //   const pagination = response?.data?.pagination;
+    //   setTotalPages(pagination?.totalPages || 1);
+    //   setCurrentPage(pagination?.page || 1);
     } catch (error) {
       console.error("❌ Error fetching orders:", error);
     } finally {
@@ -71,27 +71,10 @@ export default function OrdersScreen() {
     fetchOrders(query, currentPage, activeTab);
   }, [activeTab]);
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-    fetchOrders(query, newPage, activeTab);
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "pending":
-        return { backgroundColor: "#FEF9C3", color: "#854D0E" };
-      case "delivered":
-        return { backgroundColor: "#DCFCE7", color: "#166534" };
-      case "cancelled":
-        return { backgroundColor: "#FEE2E2", color: "#991B1B" };
-      default:
-        return { backgroundColor: "#E5E7EB", color: "#374151" };
-    }
-  };
 
   const columns = [
     {
-      header: "Order Date",
+      header: "Product",
       width: 120,
       cell: (row: any) => (
         <Text style={styles.cellText}>
@@ -100,7 +83,7 @@ export default function OrdersScreen() {
       ),
     },
     {
-      header: "Customer Name",
+      header: "Customer",
       width: 160,
       cell: (row: any) => (
         <Text numberOfLines={1} style={styles.cellText}>
@@ -109,7 +92,7 @@ export default function OrdersScreen() {
       ),
     },
     {
-      header: "Email",
+      header: "Amount",
       width: 200,
       cell: (row: any) => (
         <Text numberOfLines={1} style={styles.cellText}>
@@ -118,85 +101,47 @@ export default function OrdersScreen() {
       ),
     },
     {
-      header: "No. of Items",
+      header: "Status",
       width: 120,
       cell: (row: any) => (
         <Text style={styles.cellText}>{row.items?.length || 0}</Text>
       ),
     },
     {
-      header: "Payment Method",
+      header: "Action",
       width: 140,
       cell: (row: any) => (
         <Text style={styles.cellText}>{row.payment_info?.method || "-"}</Text>
       ),
     },
-    {
-      header: "Total (NGN)",
-      width: 120,
-      cell: (row: any) => (
-        <Text style={styles.cellText}>
-          {row.total_amount?.toLocaleString() || "0.00"}
-        </Text>
-      ),
-    },
-    {
-      header: "Return",
-      width: 100,
-      cell: (row: any) => (
-        <Text style={styles.cellText}>
-          {row.items?.some((i: any) => i.return?.isReturned) ? "Returned" : "-"}
-        </Text>
-      ),
-    },
-    {
-      header: "Status",
-      width: 120,
-      cell: (row: any) => {
-        const color = getStatusColor(row.status);
-        return (
-          <View
-            style={{
-              backgroundColor: color.backgroundColor,
-              borderRadius: 6,
-              paddingVertical: 4,
-              paddingHorizontal: 8,
-              alignSelf: "flex-start",
-            }}
-          >
-            <Text style={{ color: color.color, fontWeight: "600" }}>
-              {row.status}
-            </Text>
-          </View>
-        );
-      },
-    },
+ 
   ];
 
   if (loading) return <ThemedLoader />;
 
   return (
-    <View style={{ flex: 1, paddingTop: "7%", backgroundColor: "#fff" }}>
-      <Header title={"Orders"} />
-      <OrdersHeader
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        query={query}
-        setQuery={setQuery}
-        onSearch={(text: string) => fetchOrders(text, 1, activeTab)}
-        onFilter={() => console.log("Filter clicked")}
-        onDate={() => console.log("Select Date clicked")}
-      />
+    <ThemedView style={{ flex: 1, paddingTop: "7%", backgroundColor: "#fff" }}>
+      <Header title={"Dispute"} />
+
+  <Text style={{padding:16, color:"gray", fontWeight:"600", fontSize:15 }}>Here’s Your Current dispute Overview</Text>
+
+<OrdersHeader
+  showTabs={false}
+  query={query}
+  setQuery={setQuery}
+//   onSearch={handleSearch}
+/>
+
       <Table
         columns={columns}
         data={orders}
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={handlePageChange}
+        // onPageChange={handlePageChange}
         isLoading={loading}
         onRowClick={(row) => console.log("Clicked:", row)}
       />
-    </View>
+    </ThemedView>
   );
 }
 

@@ -6,11 +6,11 @@ export const MediaFieldStyles = (colorScheme: "light" | "dark") =>
     container: {  marginBottom:10,  
       paddingHorizontal:16 },
     card:{
-      borderWidth: 1,
-      borderColor: "#eee",
-      borderRadius: 12,
-      padding:16,
-       backgroundColor: "#fff"
+      // borderWidth: 1,
+      // borderColor: "#eee",
+      // borderRadius: 12,
+      // padding:16,
+      //  backgroundColor: "#fff"
     },
     title: { fontSize: 18, fontWeight: "600", marginBottom: 12 },
     grid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
