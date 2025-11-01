@@ -46,8 +46,6 @@ export default function VendorDashboard() {
   const onChange = (_event: any, selectedDate?: Date) => {
     setShowPicker(Platform.OS === "ios");
     if (selectedDate) setDate(selectedDate);
-
-
   };
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,7 +65,7 @@ export default function VendorDashboard() {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -75,7 +73,7 @@ export default function VendorDashboard() {
   return (
     <ThemedView style={styles.container}>
       {/* Header */}
-      <Header title={`Welcome ${user?.name || ""}`}  showBottomBorder={false}  />
+      <Header title={`Welcome ${user?.name || ""}`} showBottomBorder={false} />
 
       {/* Welcome Section */}
       <ThemedView style={styles.welcomeSection}>
@@ -161,92 +159,55 @@ export default function VendorDashboard() {
         </ThemedView>
 
         {/* Recent Orders */}
-        {/* <ThemedView style={[styles.card, { width: width * 0.9 }]}>
+        <ThemedView style={[styles.card, { width: width * 0.9 }]}>
           <ThemedView style={styles.sectionHeader}>
             <ThemedText style={styles.sectionTitle}>Recent Orders</ThemedText>
-            <TouchableOpacity style={styles.viewAllButton} onPress={()=>router.push("/dashboard/vendor/orders")}>
+            <TouchableOpacity
+              style={styles.viewAllButton}
+              onPress={() => router.push("/dashboard/vendor/orders")}
+            >
               <ThemedText style={styles.viewAllThemedText}>View All</ThemedText>
               <Ionicons name="arrow-forward" size={20} color="#6B0C2D" />
             </TouchableOpacity>
           </ThemedView>
 
           <ThemedView style={styles.ordersList}>
-            <OrderItem
-              orderId="#GRDC3"
-              amount="₦4,000"
-              date="03/08/2025"
-              status="successful"
-            />
-            <OrderItem
-              orderId="#D9I3O"
-              amount="₦8,000"
-              date="03/08/2025"
-              status="pending"
-            />
-            <OrderItem
-              orderId="#4M_OC"
-              amount="₦4,000"
-              date="22/07/2025"
-              status="pending"
-            />
-            <OrderItem
-              orderId="#XPW8U"
-              amount="₦8,000"
-              date="17/07/2025"
-              status="pending"
-            />
-            <OrderItem
-              orderId="#TEQC3"
-              amount="₦4,000"
-              date="17/07/2025"
-              status="pending"
-            />
+            {loading ? (
+              <ThemedText>Loading orders...</ThemedText>
+            ) : orders.length === 0 ? (
+              <ThemedText>No recent orders found.</ThemedText>
+            ) : (
+              orders
+                .slice(0, 5)
+                .map((order) => (
+                  <OrderItem
+                    key={order.id}
+                    orderId={`${order.orderNumber.slice(0, 5)}`}
+                    amount={`${amountFormatter(order.total_amount ?? 0)}`}
+                    date={
+                      order.createdAt
+                        ? new Date(order.createdAt).toLocaleDateString()
+                        : "N/A"
+                    }
+                    status={order.status ?? "pending"}
+                  />
+                ))
+            )}
           </ThemedView>
-        </ThemedView> */}
-
-<ThemedView style={[styles.card, { width: width * 0.9 }]}>
-  <ThemedView style={styles.sectionHeader}>
-    <ThemedText style={styles.sectionTitle}>Recent Orders</ThemedText>
-    <TouchableOpacity
-      style={styles.viewAllButton}
-      onPress={() => router.push("/dashboard/vendor/orders")}
-    >
-      <ThemedText style={styles.viewAllThemedText}>View All</ThemedText>
-      <Ionicons name="arrow-forward" size={20} color="#6B0C2D" />
-    </TouchableOpacity>
-  </ThemedView>
-
-  <ThemedView style={styles.ordersList}>
-    {loading ? (
-      <ThemedText>Loading orders...</ThemedText>
-    ) : orders.length === 0 ? (
-      <ThemedText>No recent orders found.</ThemedText>
-    ) : (
-      orders.slice(0, 5).map((order) => (
-        <OrderItem
-          key={order.id}
-          orderId={`${order.orderNumber.slice(0, 5)}`}
-          amount={`${amountFormatter(order.total_amount ?? 0)}`}
-          date={
-            order.createdAt
-              ? new Date(order.createdAt).toLocaleDateString()
-              : "N/A"
-          }
-          status={order.status ?? "pending"}
-        />
-      ))
-    )}
-  </ThemedView>
-</ThemedView>
-
+        </ThemedView>
 
         {/* Popular Products */}
         <ThemedView
           style={[styles.card, { width: width * 0.9, paddingHorizontal: 10 }]}
         >
           <ThemedView style={styles.sectionHeader}>
-            <ThemedText style={styles.sectionTitle}>Popular Products</ThemedText>
-            <TouchableOpacity style={styles.viewAllButton}>
+            <ThemedText style={styles.sectionTitle}>
+              Popular Products
+            </ThemedText>
+            <TouchableOpacity
+              style={styles.viewAllButton}
+              onPress={() => router.push("/dashboard/vendor/products")}
+            >
               <ThemedText style={styles.viewAllThemedText}>
                 Manage Products
               </ThemedText>

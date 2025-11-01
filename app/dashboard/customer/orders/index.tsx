@@ -1,10 +1,10 @@
 "use client";
 
 import { OrderAPI } from "@/apis/order-api";
+import OrdersHeader from "@/components/Customer/OrderScreenHeader";
 import Header from "@/components/Header";
 import Table from "@/components/Table";
 import { ThemedLoader } from "@/components/ThemedLoader";
-import OrdersHeader from "@/components/Vendor/OrderScreenHeader";
 import { amountFormatter } from "@/helpers/data-utils";
 import { useAuthStore } from "@/store";
 import React, { useEffect, useState } from "react";
@@ -13,11 +13,11 @@ import { OrdersStyles } from "./style";
 
 export default function OrdersScreen() {
   const { user } = useAuthStore();
-  const storeId = user?.store?.id;
+  const storeId = user?.id;
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("All");
+  const [activeTab, setActiveTab] = useState("Ongoing");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const colorScheme = useColorScheme() as 'light' | 'dark';
@@ -26,9 +26,9 @@ export default function OrdersScreen() {
 
   const normalizeStatus = (tab: string) => {
     switch (tab) {
-      case "Delivered":
+      case "Completed":
         return "delivered";
-      case "Processing":
+      case "Ongoing":
         return "pending";
       case "Cancelled":
         return "cancelled";
@@ -37,15 +37,18 @@ export default function OrdersScreen() {
     }
   };
 
-  const fetchOrders = async (search?: string, page = 1, status?: string) => {
+  const fetchOrders = async (search = "", page = 1, tab = activeTab) => {
+    if (!storeId) return;
+
     try {
       setLoading(true);
+      setOrders([]);
+
+      const status = normalizeStatus(tab);
       const params: Record<string, any> = { page };
+      if (status) params.status = status;
 
-      const normalizedStatus = normalizeStatus(status || activeTab);
-      if (normalizedStatus) params.status = normalizedStatus;
-
-      const response = await authAPI.getMyStoreOrders(storeId, params);
+      const response = await authAPI.getCustomerOrder(storeId, params);
 
       const orderList = Array.isArray(response?.data?.data)
         ? response.data.data
@@ -58,18 +61,24 @@ export default function OrdersScreen() {
         : orderList;
 
       setOrders(filtered);
+
       const pagination = response?.data?.pagination;
       setTotalPages(pagination?.totalPages || 1);
-      setCurrentPage(pagination?.page || 1);
+      setCurrentPage(pagination?.page || page);
     } catch (error) {
       console.error("❌ Error fetching orders:", error);
+      setOrders([]);
+      setTotalPages(1);
+      setCurrentPage(1);
     } finally {
       setLoading(false);
     }
   };
 
+  // Fetch orders whenever activeTab changes
   useEffect(() => {
-    fetchOrders(query, currentPage, activeTab);
+    setCurrentPage(1); // reset page
+    fetchOrders(query, 1, activeTab); // explicitly pass activeTab
   }, [activeTab]);
 
   const handlePageChange = (newPage: number) => {
@@ -101,28 +110,21 @@ export default function OrdersScreen() {
       ),
     },
     {
-      header: "Customer Name",
+      header: "Order Number",
       width: 160,
       cell: (row: any) => (
         <Text numberOfLines={1} style={styles.cellText}>
-          {row.user?.name || "-"}
+          {row.orderNumber || "-"}
         </Text>
       ),
     },
     {
-      header: "Email",
+      header: "No. of items",
       width: 200,
       cell: (row: any) => (
         <Text numberOfLines={1} style={styles.cellText}>
-          {row.user?.email || "-"}
+          {row?.items?.length || 0}
         </Text>
-      ),
-    },
-    {
-      header: "No. of Items",
-      width: 120,
-      cell: (row: any) => (
-        <Text style={styles.cellText}>{row.items?.length || 0}</Text>
       ),
     },
     {
@@ -137,7 +139,7 @@ export default function OrdersScreen() {
       width: 120,
       cell: (row: any) => (
         <Text style={styles.cellText}>
-               {amountFormatter(row.total_amount || "0.00")}
+          {amountFormatter(row.total_amount || "0.00")}
         </Text>
       ),
     },
@@ -184,7 +186,10 @@ export default function OrdersScreen() {
         setActiveTab={setActiveTab}
         query={query}
         setQuery={setQuery}
-        onSearch={(text: string) => fetchOrders(text, 1, activeTab)}
+        onSearch={(text: string) => {
+          setCurrentPage(1);
+          fetchOrders(text, 1, activeTab); // explicitly pass tab
+        }}
         onFilter={() => console.log("Filter clicked")}
         onDate={() => console.log("Select Date clicked")}
       />
@@ -200,5 +205,3 @@ export default function OrdersScreen() {
     </View>
   );
 }
-
-
