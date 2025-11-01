@@ -25,8 +25,6 @@ import {
 import * as Yup from "yup";
 import { ProfileSettingStyles } from "./style";
 
-
-
 interface ProfileSettingsScreenProps {
   onSuccess?: (message: string) => void;
   onError?: (message: string) => void;

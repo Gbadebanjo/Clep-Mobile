@@ -94,6 +94,7 @@ export type VendorProfile = {
     };
     businessDetails: BusinessDetails;
     bankDetails: {
+        businessPostalCode?: string;
         bankCode: string;
         bankName?: string;
         accountNumber: string;
