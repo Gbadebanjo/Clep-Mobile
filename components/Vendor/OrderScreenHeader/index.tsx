@@ -20,7 +20,7 @@ export default function OrdersHeader({
   onSearch,
   onFilter,
   onDate,
-  showTabs = true, // 👈 new optional prop (default true)
+  showTabs = true,
 }: any) {
   const tabs = ["All", "Delivered", "Processing", "Cancelled"];
   const colorScheme = useColorScheme() as "light" | "dark";
@@ -32,7 +32,7 @@ export default function OrdersHeader({
     setShowPicker(Platform.OS === "ios");
     if (selectedDate) {
       setDate(selectedDate);
-      onDate?.(selectedDate); // 👈 call parent date handler if provided
+      onDate?.(selectedDate);
     }
   };
 

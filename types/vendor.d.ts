@@ -94,6 +94,7 @@ export type VendorProfile = {
     };
     businessDetails: BusinessDetails;
     bankDetails: {
+        businessPostalCode?: string;
         bankCode: string;
         bankName?: string;
         accountNumber: string;
@@ -397,3 +398,41 @@ export interface LatestOrder {
     status: string;
     itemCount: number;
 }
+
+export interface VendorProfile {
+    id: string;
+    user?: {
+      id: string;
+      name?: string;
+      email?: string;
+      phoneNumber?: string;
+      profilePicture?: string;
+    };
+    name?: string;
+    email?: string;
+    phoneNumber?: string;
+    profilePicture?: string;
+    businessDetails?: {
+      businessName?: string;
+      businessPhone?: string;
+      businessAddress?: string;
+      businessState?: string;
+      businessCity?: string;
+      businessPostalCode?: string;
+    };
+  }
+  
+  export interface UpdateProfilePayload {
+    name?: string;
+    email?: string;
+    phoneNumber?: string;
+    profilePicture?: string;
+    businessDetails?: {
+      businessName?: string;
+      businessPhone?: string;
+      businessAddress?: string;
+      businessState?: string;
+      businessCity?: string;
+      businessPostalCode?: string;
+    };
+  }

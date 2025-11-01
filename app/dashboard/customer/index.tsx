@@ -4,10 +4,9 @@ import { ThemedTouchableOpacity } from "@/components/ThemedTouchableOpacity"
 import { ThemedView } from "@/components/ThemedView"
 import { useAuthStore } from "@/store"
 import { Ionicons } from "@expo/vector-icons"
-import { Dimensions, ScrollView, StatusBar, View } from "react-native"
+import { router } from "expo-router"
+import { ScrollView, StatusBar, View } from "react-native"
 import { styles } from "./style"
-
-const { width } = Dimensions.get("window")
 
 export default function CustomerDashboard() {
   const { user } = useAuthStore();
@@ -22,7 +21,7 @@ export default function CustomerDashboard() {
       icon: "cube-outline",
       title: "Track Order",
       subtitle: "View and track your orders",
-      onPress: () => console.log("Track Order"),
+      onPress: () => router.push("/dashboard/customer/orders"),
     },
     {
       icon: "heart-outline",
@@ -34,7 +33,7 @@ export default function CustomerDashboard() {
         icon: "location-outline",
         title: "Saved Measurements",
         subtitle: "Your body measurements",
-        onPress: () => console.log("My Wishlist"),
+        onPress: router.push("/(tabs)/measurement"),
       },
       {
         icon: "card-outline",

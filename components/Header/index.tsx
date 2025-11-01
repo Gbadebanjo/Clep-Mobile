@@ -1,18 +1,18 @@
 import { useAuthStore } from "@/store";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { Calculator, PencilRuler } from "lucide-react-native";
+import { Calculator, Eye, File, PencilRuler, ShoppingBag, TrendingUp, User } from "lucide-react-native";
 import React, { JSX, useEffect, useRef, useState } from "react";
 import {
-    Alert,
-    Animated,
-    Dimensions,
-    LayoutAnimation,
-    Modal,
-    ScrollView,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    useColorScheme
+  Alert,
+  Animated,
+  Dimensions,
+  LayoutAnimation,
+  Modal,
+  ScrollView,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  useColorScheme
 } from "react-native";
 import { ThemedText } from "../ThemedText";
 import { ThemedTouchableOpacity } from "../ThemedTouchableOpacity";
@@ -163,50 +163,91 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
       label: "Profile Management",
       icon: <Feather name="user" size={22} />,
       roles: ["customer"],
-      route: "/customer/profile",
+      route: "/dashboard/customer/profile-management",
     },
     {
       label: "Order History",
       icon: <Ionicons name="time-outline" size={22} />,
       roles: ["customer"],
-      route: "/customer/orders",
+      route: "/dashboard/customer/orders",
     },
     {
-      label: "Saved Measurements",
+      label: "Measurements",
       icon: <PencilRuler size={22} />,
       roles: ["customer"],
-      route: "/customer/saved-measurements",
+      route: "/(tabs)/measurement",
     },
     {
-      label: "Wishlist",
-      icon: <Feather name="heart" size={22} />,
+      label: "Cart",
+      icon: <ShoppingBag size={22} />,
       roles: ["customer"],
-      route: "/customer/wishlist",
+      route: "/(tabs)/cart",
     },
     {
-      label: "Shipping and Return",
-      icon: <Feather name="package" size={22} />,
+      label: "Followed Vendor",
+      icon: <TrendingUp size={22} />,
       roles: ["customer"],
-      route: "/customer/shipping-return",
+      disabled: true,
+      badgeText: "Coming Soon!",
     },
     {
-      label: "Size Guide",
-      icon: <Feather name="book" size={22} />,
+      label: "Favourite Vendor",
+      icon: <User size={22} />,
       roles: ["customer"],
-      route: "/customer/size-guide",
+      disabled: true,
+      badgeText: "Coming Soon!",
     },
     {
-      label: "Track Orders",
-      icon: <Ionicons name="locate-outline" size={22} />,
+      label: "Recent View",
+      icon: <Eye size={22} />,
       roles: ["customer"],
-      route: "/customer/track-orders",
+      disabled: true,
+      badgeText: "Coming Soon!",
     },
     {
-      label: "Contact Us",
-      icon: <Feather name="phone" size={22} />,
+      label: "Coupons",
+      icon: <Calculator size={22} />,
       roles: ["customer"],
-      route: "/customer/contact",
+      disabled: true,
+      badgeText: "Coming Soon!",
     },
+    {
+      label: "Newletter Preference",
+      icon: <File size={22} />,
+      roles: ["customer"],
+      disabled: true,
+      badgeText: "Coming Soon!",
+    },
+    // {
+    //   label: "Wishlist",
+    //   icon: <Feather name="heart" size={22} />,
+    //   roles: ["customer"],
+    //   route: "/customer/wishlist",
+    // },
+    // {
+    //   label: "Shipping and Return",
+    //   icon: <Feather name="package" size={22} />,
+    //   roles: ["customer"],
+    //   route: "/customer/shipping-return",
+    // },
+    // {
+    //   label: "Size Guide",
+    //   icon: <Feather name="book" size={22} />,
+    //   roles: ["customer"],
+    //   route: "/customer/size-guide",
+    // },
+    // {
+    //   label: "Track Orders",
+    //   icon: <Ionicons name="locate-outline" size={22} />,
+    //   roles: ["customer"],
+    //   route: "/customer/track-orders",
+    // },
+    // {
+    //   label: "Contact Us",
+    //   icon: <Feather name="phone" size={22} />,
+    //   roles: ["customer"],
+    //   route: "/customer/contact",
+    // },
   ];
 
   return (
@@ -283,21 +324,31 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
           {/* Bottom Section */}
           {user?.role?.toLowerCase() === "customer" && (
             <ThemedView style={styles.customerBottomSection}>
-              <TouchableOpacity style={styles.menuRow}>
-                <Feather name="settings" size={22} color="#292D32" />
-                <ThemedText style={styles.menuText}>Settings</ThemedText>
-              </TouchableOpacity>
+          <ThemedView style={styles.menuRow}>
+          <ThemedView style={{ flexDirection: "row", alignItems: "center", opacity: 0.3 }}>
+  <Feather name="settings" size={22} color="#292D32" />
+  <ThemedText style={[styles.menuText, { marginLeft: 8 }]}>
+    Settings
+  </ThemedText>
 
-              <TouchableOpacity style={styles.menuRow}>
-                <Ionicons
-                  name="help-circle-outline"
-                  size={22}
-                  color="#292D32"
-                />
-                <ThemedText style={styles.menuText}>
-                  Platform Support
-                </ThemedText>
-              </TouchableOpacity>
+  {/* Coming Soon badge */}
+  <ThemedView
+    style={{
+     
+      marginLeft: 6,
+      paddingHorizontal: 6,
+      paddingVertical: 2,
+      borderRadius: 8,
+    }}
+  >
+    <ThemedText style={{ color: "red", fontSize: 10, fontWeight: "bold" }}>
+      Coming Soon
+    </ThemedText>
+  </ThemedView>
+</ThemedView>
+</ThemedView>
+
+           
 
               <TouchableOpacity style={styles.menuRow} onPress={handleLogout}>
                 <Feather
@@ -309,12 +360,12 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
                 <ThemedText style={styles.menuText}>Log out</ThemedText>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.vendorButton}>
+              {/* <TouchableOpacity style={styles.vendorButton}>
                 <Ionicons name="storefront-outline" size={18} color="#fff" />
                 <ThemedText style={styles.vendorButtonText}>
                   Become a Vendor
                 </ThemedText>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </ThemedView>
           )}
 
@@ -325,7 +376,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
                 onPress={toggleSettings}
               >
                 <Feather name="settings" size={22} color="#000" />
-                <ThemedText>Settings</ThemedText>
+                <ThemedText>Account</ThemedText>
                 <Ionicons
                   name={showSettingsMenu ? "chevron-up" : "chevron-down"}
                   size={18}
@@ -336,7 +387,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 
               {showSettingsMenu && (
                 <ThemedView style={styles.settingsMenu}>
-                  <TouchableOpacity style={styles.subItem}>
+                  <TouchableOpacity style={styles.subItem} onPress={()=>router.push("/dashboard/vendor/account")}>
                     <Ionicons name="key-outline" size={18} color="#333" />
                     <ThemedText style={styles.subItemText}>Security</ThemedText>
                   </TouchableOpacity>

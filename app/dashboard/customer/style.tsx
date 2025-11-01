@@ -47,8 +47,8 @@ export const styles = StyleSheet.create({
       paddingHorizontal: 20,
       paddingVertical: 2,
       marginBottom: 10,
-      borderBottomWidth: 1,
-      borderColor: "#848484",
+      // borderBottomWidth: 1,
+      // borderColor: "#848484",
       paddingBottom: 12,
     },
     welcomeTitle: {
