@@ -1,7 +1,7 @@
 import { ProductAPI } from '@/apis/product-api';
 import { product } from '@/types/product';
-import React, { useEffect, useState } from 'react';
-import { Dimensions, Text } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { FlatList, Dimensions, Text, View } from 'react-native';
 import LinkButton from '../../General/link.button';
 import { ThemedLoader } from '../../ThemedLoader';
 import { ThemedText } from '../../ThemedText';
@@ -10,7 +10,7 @@ import ProductCard from '../ProductCard/product-card';
 import styles from './style';
 
 const screenWidth = Dimensions.get('window').width;
-const productCardWidth = (screenWidth - 36) / 2; // 12 padding + 12 margin between columns
+const productCardWidth = (screenWidth - 36) / 2;
 
 export default function FeaturedProducts() {
   const [loading, setLoading] = useState(true);
@@ -23,30 +23,27 @@ export default function FeaturedProducts() {
         setLoading(true);
         const productAPI = new ProductAPI();
 
-        let results = await productAPI.getFeaturedProducts();
-        let products = results?.data?.docs || [];
-
-        if (products.length < 18) {
-          const additionalResults = await productAPI.getProducts({
+        // Run both requests in parallel
+        const [featuredRes, recentRes] = await Promise.all([
+          productAPI.getFeaturedProducts(),
+          productAPI.getProducts({
             where: { status: { equals: 'published' } },
             sort: '-createdAt',
-            limit: 18 - products.length + 10,
-          });
+            limit: 28, // just fetch once, no need for two-step
+          }),
+        ]);
 
-          const recentProducts = additionalResults?.data?.docs || [];
-          const featuredIds = products.map((p) => p.id);
-          const additionalProducts = recentProducts
-            .filter((p) => !featuredIds.includes(p.id))
-            .slice(0, 18 - products.length);
+        const featured = featuredRes?.data?.docs || [];
+        const recent = recentRes?.data?.docs || [];
 
-          products = [...products, ...additionalProducts];
-        }
+        const featuredIds = new Set(featured.map(p => p.id));
+        const combined = [...featured, ...recent.filter(p => !featuredIds.has(p.id))].slice(0, 18);
 
-        setFeaturedProducts(products.slice(0, 18));
-        setLoading(false);
+        setFeaturedProducts(combined);
       } catch (err) {
         console.error('Error fetching featured products:', err);
         setError(true);
+      } finally {
         setLoading(false);
       }
     };
@@ -54,37 +51,45 @@ export default function FeaturedProducts() {
     fetchFeaturedProducts();
   }, []);
 
-  if (loading) return <ThemedLoader text="" />;
-  if (error) return <Text style={styles.errorText}>An error occurred. Please try again.</Text>;
+  const data = useMemo(() => featuredProducts, [featuredProducts]);
 
-  // Group products into rows of 2
-  const rows = [];
-  for (let i = 0; i < featuredProducts.length; i += 2) {
-    rows.push(featuredProducts.slice(i, i + 2));
+  if (loading) return <ThemedLoader text="" />;
+  if (error)
+    return (
+      <Text style={styles.errorText}>
+        An error occurred. Please try again.
+      </Text>
+    );
+
+  if (data.length === 0) {
+    return (
+      <ThemedView style={styles.noProductContainer}>
+        <ThemedText>No featured products available at the moment</ThemedText>
+        <ThemedText>Check back soon for our latest featured items!</ThemedText>
+      </ThemedView>
+    );
   }
 
   return (
     <ThemedView style={styles.scrollContainer}>
-      {/* Heading */}
       <ThemedText style={styles.heading}>Featured Products</ThemedText>
 
-      {/*Product grid */}
-      {rows.map((row, rowIndex) => (
-        <ThemedView style={styles.row} key={rowIndex}>
-          {row.map((product, colIndex) => (
-            <ThemedView key={colIndex} style={[styles.productWrapper, { width: productCardWidth }]}>
-              <ProductCard product={product} />
-            </ThemedView>
-          ))}
-        </ThemedView>
-      ))}
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={2}
+        columnWrapperStyle={{ justifyContent: 'space-between' }}
+        renderItem={({ item }) => (
+          <View style={[styles.productWrapper, { width: productCardWidth }]}>
+            <ProductCard product={item} />
+          </View>
+        )}
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={6}
+        maxToRenderPerBatch={8}
+        windowSize={7}
+      />
 
-      {featuredProducts.length === 0 && (
-        <ThemedView style={styles.noProductContainer}>
-          <ThemedText>No featured products available at the moment</ThemedText>
-          <ThemedText>Check back soon for our latest featured items!</ThemedText>
-        </ThemedView>
-      )}
       <LinkButton text="View All Products" href="/all-products" />
     </ThemedView>
   );

@@ -22,8 +22,7 @@ export default function BestSellers() {
     const fetchBestSellers = async () => {
       try {
         setLoading(true);
-        const productAPI = new ProductAPI();
-
+        const productAPI = new ProductAPI()
         // First try to get featured products
         // let results = await productAPI.getProductBestSellers({category: selectedCategory, period: selectedPeriod});
         let results = await productAPI.getFeaturedProducts();
@@ -53,7 +52,7 @@ export default function BestSellers() {
         setBestSellers(products.slice(0, 18));
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching best sellers:', err);
+        console.error('Er?ror fetching best sellers:', err);
         setError(true);
         setLoading(false);
       }
@@ -75,7 +74,6 @@ export default function BestSellers() {
     <View style={styles.scrollContainer}>
       {/* Heading */}
       <ThemedText style={styles.heading}>Best Products</ThemedText>
-
       <LinkButton
         text="Explore All"
         href="/all-products"
