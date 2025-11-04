@@ -1,12 +1,12 @@
-import Header from "@/components/Header"
-import { ThemedText } from "@/components/ThemedText"
-import { ThemedTouchableOpacity } from "@/components/ThemedTouchableOpacity"
-import { ThemedView } from "@/components/ThemedView"
-import { useAuthStore } from "@/store"
-import { Ionicons } from "@expo/vector-icons"
-import { router } from "expo-router"
-import { ScrollView, StatusBar, View } from "react-native"
-import { styles } from "./style"
+import Header from "@/components/Header";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedTouchableOpacity } from "@/components/ThemedTouchableOpacity";
+import { ThemedView } from "@/components/ThemedView";
+import { useAuthStore } from "@/store";
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { ScrollView, StatusBar, View } from "react-native";
+import { styles } from "./style";
 
 export default function CustomerDashboard() {
   const { user } = useAuthStore();
@@ -14,8 +14,7 @@ export default function CustomerDashboard() {
     { label: "Total Orders", value: "0", icon: "bag-outline" },
     { label: "Pending Orders", value: "0", icon: "time-outline" },
     { label: "Wishlist Items", value: "0", icon: "heart-outline" },
-    
-  ]
+  ];
   const quickActions = [
     {
       icon: "cube-outline",
@@ -30,36 +29,36 @@ export default function CustomerDashboard() {
       onPress: () => console.log("My Wishlist"),
     },
     {
-        icon: "location-outline",
-        title: "Saved Measurements",
-        subtitle: "Your body measurements",
-        onPress: router.push("/(tabs)/measurement"),
-      },
-      {
-        icon: "card-outline",
-        title: "Payment Methods",
-        subtitle: "Manage your payment options",
-        onPress: () => console.log("My Wishlist"),
-      },
-  ]
+      icon: "location-outline",
+      title: "Saved Measurements",
+      subtitle: "Your body measurements",
+      // onPress: router.push("/(tabs)/measurement"),
+      onPress: () => router.push("/(tabs)/measurement"),
+    },
+    {
+      icon: "card-outline",
+      title: "Payment Methods",
+      subtitle: "Manage your payment options",
+      onPress: () => console.log("My Wishlist"),
+    },
+  ];
 
   return (
     <ThemedView style={styles.container}>
       <StatusBar barStyle="dark-content" />
 
-           {/* Welcome Section */}
-           {/* <View style={styles.welcomeSection}>
+      {/* Welcome Section */}
+      {/* <View style={styles.welcomeSection}>
           <ThemedText style={styles.welcomeTitle}>Welcome Back!</ThemedText>
           <ThemedText style={styles.welcomeSubtitle}>Here's what's happening with your account</ThemedText>
         </View> */}
-  <Header title={`Welcome ${user?.name}`} showBackButton={false}/>
+      <Header title={`Welcome ${user?.name}`} showBackButton={false} />
 
-           {/* ✅ Welcome Section (outside scrollview) */}
+      {/* ✅ Welcome Section (outside scrollview) */}
       <View style={styles.welcomeSection}>
         <ThemedText style={styles.welcomeSubtitle}>
-          Here's Your Current Sales Overview
+          Here&apos;s Your Current Sales Overview
         </ThemedText>
-   
       </View>
 
       <ScrollView
@@ -67,8 +66,6 @@ export default function CustomerDashboard() {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
-   
-
         {/* Stats Cards */}
         <View style={styles.statsContainer}>
           {stats.map((stat, index) => (
@@ -89,22 +86,28 @@ export default function CustomerDashboard() {
           <ThemedText style={styles.sectionTitle}>Quick Actions</ThemedText>
 
           {quickActions.map((action, index) => (
-            <ThemedTouchableOpacity key={index} style={styles.actionCard} onPress={action.onPress} activeOpacity={0.7}>
+            <ThemedTouchableOpacity
+              key={index}
+              style={styles.actionCard}
+              onPress={action.onPress}
+              activeOpacity={0.7}
+            >
               <View style={styles.actionIconContainer}>
                 <Ionicons name={action.icon as any} size={24} color="#000" />
               </View>
               <View style={styles.actionContent}>
-                <ThemedText style={styles.actionTitle}>{action.title}</ThemedText>
-                <ThemedText style={styles.actionSubtitle}>{action.subtitle}</ThemedText>
+                <ThemedText style={styles.actionTitle}>
+                  {action.title}
+                </ThemedText>
+                <ThemedText style={styles.actionSubtitle}>
+                  {action.subtitle}
+                </ThemedText>
               </View>
               <Ionicons name="arrow-forward" size={20} color="#666" />
             </ThemedTouchableOpacity>
           ))}
         </View>
       </ScrollView>
- 
     </ThemedView>
-  )
+  );
 }
-
-
