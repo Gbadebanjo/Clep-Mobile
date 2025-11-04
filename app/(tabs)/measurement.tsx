@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import MeasurementRoot from "@/components/Measurement/MeasurementRoot";
+import { ThemedLoader } from "@/components/ThemedLoader";
 import { useAuthStore } from "@/store";
 import { useRouter } from 'expo-router';
-import MeasurementRoot from "@/components/Measurement/MeasurementRoot";
-import { ThemedView } from "@/components/ThemedView";
-import Loader from "@/components/Loader";
+import React, { useEffect } from "react";
 
 export default function Measurement() {
   const { user } = useAuthStore();
@@ -22,9 +21,7 @@ export default function Measurement() {
 
   if (user === undefined || user === null) {
     return (
-      <ThemedView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Loader visible />
-      </ThemedView>
+ <ThemedLoader/>
     );
   }
 
