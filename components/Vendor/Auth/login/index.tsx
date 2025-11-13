@@ -28,7 +28,7 @@ export default function VendorLoginComponent() {
       return;
     }
     setIsLoading(true);
-    const response = await AuthService.login({ email, password });
+    const response = await AuthService.vendorLogin({ email, password });
     if (response.success) {
       if (response.data?.data.user?.emailVerified) {
         router.push('/' as any);

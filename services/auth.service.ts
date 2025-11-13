@@ -39,6 +39,46 @@ export class AuthService {
       if (response.ok && response.data) {
         const { user, token, message } = (response.data as LoginResponse).data;
 
+        if (user.role === 'vendor') {
+          showError('This account is not registered as a customer. Please use the vendor login.');
+          setLoading(false);
+          return { success: false, error: 'Invalid role for this login page' };
+        }
+        // Update store
+        setUser(user);
+        setToken(token);
+        setAuthToken(token);
+
+        showSuccess('Login successful!');
+        return { success: true, data: response.data as LoginResponse };
+      } else {
+        showError((response as any)?.data.error || 'Login failed');
+
+        return { success: false, error: (response as LoginResponse)?.data.message };
+      }
+    } catch (error: any) {
+      showError('Network error. Please try again.');
+      return { success: false, error: error.message };
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  static async vendorLogin(credentials: { email: string; password: string }) {
+    const { setUser, setToken, setLoading } = useAuthStore.getState();
+
+    setLoading(true);
+
+    try {
+      const response = await api.post('/users/login', credentials);
+
+      if (response.ok && response.data) {
+        const { user, token, message } = (response.data as LoginResponse).data;
+         if (user.role === 'customer') {
+          showError('This account is not registered as a vendor. Please use the customer login.');
+          setLoading(false);
+          return { success: false, error: 'Invalid role for this login page' };
+        }
         // Update store
         setUser(user);
         setToken(token);
