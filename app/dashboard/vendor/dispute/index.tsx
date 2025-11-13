@@ -1,8 +1,8 @@
 "use client";
 
 import { DisputeAPI } from "@/apis/dispute-api";
+import CardTable from "@/components/CardTable";
 import Header from "@/components/Header";
-import Table from "@/components/Table";
 import { ThemedLoader } from "@/components/ThemedLoader";
 import { ThemedView } from "@/components/ThemedView";
 import OrdersHeader from "@/components/Vendor/OrderScreenHeader";
@@ -132,7 +132,7 @@ export default function OrdersScreen() {
 //   onSearch={handleSearch}
 />
 
-      <Table
+      <CardTable
         columns={columns}
         data={orders}
         currentPage={currentPage}

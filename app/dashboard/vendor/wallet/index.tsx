@@ -4,12 +4,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Alert, Image, RefreshControl, ScrollView, TouchableOpacity, useColorScheme, View } from "react-native";
 
 import Header from "@/components/Header";
-import Table from "@/components/Table";
 import { ThemedLoader } from "@/components/ThemedLoader";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 
 import { AuthAPI } from "@/apis/auth-api";
+import CardTable from "@/components/CardTable";
 import { amountFormatter } from "@/helpers/data-utils";
 import { useAuthStore } from "@/store";
 import { WalletResponse } from "@/types/store";
@@ -212,8 +212,8 @@ const WalletDashboard = () => {
         ) : transactions.length === 0 ? (
           <ThemedText style={styles.empty}>No transactions found</ThemedText>
         ) : (
-          <View style={{ flex: 1, }}>
-            <Table
+          <View style={{ flex: 1, paddingHorizontal: 16, marginTop: 16 }}>
+            <CardTable
               columns={columns}
               data={transactions}
               currentPage={1}

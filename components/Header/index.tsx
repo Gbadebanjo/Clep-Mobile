@@ -172,10 +172,10 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
       route: "/dashboard/customer/orders",
     },
     {
-      label: "Measurements",
+      label: "Saved Measurements",
       icon: <PencilRuler size={22} />,
       roles: ["customer"],
-      route: "/(tabs)/measurement",
+      route: "/dashboard/customer/measurement",
     },
     {
       label: "Cart",

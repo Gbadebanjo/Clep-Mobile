@@ -1,8 +1,8 @@
 "use client";
 
 import { ProductAPI } from "@/apis/product-api";
+import CardTable from "@/components/CardTable";
 import Header from "@/components/Header";
-import Table from "@/components/Table";
 import { ThemedLoader } from "@/components/ThemedLoader";
 import { ThemedView } from "@/components/ThemedView";
 import ProductsHeader from "@/components/Vendor/ProductsScreenHeader";
@@ -34,7 +34,9 @@ export default function ProductsScreen() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize] = useState(10);
-  const [activeTab, setActiveTab] = useState<"all" | "published" | "draft">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "published" | "draft">(
+    "all"
+  );
 
   const fetchProducts = async (search?: string, page = 1, status?: string) => {
     try {
@@ -189,17 +191,24 @@ export default function ProductsScreen() {
       width: 100,
       cell: (row: any) => (
         <ThemedView style={styles.actions}>
-       <TouchableOpacity onPress={()=>router.push(`/dashboard/vendor/products/productDetails?id=${row.id}`)}>
-          <Feather name="eye" size={17} />
-
-        </TouchableOpacity>
-        
-        <TouchableOpacity onPress={()=>router.push(`/dashboard/vendor/products/addProducts?id=${row.id}`)}>
-            <Feather name="edit" size={17} />
-
+          <TouchableOpacity
+            onPress={() =>
+              router.push(
+                `/dashboard/vendor/products/productDetails?id=${row.id}`
+              )
+            }
+          >
+            <Feather name="eye" size={17} />
           </TouchableOpacity>
-          </ThemedView>
-   
+
+          <TouchableOpacity
+            onPress={() =>
+              router.push(`/dashboard/vendor/products/addProducts?id=${row.id}`)
+            }
+          >
+            <Feather name="edit" size={17} />
+          </TouchableOpacity>
+        </ThemedView>
       ),
     },
   ];
@@ -227,7 +236,20 @@ export default function ProductsScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <Table
+        <View
+          style={{ flex: 1, paddingHorizontal: "4%", backgroundColor: "#fff" }}
+        >
+          <CardTable
+            columns={columns}
+            data={products}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+            isLoading={loading}
+            onRowClick={(row) => console.log("Clicked:", row)}
+          />
+        </View>
+        {/* <CardTable
           columns={columns}
           data={products}
           currentPage={currentPage}
@@ -235,7 +257,7 @@ export default function ProductsScreen() {
           onPageChange={handlePageChange}
           isLoading={loading}
           onRowClick={(row) => console.log("Clicked:", row)}
-        />
+        /> */}
       </ScrollView>
     </ThemedView>
   );

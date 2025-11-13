@@ -244,3 +244,9 @@ export interface OrderItemProps {
     date: string;
     status: string;
   }
+
+  export type OrderStatusType =
+    | 'pending'
+    | 'delivered'
+    | 'cancelled'
+    | 'returned';

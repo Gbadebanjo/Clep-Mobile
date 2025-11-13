@@ -51,6 +51,7 @@ const categories = [
   },
 ];
 
+
 const CategoryCard = ({ category }) => {
   const router = useRouter();
   return (

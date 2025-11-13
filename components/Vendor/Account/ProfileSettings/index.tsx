@@ -14,13 +14,13 @@ import { useFormik } from "formik";
 import { UserCircle } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Image,
-    Pressable,
-    ScrollView,
-    TextInput,
-    TouchableOpacity,
-    useColorScheme,
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  useColorScheme,
 } from "react-native";
 import * as Yup from "yup";
 import { ProfileSettingStyles } from "./style";
@@ -154,24 +154,47 @@ export default function ProfileSettingsScreen({
   const updateProfileMutation = useMutation({
     mutationFn: async (payload: UpdateProfilePayload) => {
       if (!vendorId) throw new Error("Vendor ID not found");
-      const response = await fetch(`${api.getBaseURL()}/vendors/${vendorId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!response.ok) throw new Error("Failed to update profile");
-      return response.json();
+  
+      const url = `${api.getBaseURL()}/vendors/${vendorId}`;
+   
+      try {
+        const response = await fetch(url, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const text = await response.text();
+        if (!response.ok) {
+          throw new Error(
+            `Failed to update profile: ${response.status} ${response.statusText}\nResponse: ${text}`
+          );
+        }
+  
+        try {
+          return JSON.parse(text);
+        } catch (parseErr) {
+          console.warn("[v0] Failed to parse JSON:", parseErr);
+          throw new Error("Invalid JSON response from server");
+        }
+      } catch (err) {
+        console.error("[v0] Update profile error:", err);
+        throw err;
+      }
     },
-    onSuccess: () => {
-      const successMsg = "Profile updated successfully";
+  
+    onSuccess: (data) => {
+      const successMsg = data.message;
       onSuccess?.(successMsg);
       fetchVendorProfile.refetch();
     },
+  
     onError: (error: any) => {
       const errorMsg = error.message || "Failed to update profile";
       onError?.(errorMsg);
     },
   });
+  
 
   const pickImage = async () => {
     try {
@@ -203,50 +226,55 @@ export default function ProfileSettingsScreen({
   const uploadPictureMutation = useMutation({
     mutationFn: async (asset: any) => {
       if (!vendorId) throw new Error("Vendor ID not found");
-
+  
       const formData = new FormData();
-
-      // Properly construct the file object for React Native
       formData.append("file", {
         uri: asset.uri,
-        type: asset.type || "image/jpeg",
         name: asset.fileName || "profile.jpg",
+        type: asset.mimeType || "image/jpeg",
       } as any);
-
-      const uploadUrl = `${api.getBaseURL()}/upload-media`;
+  
+      const uploadUrl = `https://sandbox.vazzel.com/api/upload-media`;
       const updateProfileUrl = `${api.getBaseURL()}/vendors/${vendorId}`;
-
+  
       try {
+        console.log("Uploading file to:", uploadUrl);
+        console.log("File data:", asset);
+  
         const uploadResponse = await fetch(uploadUrl, {
           method: "POST",
-          body: formData,
           headers: {
             Accept: "application/json",
           },
+          body: formData,
         });
-
+  
         if (!uploadResponse.ok) {
           const text = await uploadResponse.text();
-          console.log("[v0] Upload failed response text:", text);
-          console.log("[v0] Upload failed status:", uploadResponse.status);
+          console.error("[v0] Upload failed:", uploadResponse.status, text);
           throw new Error(`Upload failed with status ${uploadResponse.status}`);
         }
-
+  
         const uploadData = await uploadResponse.json();
-        const mediaUrl = uploadData.data.doc.url;
-
+        console.log("Upload success:", uploadData);
+  
+        const mediaUrl = uploadData?.data?.doc?.url;
+        const mediaId = uploadData?.data?.doc?.id;
+  
+        if (!mediaId) throw new Error("No media ID returned from upload");
+  
         const profileUpdateResponse = await fetch(updateProfileUrl, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ profilePicture: uploadData.data.doc.id }),
+          body: JSON.stringify({ profilePicture: mediaId }),
         });
-
+  
         if (!profileUpdateResponse.ok) {
           throw new Error("Profile update failed");
         }
-
+  
         return { url: mediaUrl };
       } catch (err) {
         console.error("[v0] Upload error:", err);
@@ -260,6 +288,9 @@ export default function ProfileSettingsScreen({
       onError?.(error.message || "Failed to upload profile picture");
     },
   });
+  
+
+  
 
   if (fetchVendorProfile.isLoading) {
     return <ThemedLoader />;
@@ -334,7 +365,12 @@ export default function ProfileSettingsScreen({
               </ThemedText>
             )}
           </ThemedView>
+          <ThemedView style={{backgroundColor:"#fce6f3", padding:5, borderRadius:6, marginBottom:10}}>
+          <ThemedText style={{fontSize:10, color:"#a61f4f"}}>• Your first name and surname as it appears on your NIN</ThemedText>
+          <ThemedText style={{fontSize:10, color:"#a61f4f"}}>• Your middle name is not required</ThemedText>
 
+          </ThemedView>
+       
           <ThemedView style={styles.formGroup}>
             <ThemedText style={styles.label}>Email Address </ThemedText>
             <TextInput
@@ -345,7 +381,7 @@ export default function ProfileSettingsScreen({
             />
           </ThemedView>
 
-          <Pressable
+          <TouchableOpacity
             style={[
               styles.button,
               updateProfileMutation.isPending && styles.buttonDisabled,
@@ -359,7 +395,7 @@ export default function ProfileSettingsScreen({
             <ThemedText style={styles.buttonText}>
               {updateProfileMutation.isPending ? "Saving..." : "Save Changes"}
             </ThemedText>
-          </Pressable>
+          </TouchableOpacity>
         </ThemedView>
 
         {/* Business Information */}

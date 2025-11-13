@@ -1,14 +1,16 @@
 "use client";
 
 import { OrderAPI } from "@/apis/order-api";
+import CardTable from "@/components/CardTable";
 import Header from "@/components/Header";
-import Table from "@/components/Table";
 import { ThemedLoader } from "@/components/ThemedLoader";
 import OrdersHeader from "@/components/Vendor/OrderScreenHeader";
 import { amountFormatter } from "@/helpers/data-utils";
 import { useAuthStore } from "@/store";
+import { router } from "expo-router";
+import { Eye } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
-import { Text, useColorScheme, View } from "react-native";
+import { Text, TouchableOpacity, useColorScheme, View } from "react-native";
 import { OrdersStyles } from "./style";
 
 export default function OrdersScreen() {
@@ -89,6 +91,8 @@ export default function OrdersScreen() {
         return { backgroundColor: "#E5E7EB", color: "#374151" };
     }
   };
+
+  console.log("Orders:", orders);
 
   const columns = [
     {
@@ -172,6 +176,23 @@ export default function OrdersScreen() {
         );
       },
     },
+    {
+      header: "Actions",
+      width: 100,
+      cell: (row: any) => (
+        <TouchableOpacity
+          onPress={() =>
+            router.push({
+              pathname: "/dashboard/vendor/single-order",
+              params: { orderId: row.id },
+            })
+          }
+        >
+          <Eye color="#000" size={20} />
+        </TouchableOpacity>
+      ),
+    }
+    
   ];
 
   if (loading) return <ThemedLoader />;
@@ -188,15 +209,18 @@ export default function OrdersScreen() {
         onFilter={() => console.log("Filter clicked")}
         onDate={() => console.log("Select Date clicked")}
       />
-      <Table
-        columns={columns}
-        data={orders}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-        isLoading={loading}
-        onRowClick={(row) => console.log("Clicked:", row)}
-      />
+
+<View style={{ flex: 1, paddingHorizontal: "4%", backgroundColor: "#fff" }}>
+       <CardTable
+  columns={columns}
+  data={orders}
+  currentPage={currentPage}
+  totalPages={totalPages}
+  onPageChange={handlePageChange}
+  isLoading={loading}
+  onRowClick={(row) => console.log("Clicked:", row)}
+/>
+       </View>
     </View>
   );
 }
