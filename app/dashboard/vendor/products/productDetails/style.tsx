@@ -43,6 +43,7 @@ export const ProductDetailsStyles = (colorScheme: "light" | "dark") =>
       flexDirection: "row",
       justifyContent: "space-between",
       marginTop: 24,
+      gap: 10,
     },
     button: {
       flexDirection: "row",

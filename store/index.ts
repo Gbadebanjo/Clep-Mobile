@@ -4,17 +4,41 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-// Auth Store
+// Decode JWT safely in React Native
+const decodeJWT = (token: string) => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (err) {
+    console.error('❌ Failed to decode JWT:', err);
+    return null;
+  }
+};
+
+let logoutTimer: NodeJS.Timeout | number | null = null;
+
 interface AuthState {
   user: any | null;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  rehydrated: boolean;
+
   login: (credentials: any) => Promise<void>;
   logout: () => void;
+
   setUser: (user: any) => void;
   setToken: (token: string) => void;
+
   setLoading: (loading: boolean) => void;
+
   resetEmail: string;
   setResetEmail: (resetEmail: string) => void;
 }
@@ -26,20 +50,30 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       isAuthenticated: false,
       isLoading: false,
+      rehydrated: false,
+      resetEmail: '',
 
       login: async (credentials) => {
         set({ isLoading: true });
         try {
-          // API call will be handled in the service layer
-          // This is just the state management part
+          // Call your login API here and get `token` and `user`
+          // Example:
+          // const response = await api.login(credentials);
+          // get().setToken(response.token);
+          // get().setUser(response.user);
         } catch (error) {
-          console.error('Login error:', error);
+          console.error('❌ Login error:', error);
         } finally {
           set({ isLoading: false });
         }
       },
 
       logout: () => {
+        console.log('🔓 Logging out...');
+        if (logoutTimer) {
+          clearTimeout(logoutTimer as NodeJS.Timeout);
+          logoutTimer = null;
+        }
         set({
           user: null,
           token: null,
@@ -52,17 +86,49 @@ export const useAuthStore = create<AuthState>()(
       },
 
       setToken: (token) => {
+        console.log('🧪 setToken called:', token);
         set({ token, isAuthenticated: !!token });
+
+        if (logoutTimer) {
+          clearTimeout(logoutTimer as NodeJS.Timeout);
+          logoutTimer = null;
+        }
+
+        if (!token) return;
+
+        const payload = decodeJWT(token);
+        if (!payload || !payload.exp) {
+          console.warn('❌ Invalid token — no exp found');
+          get().logout();
+          return;
+        }
+
+        const expMs = payload.exp * 1000;
+        const now = Date.now();
+        const timeLeft = expMs - now;
+
+        console.log('🔐 JWT Expiration Info:');
+        console.log('   • exp:', payload.exp);
+        console.log('   • Expiration:', new Date(expMs).toISOString());
+        console.log('   • Current Time:', new Date(now).toISOString());
+        console.log('   • Time Left (ms):', timeLeft);
+
+        if (timeLeft <= 0) {
+          console.log('⚠️ Token already expired — logging out.');
+          get().logout();
+          return;
+        }
+
+        logoutTimer = setTimeout(() => {
+          console.log('⏳ Token expired — auto logout triggered.');
+          get().logout();
+        }, timeLeft);
       },
 
-      setLoading: (isLoading) => {
-        set({ isLoading });
-      },
-      resetEmail: '',
-      setResetEmail: (resetEmail) => {
-        set({ resetEmail });
-      },
+      setLoading: (isLoading) => set({ isLoading }),
+      setResetEmail: (resetEmail) => set({ resetEmail }),
     }),
+
     {
       name: 'auth-storage',
       storage: createJSONStorage(() => AsyncStorage),
@@ -71,11 +137,16 @@ export const useAuthStore = create<AuthState>()(
         token: state.token,
         isAuthenticated: state.isAuthenticated,
       }),
+      onRehydrateStorage: () => (state, error) => {
+        if (!error) {
+          state!.rehydrated = true;
+        }
+      },
     }
   )
 );
 
-// App Store for general app state
+// Optional App store
 interface AppState {
   isOnboarded: boolean;
   theme: 'light' | 'dark' | 'system';
@@ -91,7 +162,6 @@ export const useAppStore = create<AppState>()(
       isOnboarded: false,
       theme: 'system',
       language: 'en',
-
       setOnboarded: (isOnboarded) => set({ isOnboarded }),
       setTheme: (theme) => set({ theme }),
       setLanguage: (language) => set({ language }),

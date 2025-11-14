@@ -1,6 +1,6 @@
 import { ProductAPI } from "@/apis/product-api";
+import CardTable from "@/components/CardTable";
 import Header from "@/components/Header";
-import Table from "@/components/Table";
 import { ThemedLoader } from "@/components/ThemedLoader";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedTouchableOpacity } from "@/components/ThemedTouchableOpacity";
@@ -12,11 +12,12 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
-    Alert,
-    Image,
-    RefreshControl,
-    ScrollView,
-    useColorScheme,
+  Alert,
+  Image,
+  RefreshControl,
+  ScrollView,
+  TouchableOpacity,
+  useColorScheme,
 } from "react-native";
 import { ProductDetailsStyles } from "./style";
 
@@ -178,7 +179,7 @@ export default function ProductDetailsScreen() {
       width: 100,
       cell: (row: any) => (
         <ThemedView style={styles.actions}>
-          <ThemedTouchableOpacity
+          <TouchableOpacity
             onPress={() =>
               router.push(
                 `/dashboard/vendor/products/productDetails?id=${row.id}`
@@ -186,15 +187,16 @@ export default function ProductDetailsScreen() {
             }
           >
             <Feather name="eye" size={17} />
-          </ThemedTouchableOpacity>
+          </TouchableOpacity>
 
-          <ThemedTouchableOpacity
+          <TouchableOpacity
             onPress={() =>
               router.push(`/dashboard/vendor/products/addProducts?id=${row.id}`)
             }
+            
           >
             <Feather name="edit" size={17} />
-          </ThemedTouchableOpacity>
+          </TouchableOpacity>
         </ThemedView>
       ),
     },
@@ -325,7 +327,7 @@ export default function ProductDetailsScreen() {
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
             >
-              <Table
+              <CardTable
                 columns={columns}
                 data={products}
                 currentPage={currentPage}

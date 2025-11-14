@@ -32,6 +32,7 @@ export class MeasurementAPI extends BaseAPI {
         data: { measurements: Measurement };
     }> {
         const response = await this.axiosInstance.get(`/measurements/me`);
+        console.log("Ai", response.data);
         return response.data;
     }
 

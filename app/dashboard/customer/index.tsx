@@ -33,7 +33,7 @@ export default function CustomerDashboard() {
       title: "Saved Measurements",
       subtitle: "Your body measurements",
       // onPress: router.push("/(tabs)/measurement"),
-      onPress: () => router.push("/(tabs)/measurement"),
+      onPress: () => router.push("/dashboard/customer/measurement"),
     },
     {
       icon: "card-outline",

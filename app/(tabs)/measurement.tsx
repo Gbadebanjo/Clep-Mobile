@@ -5,24 +5,22 @@ import { useRouter } from 'expo-router';
 import React, { useEffect } from "react";
 
 export default function Measurement() {
-  const { user } = useAuthStore();
+  const { user, rehydrated } = useAuthStore();
   const router = useRouter();
 
-  // console.log('User', user)
-
   useEffect(() => {
-    if ( user === null) {
+    // Only redirect after store is fully rehydrated
+    if (rehydrated && !user) {
       const timer = setTimeout(() => {
         router.replace('/customer/login');
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [user, router]);
+  }, [rehydrated, user, router]);
 
-  if (user === undefined || user === null) {
-    return (
- <ThemedLoader/>
-    );
+  // Show loader until store rehydrates or user is null
+  if (!rehydrated || user === undefined || user === null) {
+    return <ThemedLoader />;
   }
 
   return <MeasurementRoot />;

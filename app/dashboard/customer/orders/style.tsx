@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 
-
 export const OrdersStyles = (colorScheme: "light" | "dark") =>
     StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FFF", paddingHorizontal: 16 },

@@ -1,12 +1,12 @@
-import React from 'react';
-import { View, Text,  ScrollView, TouchableOpacity, ActivityIndicator, Image as RNImage } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useMutation } from '@tanstack/react-query';
+import { MeasurementAPI } from '@/apis/measurement-api';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 import { useMeasurementStore } from '@/store';
 import { AIMeasurement } from '@/types/measurement';
-import { MeasurementAPI } from '@/apis/measurement-api';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
-import { useColorScheme } from '@/hooks/useColorScheme.web';
 import { DataStyles } from './styles';
 
 // const HowToMeasure = require('@/assets/images/howtomeasure 1.png');
@@ -57,12 +57,22 @@ export default function Data() {
   );
 
   return (
-    <View style={styles.root}>
-      <ScrollView contentContainerStyle={styles.rightPanel}>
+    <View style={[styles.root, { flex: 1 }]}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={[
+          styles.rightPanel,
+          { paddingBottom: 100 }, // 👈 Add padding to make the button scrollable into view
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.title}>
-          Your Recommended Size: <Text style={styles.bold}>{sizeRecommendation}</Text>
+          Your Recommended Size:{" "}
+          <Text style={styles.bold}>{sizeRecommendation}</Text>
         </Text>
+  
         <Text style={styles.sectionTitle}>Measurement Data</Text>
+  
         <View style={styles.table}>
           {measurementData.map(({ label, value }, index) => (
             <View key={index} style={styles.tableRow}>
@@ -71,9 +81,12 @@ export default function Data() {
             </View>
           ))}
         </View>
+  
         <Text style={styles.recommendation}>
-          Based on your measurements, we recommend a size <Text style={styles.bold}>{sizeRecommendation}</Text>.
+          Based on your measurements, we recommend a size{" "}
+          <Text style={styles.bold}>{sizeRecommendation}</Text>.
         </Text>
+  
         <TouchableOpacity
           disabled={saveMeasurement.isPending}
           style={[
@@ -84,7 +97,7 @@ export default function Data() {
             saveMeasurement.mutate(
               Object.fromEntries(
                 Object.entries(measurements).map(([key, value]) => [
-                  key.replace(/\s+/g, '_'),
+                  key.replace(/\s+/g, "_"),
                   value,
                 ])
               ) as AIMeasurement
@@ -98,11 +111,10 @@ export default function Data() {
               <ActivityIndicator color="#fff" />
             </>
           ) : (
-            <>
-              <Text style={styles.saveButtonText}>Share Measurement</Text>
-            </>
+            <Text style={styles.saveButtonText}>Share Measurement</Text>
           )}
         </TouchableOpacity>
+  
         <Toast />
       </ScrollView>
     </View>

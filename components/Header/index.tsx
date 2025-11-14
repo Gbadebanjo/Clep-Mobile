@@ -36,6 +36,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
   const { setUser, user } = useAuthStore();
+  const storeId = user?.store?.id;
   const sidebarWidth = width * 0.8;
   const slideAnim = useRef(new Animated.Value(-sidebarWidth)).current;
   const colorScheme = useColorScheme() as 'light' | 'dark';
@@ -116,7 +117,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
       label: "Measurements",
       icon: <PencilRuler size={22} />,
       roles: ["vendor"],
-      route: "/(tabs)/measurement",
+      route: "/dashboard/vendor/measurement",
     },
     {
       label: "Store Fonts",
@@ -124,6 +125,14 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
       roles: ["vendor"],
       route: "/dashboard/vendor/store-front",
     },
+    {
+      label: "My Store Fonts",
+      icon: <Ionicons name="storefront-outline" size={22} />,
+      roles: ["vendor"],
+      route: `/store-front/${storeId}`,
+    },
+
+ 
     {
       label: "Custom",
       icon: <Feather name="user" size={22} />,
@@ -172,10 +181,10 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
       route: "/dashboard/customer/orders",
     },
     {
-      label: "Measurements",
+      label: "Saved Measurements",
       icon: <PencilRuler size={22} />,
       roles: ["customer"],
-      route: "/(tabs)/measurement",
+      route: "/dashboard/customer/measurement",
     },
     {
       label: "Cart",
