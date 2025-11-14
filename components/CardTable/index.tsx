@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from "react";
 import {
-    FlatList,
-    Text,
-    TouchableOpacity,
-    useColorScheme,
-    View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
 } from "react-native";
 
 import NoDataField from "../NoData";
@@ -150,8 +150,8 @@ const CardTable = <T,>({
         </View>
       ) : sortedData.length === 0 ? (
         <NoDataField
-          title="Not found!"
-          description="Try adjusting filters or switching tabs."
+          title="No Data Available!"
+          description=""
         />
       ) : (
         <FlatList

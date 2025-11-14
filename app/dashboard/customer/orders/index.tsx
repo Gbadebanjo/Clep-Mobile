@@ -22,7 +22,7 @@ export default function OrdersScreen() {
   const [activeTab, setActiveTab] = useState("Ongoing");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const colorScheme = useColorScheme() as 'light' | 'dark';
+  const colorScheme = useColorScheme() as "light" | "dark";
   const styles = OrdersStyles(colorScheme);
   const authAPI = new OrderAPI(user?.token);
 
@@ -80,7 +80,7 @@ export default function OrdersScreen() {
   // Fetch orders whenever activeTab changes
   useEffect(() => {
     setCurrentPage(1); // reset page
-    fetchOrders(query, 1, activeTab); 
+    fetchOrders(query, 1, activeTab);
   }, [activeTab]);
 
   const handlePageChange = (newPage: number) => {
@@ -139,7 +139,6 @@ export default function OrdersScreen() {
     {
       header: "Total (NGN)",
       width: 120,
-      
 
       cell: (row: any) => (
         <Text style={styles.cellText}>
@@ -213,19 +212,24 @@ export default function OrdersScreen() {
         onFilter={() => console.log("Filter clicked")}
         onDate={() => console.log("Select Date clicked")}
       />
-       <View style={{ flex: 1, paddingHorizontal: "4%", backgroundColor: "#fff" }}>
-       <CardTable
-  columns={columns}
-  data={orders}
-  currentPage={currentPage}
-  totalPages={totalPages}
-  onPageChange={handlePageChange}
-  isLoading={loading}
-  onRowClick={(row) => console.log("Clicked:", row)}
-/>
-       </View>
-
-
+      <View
+        style={{ flex: 1, paddingHorizontal: "4%", backgroundColor: "#fff" }}
+      >
+        <CardTable
+          columns={columns}
+          data={orders}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          isLoading={loading}
+          onRowClick={(row) =>
+            router.push({
+              pathname: "/dashboard/customer/single-order",
+              params: { order: JSON.stringify(row) },
+            })
+          }
+        />
+      </View>
     </View>
   );
 }

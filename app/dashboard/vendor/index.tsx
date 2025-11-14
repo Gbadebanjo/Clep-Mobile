@@ -73,7 +73,7 @@ export default function VendorDashboard() {
   return (
     <ThemedView style={styles.container}>
       {/* Header */}
-      <Header title={`Welcome ${user?.name || ""}`} showBottomBorder={false} />
+      <Header title={`Hello ${user?.name || ""}`} showBottomBorder={false} />
 
       {/* Welcome Section */}
       <ThemedView style={styles.welcomeSection}>

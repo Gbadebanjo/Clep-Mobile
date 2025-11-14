@@ -22,7 +22,7 @@ export default function OrdersScreen() {
   const [activeTab, setActiveTab] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const colorScheme = useColorScheme() as 'light' | 'dark';
+  const colorScheme = useColorScheme() as "light" | "dark";
   const styles = OrdersStyles(colorScheme);
   const authAPI = new OrderAPI(user?.token);
 
@@ -141,7 +141,7 @@ export default function OrdersScreen() {
       width: 120,
       cell: (row: any) => (
         <Text style={styles.cellText}>
-               {amountFormatter(row.total_amount || "0.00")}
+          {amountFormatter(row.total_amount || "0.00")}
         </Text>
       ),
     },
@@ -191,8 +191,7 @@ export default function OrdersScreen() {
           <Eye color="#000" size={20} />
         </TouchableOpacity>
       ),
-    }
-    
+    },
   ];
 
   if (loading) return <ThemedLoader />;
@@ -210,19 +209,24 @@ export default function OrdersScreen() {
         onDate={() => console.log("Select Date clicked")}
       />
 
-<View style={{ flex: 1, paddingHorizontal: "4%", backgroundColor: "#fff" }}>
-       <CardTable
-  columns={columns}
-  data={orders}
-  currentPage={currentPage}
-  totalPages={totalPages}
-  onPageChange={handlePageChange}
-  isLoading={loading}
-  onRowClick={(row) => console.log("Clicked:", row)}
-/>
-       </View>
+      <View
+        style={{ flex: 1, paddingHorizontal: "4%", backgroundColor: "#fff" }}
+      >
+        <CardTable
+          columns={columns}
+          data={orders}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          isLoading={loading}
+          onRowClick={(row) =>
+            router.push({
+              pathname: "/dashboard/vendor/single-order",
+              params: { orderId: row.id },
+            })
+          }
+        />
+      </View>
     </View>
   );
 }
-
-

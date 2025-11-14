@@ -7,26 +7,22 @@ import CustomerDashboard from "../dashboard/customer";
 import VendorDashboard from "../dashboard/vendor";
 
 export default function UserScreen() {
-  const { user } = useAuthStore();
-
+  const { user, rehydrated } = useAuthStore();
+  
   useEffect(() => {
-    if (!user) {
-      setTimeout(() => {
-        router.replace("/customer/login");
-      }, 100);
+    if (rehydrated && !user) {
+      router.replace("/customer/login");
     }
-  }, [user]);
+  }, [rehydrated, user]);
 
-  if (user === undefined || user === null) {
-    return (
-      <ThemedLoader/>
-    );
+  if (!rehydrated || user === undefined || user === null) {
+    return <ThemedLoader />;
   }
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      {user?.role === "customer" && <CustomerDashboard />}
-      {user?.role === "vendor" && <VendorDashboard />}
+      {user.role === "customer" && <CustomerDashboard />}
+      {user.role === "vendor" && <VendorDashboard />}
     </ThemedView>
   );
 }

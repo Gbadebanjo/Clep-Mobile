@@ -2,9 +2,10 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { View } from 'react-native';
+import { PaystackProvider } from 'react-native-paystack-webview';
 import 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
-import { PaystackProvider } from 'react-native-paystack-webview';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { setAuthToken } from '@/services/api';
@@ -13,6 +14,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 export default function RootLayout() {
+
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -29,7 +31,6 @@ export default function RootLayout() {
       })
   );
 
-  // Initialize auth token on app start
   const { token } = useAuthStore();
 
   useEffect(() => {
@@ -38,41 +39,39 @@ export default function RootLayout() {
     }
   }, [token]);
 
-  if (!loaded) {
-    return null;
-  }
+  if (!loaded) return null;
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <PaystackProvider publicKey={process.env.EXPO_PUBLIC_PAYSTACK_PUBLIC_KEY!}>
-      <QueryClientProvider client={queryClient}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="signup" options={{ headerShown: false }} />
-          <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor/login" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor/verification" options={{ headerShown: false }} />
-          {/* <Stack.Screen name="vendor/login-success" options={{ headerShown: false }} /> */}
-          <Stack.Screen name="vendor/signup" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor/plan-selection" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor/identity-verification" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor/store-setup" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor/wallet-setup" options={{ headerShown: false }} />
-          <Stack.Screen name="vendor/account-created" options={{ headerShown: false }} />
-          <Stack.Screen name='measurement/height' options={{ headerShown: false }} />
-          <Stack.Screen name='measurement/uploadPhoto' options={{ headerShown: false }} />
-          <Stack.Screen name='measurement/data' options={{ headerShown: false }} />
-          <Stack.Screen name='measurement/share' options={{ headerShown: false }} />
-          <Stack.Screen name='store-front/[id]' options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-        <Toast />
-      </QueryClientProvider>
+        <QueryClientProvider client={queryClient}>
+        
+            <View style={{ flex: 1 }}>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="signup" />
+                <Stack.Screen name="login" />
+                <Stack.Screen name="vendor/login" />
+                <Stack.Screen name="vendor/verification" />
+                <Stack.Screen name="vendor/signup" />
+                <Stack.Screen name="vendor/plan-selection" />
+                <Stack.Screen name="vendor/identity-verification" />
+                <Stack.Screen name="vendor/store-setup" />
+                <Stack.Screen name="vendor/wallet-setup" />
+                <Stack.Screen name="vendor/account-created" />
+                <Stack.Screen name="measurement/height" />
+                <Stack.Screen name="measurement/uploadPhoto" />
+                <Stack.Screen name="measurement/data" />
+                <Stack.Screen name="measurement/share" />
+                <Stack.Screen name="store-front/[id]" />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+
+              <StatusBar style="auto" />
+              <Toast />
+            </View>
+       
+        </QueryClientProvider>
       </PaystackProvider>
     </ThemeProvider>
   );

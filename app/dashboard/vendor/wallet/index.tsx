@@ -70,7 +70,7 @@ const WalletDashboard = () => {
 
   const columns = [
     {
-      header: "ID",
+      header: "",
       width: 140,
       cell: (row: any) => (
         <ThemedText numberOfLines={1}>{row.transactionId || "N/A"}</ThemedText>
