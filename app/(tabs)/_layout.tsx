@@ -6,20 +6,12 @@ import { useAuthStore } from '@/store';
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { PencilRuler } from 'lucide-react-native';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Platform } from 'react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { user } = useAuthStore();
-
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-
-  useEffect(() => {
-    if (user) {
-      setIsLoggedIn(true);
-    } else setIsLoggedIn(false);
-  }, [user]);
 
   return (
     <Tabs
@@ -30,7 +22,6 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: 'absolute',
           },
           default: {},
@@ -44,20 +35,17 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Ionicons size={28} name="home" color={color} />,
         }}
       />
-      {/* <Tabs.Screen
-        name="wishlist"
-        options={{
-          title: 'Wishlist',
-          tabBarIcon: ({ color }) => <Ionicons size={28} name="heart" color={color} />,
-        }}
-      /> */}
+
       <Tabs.Screen
         name="cart"
         options={{
           title: 'Cart',
+          href: user?.role === "vendor" ? null : undefined, // Hide tab for vendor role
           tabBarIcon: ({ color }) => <Ionicons size={28} name="cart" color={color} />,
         }}
       />
+      {/* )} */}
+
       <Tabs.Screen
         name="measurement"
         options={{

@@ -1,7 +1,15 @@
 import { useAuthStore } from "@/store";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { Calculator, Eye, File, PencilRuler, ShoppingBag, TrendingUp, User } from "lucide-react-native";
+import {
+  Calculator,
+  Eye,
+  File,
+  PencilRuler,
+  ShoppingBag,
+  TrendingUp,
+  User,
+} from "lucide-react-native";
 import React, { JSX, useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -12,13 +20,12 @@ import {
   ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  useColorScheme
+  useColorScheme,
 } from "react-native";
 import { ThemedText } from "../ThemedText";
 import { ThemedTouchableOpacity } from "../ThemedTouchableOpacity";
 import { ThemedView } from "../ThemedView";
 import { HeaderStyles } from "./style";
-
 
 const { width } = Dimensions.get("window");
 
@@ -39,7 +46,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   const storeId = user?.store?.id;
   const sidebarWidth = width * 0.8;
   const slideAnim = useRef(new Animated.Value(-sidebarWidth)).current;
-  const colorScheme = useColorScheme() as 'light' | 'dark';
+  const colorScheme = useColorScheme() as "light" | "dark";
   const styles = HeaderStyles(colorScheme);
   const toggleSidebar = () => setIsOpen(!isOpen);
 
@@ -132,7 +139,6 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
       route: `/store-front/${storeId}`,
     },
 
- 
     {
       label: "Custom",
       icon: <Feather name="user" size={22} />,
@@ -263,10 +269,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
     <ThemedView style={styles.container}>
       {/* Header */}
       <ThemedView
-        style={[
-          styles.header,
-          showBottomBorder && styles.headerBottomBorder,
-        ]}
+        style={[styles.header, showBottomBorder && styles.headerBottomBorder]}
       >
         <ThemedView style={styles.leftSection}>
           {showBackButton && (
@@ -333,31 +336,36 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
           {/* Bottom Section */}
           {user?.role?.toLowerCase() === "customer" && (
             <ThemedView style={styles.customerBottomSection}>
-          <ThemedView style={styles.menuRow}>
-          <ThemedView style={{ flexDirection: "row", alignItems: "center", opacity: 0.3 }}>
-  <Feather name="settings" size={22} color="#292D32" />
-  <ThemedText style={[styles.menuText, { marginLeft: 8 }]}>
-    Settings
-  </ThemedText>
+              <ThemedView style={styles.menuRow}>
+                <ThemedView
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    opacity: 0.3,
+                  }}
+                >
+                  <Feather name="settings" size={22} color="#292D32" />
+                  <ThemedText style={[styles.menuText, { marginLeft: 8 }]}>
+                    Settings
+                  </ThemedText>
 
-  {/* Coming Soon badge */}
-  <ThemedView
-    style={{
-     
-      marginLeft: 6,
-      paddingHorizontal: 6,
-      paddingVertical: 2,
-      borderRadius: 8,
-    }}
-  >
-    <ThemedText style={{ color: "red", fontSize: 10, fontWeight: "bold" }}>
-      Coming Soon
-    </ThemedText>
-  </ThemedView>
-</ThemedView>
-</ThemedView>
-
-           
+                  {/* Coming Soon badge */}
+                  <ThemedView
+                    style={{
+                      marginLeft: 6,
+                      paddingHorizontal: 6,
+                      paddingVertical: 2,
+                      borderRadius: 8,
+                    }}
+                  >
+                    <ThemedText
+                      style={{ color: "red", fontSize: 10, fontWeight: "bold" }}
+                    >
+                      Coming Soon
+                    </ThemedText>
+                  </ThemedView>
+                </ThemedView>
+              </ThemedView>
 
               <TouchableOpacity style={styles.menuRow} onPress={handleLogout}>
                 <Feather
@@ -396,7 +404,10 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 
               {showSettingsMenu && (
                 <ThemedView style={styles.settingsMenu}>
-                  <TouchableOpacity style={styles.subItem} onPress={()=>router.push("/dashboard/vendor/account")}>
+                  <TouchableOpacity
+                    style={styles.subItem}
+                    onPress={() => router.push("/dashboard/vendor/account")}
+                  >
                     <Ionicons name="key-outline" size={18} color="#333" />
                     <ThemedText style={styles.subItemText}>Security</ThemedText>
                   </TouchableOpacity>
@@ -423,7 +434,6 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   );
 };
 
-
 const SidebarItem: React.FC<{
   icon: JSX.Element;
   label: string;
@@ -434,7 +444,7 @@ const SidebarItem: React.FC<{
   const coloredIcon = React.cloneElement(icon, {
     color: disabled ? "#aaa" : "#000",
   });
-  const colorScheme = useColorScheme() as 'light' | 'dark';
+  const colorScheme = useColorScheme() as "light" | "dark";
   const styles = HeaderStyles(colorScheme);
   return (
     <TouchableOpacity

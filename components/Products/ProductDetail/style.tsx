@@ -239,7 +239,7 @@ export const ProductDetailStyles = (colorScheme: "light" | "dark") =>
       fontWeight: "500",
     },
     tabContent: {
-      paddingVertical: 16,
+      paddingVertical: 10,
       paddingBottom: 40,
     },
     // Specifications

@@ -2,9 +2,8 @@ import { ThemedTouchableOpacity } from "@/components/ThemedTouchableOpacity";
 import { safeAmountFormatter } from "@/helpers/data-utils";
 import { useCart } from "@/hooks/useCart";
 import { useColorScheme } from "@/hooks/useColorScheme.web";
-import { useCartStore } from "@/store";
+import { useAuthStore, useCartStore } from "@/store";
 import { product } from "@/types/product";
-import { useAuth } from '@/hooks/useAuth';
 import { router } from "expo-router";
 import { FontAwesome, MaterialIcons, Feather, Entypo } from "@expo/vector-icons";
 import React, { useEffect, useRef, useState } from "react";
@@ -23,7 +22,6 @@ import { ThemedView } from "../../ThemedView";
 import { ProductDetailStyles } from "./style";
 import { Colors } from "@/constants/Colors";
 
-
 interface ProductDetailProps {
   product: product;
 }
@@ -32,19 +30,13 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("Description");
   const [quantity, setQuantity] = useState(1);
-  // const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const { addToCart, items, removeFromCart } = useCartStore();
   const { hasSelectedItems } = useCart();
   const { changeQuantity } = useCart();
-    const { user } = useAuth();
-
-
+  const { user } = useAuthStore();
   const [isAddedToCart, setIsAddedToCart] = useState(false);
-
   const colorScheme = useColorScheme();
-
   const styles = ProductDetailStyles(colorScheme);
-
   const flatListRef = useRef<FlatList>(null);
 
   const handleCartToggle = () => {
@@ -83,17 +75,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
     </View>
   );
 
-  // const handleQuantityChange = (amount: number) => {
-  //   const newQuantity = Math.max(1, quantity + amount);
-  //   setQuantity((prev) => Math.max(1, newQuantity));
-
-  //   if (isAddedToCart) {
-  //     changeQuantity(product.id, newQuantity);
-  //   }
-  // };
-
   const increment = () => {
-    if (quantity < product.variations[0]?.quantity ) {
+    if (quantity < product.variations[0]?.quantity) {
       setQuantity((prev) => prev + 1);
       if (isAddedToCart) {
         changeQuantity(product.id, quantity + 1);
@@ -118,22 +101,21 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   };
 
   const handleCheckout = () => {
-      if (!user) {
-        router.push('/customer/login');
-        return;
-      }
-      if (!hasSelectedItems) return;
-      router.push('/checkout');
-    };
-  // Mock data for sizes, should come from product
-  // const sizes = ['S', 'M', 'L', 'XL'];
+    if (!user) {
+      router.push("/customer/login");
+      return;
+    }
+    if (!hasSelectedItems) return;
+    router.push("/checkout");
+  };
 
   return (
     <ScrollView style={styles.container}>
+      {/* Image Slider */}
       <ThemedView style={styles.sliderContainer}>
         <FlatList
           ref={flatListRef}
-          data={product.default_images.map((url, index) => {
+          data={product.default_images.map((url) => {
             return { url: (url?.image as any)?.url ?? url?.image ?? "" };
           })}
           key={product.id}
@@ -147,14 +129,16 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
         {renderPagination()}
       </ThemedView>
 
+      {/* Details */}
       <ThemedView style={styles.detailsContainer}>
         <ThemedText style={styles.productName}>{product.name}</ThemedText>
 
-        {/* Rating Placeholder */}
+        {/* Rating */}
         <View style={styles.ratingContainer}>
           <ThemedText>0.0</ThemedText>
         </View>
 
+        {/* Pricing */}
         <View style={styles.priceContainer}>
           {product.base_sale_price < product.base_price && (
             <ThemedText style={styles.originalPrice}>
@@ -176,16 +160,13 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
           )}
         </View>
 
-        {/* Stock Placeholder */}
+        {/* Stock & Summary */}
         <ThemedText style={styles.stock}>
           Only {product.variations[0].quantity} left in stock - order soon
         </ThemedText>
+        <ThemedText style={styles.shortDescription}>{product.summary}</ThemedText>
 
-        <ThemedText style={styles.shortDescription}>
-          {product.summary}
-        </ThemedText>
-
-        {/* Variations Placeholder */}
+        {/* Variations */}
         {product.variations.map((variation, index) => {
           const attributes = variation.attributes?.filter(
             (attribute) => attribute.name && attribute.value.length > 2
@@ -193,154 +174,94 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
           return (
             <View style={styles.variationContainer} key={index}>
               {attributes &&
-                attributes.map((attribute, index) => {
-                  return (
-                    attribute.name &&
-                    attribute.value && (
-                      <View style={styles.variationRow} key={index}>
-                        <ThemedText style={styles.variationLabel}>
-                          {attribute.name}
-                        </ThemedText>
-                        <ThemedText style={styles.variationValue}>
-                          {attribute.value}
-                        </ThemedText>
-                      </View>
-                    )
-                  );
-                })}
+                attributes.map((attribute, i) =>
+                  attribute.name && attribute.value ? (
+                    <View style={styles.variationRow} key={i}>
+                      <ThemedText style={styles.variationLabel}>{attribute.name}</ThemedText>
+                      <ThemedText style={styles.variationValue}>{attribute.value}</ThemedText>
+                    </View>
+                  ) : null
+                )}
             </View>
           );
         })}
 
-        {/* Size Selection */}
-        {/* <View style={styles.sizeContainer}>
-          <ThemedText style={styles.sizeLabel}>Size</ThemedText>
-          <View style={styles.sizeOptions}>
-            {sizes.map((size) => (
-              <TouchableOpacity
-                key={size}
-                style={[styles.sizeOption, selectedSize === size && styles.activeSize]}
-                onPress={() => setSelectedSize(size)}
+        {/* Render Quantity & Buttons only for customers */}
+        {user?.role === "customer" && (
+          <>
+            {/* Quantity Toggle */}
+            <View style={styles.quantityContainer}>
+              <ThemedText style={styles.quantityLabel}>Quantity</ThemedText>
+              <View style={styles.quantityToggle}>
+                <TouchableOpacity onPress={decrement} style={styles.quantityButton}>
+                  <ThemedText style={styles.quantityButtonText}>-</ThemedText>
+                </TouchableOpacity>
+                <ThemedText style={styles.quantity}>{quantity}</ThemedText>
+                <TouchableOpacity onPress={increment} style={styles.quantityButton}>
+                  <ThemedText style={styles.quantityButtonText}>+</ThemedText>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Action Buttons */}
+            <View style={styles.buttonContainer}>
+              <ThemedTouchableOpacity
+                onPress={handleCartToggle}
+                lightColor="#000"
+                darkColor="#fff"
+                style={styles.addToCartButton}
               >
-                <ThemedText style={styles.sizeText}>{size}</ThemedText>
+                <Feather
+                  name="shopping-bag"
+                  size={18}
+                  color={Colors[colorScheme].background}
+                />
+                <ThemedText darkColor="#000" lightColor="#fff" style={styles.buttonText}>
+                  {isAddedToCart ? "Remove from cart" : "Add to cart"}
+                </ThemedText>
+              </ThemedTouchableOpacity>
+
+              <TouchableOpacity style={styles.buyNowButton}>
+                <FontAwesome name="shopping-cart" size={18} color={Colors[colorScheme].text} />
+                <ThemedText style={styles.buttonText}>Buy Now</ThemedText>
               </TouchableOpacity>
-            ))}
-          </View>
-        </View> */}
 
-        {/* Quantity Toggle */}
-        <View style={styles.quantityContainer}>
-          <ThemedText style={styles.quantityLabel}>Quantity</ThemedText>
-          <View style={styles.quantityToggle}>
-            <TouchableOpacity onPress={decrement} style={styles.quantityButton}>
-              <ThemedText style={styles.quantityButtonText}>-</ThemedText>
-            </TouchableOpacity>
-            <ThemedText style={styles.quantity}>{quantity}</ThemedText>
-            <TouchableOpacity onPress={increment} style={styles.quantityButton}>
-              <ThemedText style={styles.quantityButtonText}>+</ThemedText>
-            </TouchableOpacity>
-          </View>
-        </View>
+              <TouchableOpacity style={styles.customOrderButton}>
+                <ThemedText style={styles.buttonText2}>Custom Order</ThemedText>
+              </TouchableOpacity>
 
-        {/* Action Buttons */}
-        <View style={styles.buttonContainer}>
-          <ThemedTouchableOpacity
-            onPress={handleCartToggle}
-            lightColor="#000"
-            darkColor="#fff"
-            style={styles.addToCartButton}
-          >
-            <Feather name="shopping-bag" size={18} color={Colors[colorScheme].background} />
-            <ThemedText
-              darkColor="#000"
-              lightColor="#fff"
-              style={styles.buttonText}
-            >
-              {isAddedToCart ? "Remove from cart" : "Add to cart"}
-            </ThemedText>
-          </ThemedTouchableOpacity>
-          <TouchableOpacity style={styles.buyNowButton}>
-            <FontAwesome name="shopping-cart" size={18} color={Colors[colorScheme].text} />
-            <ThemedText style={styles.buttonText}>Buy Now</ThemedText>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.customOrderButton}>
-            <ThemedText style={styles.buttonText2}>Custom Order</ThemedText>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buyNowButton}>
-            <Entypo name="chat" size={18} color={Colors[colorScheme].text} />
-            <ThemedText style={styles.buttonText}>Bargain</ThemedText>
-          </TouchableOpacity>
-        </View>
+              <TouchableOpacity style={styles.buyNowButton}>
+                <Entypo name="chat" size={18} color={Colors[colorScheme].text} />
+                <ThemedText style={styles.buttonText}>Bargain</ThemedText>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
 
-        <View
-          style={{
-            marginTop: 24,
-            paddingTop: 24,
-          }}
-        >
+        {/* Features Section */}
+        <View style={{ marginTop: 24, paddingTop: 24 }}>
           {/* Fast shipping */}
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "flex-start",
-              gap: 8,
-              marginBottom: 12,
-            }}
-          >
-            <MaterialIcons
-              name="check-circle"
-              size={18}
-              color="#16a34a"
-              style={{ marginTop: 2 }}
-            />
+          <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8, marginBottom: 12 }}>
+            <MaterialIcons name="check-circle" size={18} color="#16a34a" style={{ marginTop: 2 }} />
             <View>
               <ThemedText>Fast shipping</ThemedText>
-              <ThemedText style={{ fontSize: 12, color: "#6b7280" }}>
-                Free delivery
-              </ThemedText>
+              <ThemedText style={{ fontSize: 12, color: "#6b7280" }}>Free delivery</ThemedText>
             </View>
           </View>
           {/* Easy returns */}
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "flex-start",
-              gap: 8,
-              marginBottom: 12,
-            }}
-          >
-            <MaterialIcons
-              name="check-circle"
-              size={18}
-              color="#16a34a"
-              style={{ marginTop: 2 }}
-            />
+          <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8, marginBottom: 12 }}>
+            <MaterialIcons name="check-circle" size={18} color="#16a34a" style={{ marginTop: 2 }} />
             <View>
-              <ThemedText style={{ fontSize: 14, fontWeight: "500" }}>
-                Easy returns
-              </ThemedText>
-              <ThemedText style={{ fontSize: 12, color: "#6b7280" }}>
-                72-hr return policy
-              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: "500" }}>Easy returns</ThemedText>
+              <ThemedText style={{ fontSize: 12, color: "#6b7280" }}>72-hr return policy</ThemedText>
             </View>
           </View>
           {/* Secure checkout */}
-          <View
-            style={{ flexDirection: "row", alignItems: "flex-start", gap: 8 }}
-          >
-            <MaterialIcons
-              name="check-circle"
-              size={18}
-              color="#16a34a"
-              style={{ marginTop: 2 }}
-            />
+          <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8 }}>
+            <MaterialIcons name="check-circle" size={18} color="#16a34a" style={{ marginTop: 2 }} />
             <View>
-              <ThemedText style={{ fontSize: 14, fontWeight: "500" }}>
-                Secure checkout
-              </ThemedText>
-              <ThemedText style={{ fontSize: 12, color: "#6b7280" }}>
-                SSL encrypted payment
-              </ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: "500" }}>Secure checkout</ThemedText>
+              <ThemedText style={{ fontSize: 12, color: "#6b7280" }}>SSL encrypted payment</ThemedText>
             </View>
           </View>
         </View>
@@ -360,42 +281,32 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
           ))}
         </View>
 
+        {/* Tab Content */}
         <View style={styles.tabContent}>
-          {activeTab === "Description" && (
-            <ThemedText>{product.description}</ThemedText>
-          )}
+          {activeTab === "Description" && <ThemedText>{product.description}</ThemedText>}
           {activeTab === "Specifications" && (
             <View style={styles.specificationsContainer}>
               <View style={styles.specRow}>
                 <ThemedText style={styles.specLabel}>SKU</ThemedText>
-                <ThemedText style={styles.specValue}>
-                  {product.variations[0].sku}
-                </ThemedText>
+                <ThemedText style={styles.specValue}>{product.variations[0].sku}</ThemedText>
               </View>
               <View style={styles.specRow}>
                 <ThemedText style={styles.specLabel}>Categories</ThemedText>
                 <ThemedText style={styles.specValue}>
-                  {(product.categories[0].category as any)?.name ||
-                    product.categories[0].category}
+                  {(product.categories[0].category as any)?.name || product.categories[0].category}
                 </ThemedText>
               </View>
               <View style={styles.specRow}>
                 <ThemedText style={styles.specLabel}>Store</ThemedText>
-                <ThemedText style={styles.specValue}>
-                  {product.store?.storeName}
-                </ThemedText>
+                <ThemedText style={styles.specValue}>{product.store?.storeName}</ThemedText>
               </View>
             </View>
           )}
           {activeTab === "Reviews" && (
             <View style={styles.reviewContainer}>
-              <ThemedText style={styles.noReviewsText}>
-                No reviews yet
-              </ThemedText>
+              <ThemedText style={styles.noReviewsText}>No reviews yet</ThemedText>
               <ThemedTouchableOpacity style={styles.writeReviewButton}>
-                <ThemedText style={styles.writeReviewButtonText}>
-                  Write a Review
-                </ThemedText>
+                <ThemedText style={styles.writeReviewButtonText}>Write a Review</ThemedText>
               </ThemedTouchableOpacity>
             </View>
           )}

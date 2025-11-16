@@ -41,7 +41,7 @@ export default function VendorDashboard() {
   useEffect(() => {
     fetchMedia();
     fetchUsage();
-  }, [currentPage]);
+  }, [currentPage, fetchMedia, fetchUsage]);
 
   const onChange = (_event: any, selectedDate?: Date) => {
     setShowPicker(Platform.OS === "ios");
@@ -60,7 +60,7 @@ export default function VendorDashboard() {
       setOrders(orderList);
       setTotalPages(response?.data?.pagination?.totalPages || 1);
     } catch (error) {
-      console.error("❌ Error fetching orders:", error);
+      // console.error("❌ Error fetching orders:", error);
     } finally {
       setLoading(false);
     }
