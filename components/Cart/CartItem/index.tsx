@@ -40,8 +40,42 @@ const CartItem: React.FC<CartItemProps> = ({ item, discount = 0 }) => {
     removeItemFromCart(item.id);
   };
 
+  const getMaxQty = () => {
+  try {
+    let variationObj = null;
+    // console.log(item)
+
+    // Variation can be ARRAY or OBJECT — determine correctly
+    if (Array.isArray(item.variation)) {
+      // If multiple variations exist, pick the FIRST or SELECTED one
+      variationObj = item.variation[0];
+    } else if (item.variation && typeof item.variation === "object") {
+      variationObj = item.variation;
+    }
+
+    // 1️⃣ If variation quantity exists
+    if (variationObj?.quantity != null) {
+      return Number(variationObj.quantity);
+    }
+
+    // 2️⃣ If product has variations (fallback)
+    const productVariation = item.product?.variations?.[0];
+    if (productVariation?.quantity != null) {
+      return Number(productVariation.quantity);
+    }
+
+    // 3️⃣ If nothing exists, assume unlimited or fallback
+    return Infinity;
+  } catch (e) {
+    return Infinity;
+  }
+};
+
+
   const increaseQuantity = () => {
-    const maxQty = item.variation?.quantity ?? product?.variations?.[0]?.quantity ?? Infinity;
+    // const maxQty = item.variation?.[0]?.quantity ?? 999999;
+    const maxQty = getMaxQty();
+    console.log({maxQty})
     if (quantity < maxQty) {
       changeQuantity(item.id, quantity + 1);
     } else {
@@ -51,6 +85,23 @@ const CartItem: React.FC<CartItemProps> = ({ item, discount = 0 }) => {
       });
   }
   };
+
+  //  const incrementQuantity = () => {
+  //           console.log(product.variations[0]?.quantity)
+  //     if (quantity < product.variations[0]?.quantity) {
+  //       setQuantity((prev) => prev + 1);
+  //       if (isAddedToCart) {
+  //         changeQuantity(product.id, quantity + 1);
+  //       }
+  //     } else {
+  //       Toast.show({
+  //         type: "error",
+  //         text1: `Only ${product.variations[0]?.quantity} product${
+  //           product.variations[0]?.quantity > 1 ? "s" : ""
+  //         } left in stock.`,
+  //       });
+  //     }
+  //   };
 
   const decreaseQuantity = () => {
     if (quantity > 1) {

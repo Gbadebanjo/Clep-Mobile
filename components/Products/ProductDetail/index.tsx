@@ -5,7 +5,12 @@ import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { useAuthStore, useCartStore } from "@/store";
 import { product } from "@/types/product";
 import { router } from "expo-router";
-import { FontAwesome, MaterialIcons, Feather, Entypo } from "@expo/vector-icons";
+import {
+  FontAwesome,
+  MaterialIcons,
+  Feather,
+  Entypo,
+} from "@expo/vector-icons";
 import React, { useEffect, useRef, useState } from "react";
 import {
   FlatList,
@@ -100,12 +105,14 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
     }
   };
 
-  const handleCheckout = () => {
+  const handleBuyNow = () => {
     if (!user) {
       router.push("/customer/login");
       return;
     }
-    if (!hasSelectedItems) return;
+    if (!isAddedToCart) {
+      addToCart(product, product.variations[0], quantity);
+    }
     router.push("/checkout");
   };
 
@@ -164,7 +171,9 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
         <ThemedText style={styles.stock}>
           Only {product.variations[0].quantity} left in stock - order soon
         </ThemedText>
-        <ThemedText style={styles.shortDescription}>{product.summary}</ThemedText>
+        <ThemedText style={styles.shortDescription}>
+          {product.summary}
+        </ThemedText>
 
         {/* Variations */}
         {product.variations.map((variation, index) => {
@@ -177,8 +186,12 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
                 attributes.map((attribute, i) =>
                   attribute.name && attribute.value ? (
                     <View style={styles.variationRow} key={i}>
-                      <ThemedText style={styles.variationLabel}>{attribute.name}</ThemedText>
-                      <ThemedText style={styles.variationValue}>{attribute.value}</ThemedText>
+                      <ThemedText style={styles.variationLabel}>
+                        {attribute.name}
+                      </ThemedText>
+                      <ThemedText style={styles.variationValue}>
+                        {attribute.value}
+                      </ThemedText>
                     </View>
                   ) : null
                 )}
@@ -193,11 +206,17 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
             <View style={styles.quantityContainer}>
               <ThemedText style={styles.quantityLabel}>Quantity</ThemedText>
               <View style={styles.quantityToggle}>
-                <TouchableOpacity onPress={decrement} style={styles.quantityButton}>
+                <TouchableOpacity
+                  onPress={decrement}
+                  style={styles.quantityButton}
+                >
                   <ThemedText style={styles.quantityButtonText}>-</ThemedText>
                 </TouchableOpacity>
                 <ThemedText style={styles.quantity}>{quantity}</ThemedText>
-                <TouchableOpacity onPress={increment} style={styles.quantityButton}>
+                <TouchableOpacity
+                  onPress={increment}
+                  style={styles.quantityButton}
+                >
                   <ThemedText style={styles.quantityButtonText}>+</ThemedText>
                 </TouchableOpacity>
               </View>
@@ -216,13 +235,24 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
                   size={18}
                   color={Colors[colorScheme].background}
                 />
-                <ThemedText darkColor="#000" lightColor="#fff" style={styles.buttonText}>
+                <ThemedText
+                  darkColor="#000"
+                  lightColor="#fff"
+                  style={styles.buttonText}
+                >
                   {isAddedToCart ? "Remove from cart" : "Add to cart"}
                 </ThemedText>
               </ThemedTouchableOpacity>
 
-              <TouchableOpacity style={styles.buyNowButton}>
-                <FontAwesome name="shopping-cart" size={18} color={Colors[colorScheme].text} />
+              <TouchableOpacity
+                style={styles.buyNowButton}
+                onPress={handleBuyNow}
+              >
+                <FontAwesome
+                  name="shopping-cart"
+                  size={18}
+                  color={Colors[colorScheme].text}
+                />
                 <ThemedText style={styles.buttonText}>Buy Now</ThemedText>
               </TouchableOpacity>
 
@@ -231,7 +261,11 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.buyNowButton}>
-                <Entypo name="chat" size={18} color={Colors[colorScheme].text} />
+                <Entypo
+                  name="chat"
+                  size={18}
+                  color={Colors[colorScheme].text}
+                />
                 <ThemedText style={styles.buttonText}>Bargain</ThemedText>
               </TouchableOpacity>
             </View>
@@ -241,27 +275,68 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
         {/* Features Section */}
         <View style={{ marginTop: 24, paddingTop: 24 }}>
           {/* Fast shipping */}
-          <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8, marginBottom: 12 }}>
-            <MaterialIcons name="check-circle" size={18} color="#16a34a" style={{ marginTop: 2 }} />
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-start",
+              gap: 8,
+              marginBottom: 12,
+            }}
+          >
+            <MaterialIcons
+              name="check-circle"
+              size={18}
+              color="#16a34a"
+              style={{ marginTop: 2 }}
+            />
             <View>
               <ThemedText>Fast shipping</ThemedText>
-              <ThemedText style={{ fontSize: 12, color: "#6b7280" }}>Free delivery</ThemedText>
+              <ThemedText style={{ fontSize: 12, color: "#6b7280" }}>
+                Free delivery
+              </ThemedText>
             </View>
           </View>
           {/* Easy returns */}
-          <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8, marginBottom: 12 }}>
-            <MaterialIcons name="check-circle" size={18} color="#16a34a" style={{ marginTop: 2 }} />
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-start",
+              gap: 8,
+              marginBottom: 12,
+            }}
+          >
+            <MaterialIcons
+              name="check-circle"
+              size={18}
+              color="#16a34a"
+              style={{ marginTop: 2 }}
+            />
             <View>
-              <ThemedText style={{ fontSize: 14, fontWeight: "500" }}>Easy returns</ThemedText>
-              <ThemedText style={{ fontSize: 12, color: "#6b7280" }}>72-hr return policy</ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: "500" }}>
+                Easy returns
+              </ThemedText>
+              <ThemedText style={{ fontSize: 12, color: "#6b7280" }}>
+                72-hr return policy
+              </ThemedText>
             </View>
           </View>
           {/* Secure checkout */}
-          <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8 }}>
-            <MaterialIcons name="check-circle" size={18} color="#16a34a" style={{ marginTop: 2 }} />
+          <View
+            style={{ flexDirection: "row", alignItems: "flex-start", gap: 8 }}
+          >
+            <MaterialIcons
+              name="check-circle"
+              size={18}
+              color="#16a34a"
+              style={{ marginTop: 2 }}
+            />
             <View>
-              <ThemedText style={{ fontSize: 14, fontWeight: "500" }}>Secure checkout</ThemedText>
-              <ThemedText style={{ fontSize: 12, color: "#6b7280" }}>SSL encrypted payment</ThemedText>
+              <ThemedText style={{ fontSize: 14, fontWeight: "500" }}>
+                Secure checkout
+              </ThemedText>
+              <ThemedText style={{ fontSize: 12, color: "#6b7280" }}>
+                SSL encrypted payment
+              </ThemedText>
             </View>
           </View>
         </View>
@@ -283,30 +358,47 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
 
         {/* Tab Content */}
         <View style={styles.tabContent}>
-          {activeTab === "Description" && <ThemedText>{product.description}</ThemedText>}
+          {activeTab === "Description" && (
+            <ThemedText>{product.description}</ThemedText>
+          )}
           {activeTab === "Specifications" && (
             <View style={styles.specificationsContainer}>
               <View style={styles.specRow}>
                 <ThemedText style={styles.specLabel}>SKU</ThemedText>
-                <ThemedText style={styles.specValue}>{product.variations[0].sku}</ThemedText>
+                <ThemedText style={styles.specValue}>
+                  {product.variations[0].sku}
+                </ThemedText>
               </View>
               <View style={styles.specRow}>
                 <ThemedText style={styles.specLabel}>Categories</ThemedText>
                 <ThemedText style={styles.specValue}>
-                  {(product.categories[0].category as any)?.name || product.categories[0].category}
+                  {(product.categories[0].category as any)?.name ||
+                    product.categories[0].category}
                 </ThemedText>
               </View>
               <View style={styles.specRow}>
                 <ThemedText style={styles.specLabel}>Store</ThemedText>
-                <ThemedText style={styles.specValue}>{product.store?.storeName}</ThemedText>
+                <ThemedText style={styles.specValue}>
+                  {product.store?.storeName}
+                </ThemedText>
+              </View>
+              <View style={styles.specRow}>
+                <ThemedText style={styles.specLabel}>Tags</ThemedText>
+                <ThemedText style={styles.specValue}>
+                  {product.tags?.map((tag) => tag.tag).join(", ") || "N/A"}
+                </ThemedText>
               </View>
             </View>
           )}
           {activeTab === "Reviews" && (
             <View style={styles.reviewContainer}>
-              <ThemedText style={styles.noReviewsText}>No reviews yet</ThemedText>
+              <ThemedText style={styles.noReviewsText}>
+                No reviews yet
+              </ThemedText>
               <ThemedTouchableOpacity style={styles.writeReviewButton}>
-                <ThemedText style={styles.writeReviewButtonText}>Write a Review</ThemedText>
+                <ThemedText style={styles.writeReviewButtonText}>
+                  Write a Review
+                </ThemedText>
               </ThemedTouchableOpacity>
             </View>
           )}

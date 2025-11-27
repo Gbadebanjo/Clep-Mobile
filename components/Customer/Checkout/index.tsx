@@ -5,7 +5,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { showError, showSuccess } from '@/services/api';
 import { Ionicons } from '@expo/vector-icons';
 import { usePaystack } from 'react-native-paystack-webview';
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import {
   ScrollView,
   TouchableOpacity,
@@ -15,6 +15,7 @@ import {
 import { checkoutStyles } from './style';
 import { useCart } from '@/hooks/useCart';
 import CartItem from '@/components/Cart/CartItem';
+import { useAuthStore } from "@/store";
 import axios from 'axios'; // 🆕 API handling
 import { useNavigation } from '@react-navigation/native'; // 🆕 For routing after order
 
@@ -30,14 +31,14 @@ export default function CheckoutComponent() {
   const navigation = useNavigation(); // 🆕
   const colorScheme = useColorScheme() as 'light' | 'dark';
   const styles = checkoutStyles(colorScheme);
-  const { items, getItemDiscount, clearCart } = useCart(); // 🆕 added clearCart
+  const { items, getItemDiscount, clearCart } = useCart(); 
+  const { user } = useAuthStore((store) => store);
 
   // ✅ Calculate total price
-  const totalPrice = items.reduce((acc, item) => {
-    const discount = getItemDiscount ? getItemDiscount(item) : 0;
-    const priceAfterDiscount = item.price - discount;
-    return acc + priceAfterDiscount * (item.quantity || 1);
-  }, 0);
+ const totalPrice = items.reduce((acc, item) => {
+  return acc + item.price * item.quantity;
+}, 0);
+
 
   const states = [
     'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue', 'Borno',
@@ -71,58 +72,134 @@ export default function CheckoutComponent() {
   };
 
   // 🆕 Create order after successful payment
+  // const createOrder = async (reference: string) => {
+  //   try {
+  //     const payload = {
+  //       items: items.map((i) => ({
+  //         product: i.id,
+  //         quantity: i.quantity,
+  //         price: i.price,
+  //       })),
+  //       total_amount: totalPrice,
+  //       shipping_address: { street, city, state, zipcode, country },
+  //       payment_info: {
+  //         method: 'paystack',
+  //         reference,
+  //       },
+  //     };
+
+  //     const res = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/orders`, payload);
+
+  //     showSuccess('Order placed successfully');
+  //     clearCart();
+  //     navigation.navigate('OrderHistory', { orderId: res.data.id });
+  //   } catch (err) {
+  //     console.error('Order creation failed', err);
+  //     showError('Order creation failed. Initiating refund...');
+  //     refundPayment(reference);
+  //   }
+  // };
+
   const createOrder = async (reference: string) => {
-    try {
-      const payload = {
-        items: items.map((i) => ({
-          product: i.id,
-          quantity: i.quantity,
-          price: i.price,
-        })),
-        total_amount: totalPrice,
-        shipping_address: { street, city, state, zipcode, country },
-        payment_info: {
-          method: 'paystack',
-          reference,
-        },
-      };
+  try {
+    const payload = {
+      items: items.map((i) => ({
+        product: i.id,
+        quantity: i.quantity,
+        price: i.price,
+      })),
+      total_amount: totalPrice,
+      shipping_address: { street, city, state, zipcode, country },
+      payment_info: {
+        method: "paystack",
+        reference,
+      },
+    };
 
-      const res = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/orders`, payload);
+    const res = await axios.post(
+      `${process.env.EXPO_PUBLIC_API_URL}/orders`,
+      payload
+    );
 
-      showSuccess('Order placed successfully');
-      clearCart();
-      navigation.navigate('OrderHistory', { orderId: res.data.id });
-    } catch (err) {
-      console.error('Order creation failed', err);
-      showError('Order creation failed. Initiating refund...');
-      refundPayment(reference);
-    }
-  };
+    showSuccess("Order placed successfully!");
+
+    clearCart();
+
+    navigation.navigate("OrderHistory", {
+      orderId: res.data.id,
+    });
+  } catch (err) {
+    console.log("Order creation failed:", err);
+    showError("Order creation failed. Please contact support.");
+  }
+};
+
 
   // 🆕 Main Paystack payment handler
-  const handlePayment = () => {
-    if (!street || !city || !state || !zipcode) {
-      showError('Please fill in all required fields');
-      return;
-    }
+  // const handlePayment = () => {
+  //   if (!street || !city || !state || !zipcode) {
+  //     showError('Please fill in all required fields');
+  //     return;
+  //   }
 
-    popup.checkout({
-      email: 'testuser@example.com', // ideally, use logged-in user email
-      amount: totalPrice * 100, // Paystack expects kobo
-      reference: 'ref-' + Date.now(),
-      onSuccess: (res) => {
-        const reference = res.data.transactionRef.reference;
-        console.log('✅ Payment success:', reference);
-        createOrder(reference);
-      },
-      onCancel: () => {
-        console.log('❌ Payment cancelled');
-      },
-      onError: (err) => {
-        console.log('🚨 Payment error:', err);
-      },
-    });
-  };
+  //   const reference = "ref-" + Date.now();
+    
+  //   popup.checkout({
+  //     email: user?.email,
+  //     amount: totalPrice, // Paystack expects kobo
+  //     reference,
+  //     onSuccess: (res) => {
+  //       const reference = res.data.transactionRef.reference;
+  //       console.log('✅ Payment success:', reference);
+  //       createOrder(reference);
+  //     },
+  //     onCancel: () => {
+  //       console.log('❌ Payment cancelled');
+  //     },
+  //     onError: (err) => {
+  //       console.log('🚨 Payment error:', err);
+  //     },
+  //   });
+  // };
+
+  const handlePayment = () => {
+  if (!street || !city || !state || !zipcode) {
+    showError("Please fill in all required fields");
+    return;
+  }
+
+  const reference = "ref-" + Date.now();
+
+  popup.checkout({
+    email: user?.email,
+    amount: totalPrice, // 🟩 Paystack requires KOBO
+    reference,
+
+    onSuccess: (res) => {
+      try {
+        const paidRef = res.transactionRef.reference;
+
+        // console.log("✅ Payment success:", paidRef);
+
+        createOrder(paidRef); // ⬅️ Create order right away
+      } catch (err) {
+        console.log("Parse error:", err);
+        showError("Payment failed. Please try again.");
+      }
+    },
+
+    onCancel: () => {
+      console.log("❌ Payment cancelled");
+      showError("Payment was cancelled");
+    },
+
+    onError: (err) => {
+      console.log("🚨 Payment error:", err);
+      showError("Payment failed. Please try again.");
+    },
+  });
+};
+
 
   return (
     <ThemedView style={styles.container}>
