@@ -1,4 +1,4 @@
-import BaseAPI from '@/apis/base-api';
+import axios, { AxiosInstance } from "axios";
 import {
     AuthenticateRequest,
     AuthenticateResponse,
@@ -8,66 +8,89 @@ import {
     OrderDeliveryCostResponse,
     OrderTrackResponse,
     SingleOrderResponse,
-} from '@/types/fez';
+} from "@/types/fez";
 
-export class FezAPI extends BaseAPI {
+const baseURL = process.env.EXPO_PUBLIC_FEZ_API_BASE_URL;
+
+export class FezAPI {
+    private axiosInstance: AxiosInstance;
     private fez_token: string | null = null;
     private isAuthenticating: boolean = false;
 
-    constructor(token?: string) {
-        super(token);
+    constructor() {
+        this.axiosInstance = axios.create({
+            baseURL,
+            timeout: 20000,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
 
+        // REQUEST INTERCEPTOR
         this.axiosInstance.interceptors.request.use(
             async (config) => {
                 if (!this.fez_token) {
                     await this.authenticateAndStore();
                 }
+
                 if (this.fez_token) {
                     config.headers = config.headers || {};
                     config.headers.Authorization = `Bearer ${this.fez_token}`;
                 }
+
                 return config;
             },
             (error) => Promise.reject(error)
         );
-
-        // TODO :: We need Optimise the API to add response interceptor to ensure authenticate is only
-        // called only when token is not available or expired
     }
 
+    /**
+     * Authenticate using FEZ credentials and store token
+     */
     private async authenticateAndStore() {
         if (this.isAuthenticating) return;
 
         this.isAuthenticating = true;
+
         try {
             const authData: AuthenticateRequest = {
-                user_id: process.env.NEXT_PUBLIC_FEZ_USERID as string,
-                password: process.env.NEXT_PUBLIC_FEZ_PASSWORD as string,
+                user_id: process.env.EXPO_PUBLIC_FEZ_USERID!,
+                password: process.env.EXPO_PUBLIC_FEZ_PASSWORD!,
             };
 
-            const response = await this.axiosInstance.post<{
-                data: AuthenticateResponse;
-            }>('/fez/user/authenticate', authData);
+            // console.log("authData", authData);
 
-            this.fez_token = response?.data?.data?.authDetails?.authToken;
-        } catch (error) {
-            console.error('Authentication failed', error);
+            const response = await axios.post<{
+                authDetails: any; data: AuthenticateResponse 
+}>(
+                `${baseURL}/user/authenticate`,
+                authData,
+                { headers: { "Content-Type": "application/json" } }
+            );
+
+            this.fez_token = response?.data.authDetails?.authToken;
+
+            console.log("FEZ TOKEN STORED:", this.fez_token);
+        } catch (error: any) {
+            console.error("Authentication failed", error?.response?.data || error.message);
         } finally {
             this.isAuthenticating = false;
         }
     }
 
-    public async createOrder(
-        data: DeliveryRequest
-    ): Promise<{ data: CreateOrderResponse }> {
-        const response = await this.axiosInstance.post('/fez/order', data);
+    public async createOrder(data: DeliveryRequest) {
+        console.log("FEZ ORDER PAYLOAD:", data);
+        const response = await this.axiosInstance.post<{ data: CreateOrderResponse }>(
+            "/order",
+            data
+        );
         return response.data;
     }
 
-    public async getOrderById(
-        order_id: string
-    ): Promise<{ data: SingleOrderResponse }> {
-        const response = await this.axiosInstance.get(`/orders/${order_id}`);
+    public async getOrderById(order_id: string) {
+        const response = await this.axiosInstance.get<{ data: SingleOrderResponse }>(
+            `/orders/${order_id}`
+        );
         return response.data;
     }
 
@@ -75,30 +98,30 @@ export class FezAPI extends BaseAPI {
         state: string;
         pickUpState: string;
         weight: number;
-    }): Promise<{
-        data: OrderDeliveryCostResponse;
-    }> {
-        const response = await this.axiosInstance.post('/fez/order/cost', data);
+    }) {
+        const response = await this.axiosInstance.post<{ data: OrderDeliveryCostResponse }>(
+            "/order/cost",
+            data
+        );
         return response.data;
     }
 
-    public async trackById(
-        orderNumber: string
-    ): Promise<{ data: OrderTrackResponse }> {
-        const response = await this.axiosInstance.get(
+    public async trackById(orderNumber: string) {
+        const response = await this.axiosInstance.get<{ data: OrderTrackResponse }>(
             `/order/track/${orderNumber}`
         );
         return response.data;
     }
 
     public async deliveryEstimateTime(data: {
-        delivery_type: 'import' | 'export' | 'local';
+        delivery_type: "import" | "export" | "local";
         pick_up_state: string;
         drop_off_state: number;
-    }): Promise<{
-        data: DeliveryEstimateTimeResponse;
-    }> {
-        const response = await this.axiosInstance.post('/fez/order/cost', data);
+    }) {
+        const response = await this.axiosInstance.post<{ data: DeliveryEstimateTimeResponse }>(
+            "/order/cost",
+            data
+        );
         return response.data;
     }
 }

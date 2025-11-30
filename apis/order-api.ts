@@ -17,6 +17,7 @@ export class OrderAPI extends BaseAPI {
     public async createOrder(
         data: CreateOrderForm
     ): Promise<{ data: { doc: OrderResponse } }> {
+        console.log('data', data)
         const response = await this.axiosInstance.post('/orders', data);
         return response.data;
     }

@@ -138,5 +138,72 @@ export const checkoutStyles = (colorScheme: 'light' | 'dark') => {
       fontWeight: 'bold',
       fontSize: 16,
     },
+
+
+
+
+loadingContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: 20,
+},
+loadingText: {
+  marginTop: 10,
+  fontSize: 16,
+  color: colorScheme === 'dark' ? '#fff' : '#666',
+},
+addressListContainer: {
+  marginTop: 16,
+  gap: 12,
+},
+addressCard: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: 16,
+  borderWidth: 1,
+  borderColor: colorScheme === 'dark' ? '#333' : '#e0e0e0',
+  borderRadius: 8,
+  backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#fff',
+},
+addressCardSelected: {
+  borderColor: '#9F0E42',
+  borderWidth: 2,
+},
+addressCardContent: {
+  flex: 1,
+},
+addressStreet: {
+  fontSize: 16,
+  fontWeight: '600',
+  marginBottom: 4,
+},
+addressDetails: {
+  fontSize: 14,
+  color: colorScheme === 'dark' ? '#999' : '#666',
+},
+manualEntryButton: {
+  marginTop: 16,
+  padding: 12,
+  alignItems: 'center',
+},
+manualEntryText: {
+  fontSize: 14,
+  fontWeight: '600',
+},
+backButton: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 16,
+  gap: 8,
+},
+backButtonText: {
+  fontSize: 14,
+  fontWeight: '600',
+},
+disabledButton: {
+  opacity: 0.5,
+},
   });
 };
